@@ -1,3 +1,7 @@
+[VCCに追加する](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json)
+
+vcc://vpm/addRepo?url=<https://moruton1119.github.io/com.moruton.gimmicks/index.json>
+
 # Moruton Gimmicks Package
 
 This is a VRChat world creation package containing base scripts for Moruton Laboratory gimmicks.
