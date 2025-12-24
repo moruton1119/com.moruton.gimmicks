@@ -1,6 +1,6 @@
 {
     "name": "com.moruton.gimmicks",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "displayName": "Moruton Gimmicks Package",
     "description": "Base class for Moruton Laboratory gimmicks.",
     "unity": "2022.3",
