@@ -1,0 +1,32 @@
+name: Release VCC Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      # バージョン番号をタグから取得 (例: v0.0.1 -> 0.0.1)
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      # Zip作成 (ルートフォルダを含まない形にする)
+      - name: Create Zip
+        run: |
+          zip -r "com.moruton.gimmicks-${{ env.VERSION }}.zip" . -x ".git/*" ".github/*" "docs/*" ".gitignore"
+
+      # リリースを作成してZipをアップロード
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: com.moruton.gimmicks-${{ env.VERSION }}.zip
+          generate_release_notes: true
