@@ -1,11 +1,10 @@
 {
     "name": "com.moruton.gimmicks",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "displayName": "Moruton Gimmicks Package",
     "description": "Base class for Moruton Laboratory gimmicks.",
     "unity": "2022.3",
     "dependencies": {
-        "com.vrchat.worlds": "3.5.0",
-        "com.vrchat.udonsharp": "1.0.0"
+        "com.vrchat.worlds": "3.5.0"
     }
 }
