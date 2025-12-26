@@ -5,6 +5,17 @@
     "packages": {
         "com.moruton.gimmicks": {
             "versions": {
+                "0.0.5": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.5",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class for Moruton Laboratory gimmicks.",
+                    "unity": "2022.3",
+                    "dependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.5/com.moruton.gimmicks-0.0.5.zip"
+                },
                 "0.0.4": {
                     "name": "com.moruton.gimmicks",
                     "version": "0.0.4",
