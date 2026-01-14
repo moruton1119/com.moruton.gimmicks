@@ -1,4 +1,12 @@
-[VCCに追加する](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json)
+# Moruton Gimmicks Package
+
+**[➡️ 公式配布ページ (Add to VCC)](https://moruton1119.github.io/com.moruton.gimmicks/)**
+
+Moruton Laboratory のギミック共通パッケージです。ワールド・アバター両対応。
+
+---
+
+[Direct VCC Link](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json)
 
 vcc://vpm/addRepo?url=<https://moruton1119.github.io/com.moruton.gimmicks/index.json>
 
