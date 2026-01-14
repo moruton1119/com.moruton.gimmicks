@@ -14,7 +14,6 @@ namespace Moruton.Gimmicks
     public abstract class MorutonGimmickPackage : MonoBehaviour
 #endif
     {
-        // もるらぼのギミックに共通のEditor処理を書き込むための継承用Script
-        [SerializeField] private Texture2D dummyImage;
+
     }
 }

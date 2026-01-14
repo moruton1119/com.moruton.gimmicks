@@ -30,7 +30,7 @@ namespace Moruton.Gimmicks.Editor
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Booth", new GUIStyle(GUI.skin.button) { fontSize = 12, fontStyle = FontStyle.Bold }, GUILayout.Height(25)))
             {
-                Application.OpenURL("https://moruton-world.booth.pm/");
+                Application.OpenURL("https://moruton.booth.pm/");
             }
 
             if (GUILayout.Button("Discord", GUILayout.Height(25)))
@@ -58,7 +58,7 @@ namespace Moruton.Gimmicks.Editor
                     EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
                     if (GUILayout.Button("VCCを起動して更新する (またはBoothを確認)"))
                     {
-                        Application.OpenURL("https://moruton-world.booth.pm/"); 
+                        Application.OpenURL("https://moruton-world.booth.pm/");
                     }
                 }
                 EditorGUILayout.EndVertical();
