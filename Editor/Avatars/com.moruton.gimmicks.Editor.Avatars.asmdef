@@ -2,7 +2,8 @@
     "name": "com.moruton.gimmicks.Editor.Avatars",
     "references": [
         "com.moruton.gimmicks",
-        "com.moruton.gimmicks.Editor"
+        "com.moruton.gimmicks.Editor",
+        "com.moruton.gimmicks.Avatars"
     ],
     "includePlatforms": [
         "Editor"
