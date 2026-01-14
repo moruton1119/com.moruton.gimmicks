@@ -1,0 +1,44 @@
+# --- Unity 一時ファイル ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+/[Aa]ssets/AssetStoreTools*
+
+# --- プロジェクトファイル ---
+# Visual Studio / Rider / VS Code
+[Aa]ssets/Plugins/Editor/JetBrains*
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svclog
+*.pdb
+*.opendb
+*.VC.db
+
+# --- VRChat / VCC 関連 ---
+# パッケージビルド済みのZIPはリポジトリに含めない
+*.zip
+
+# --- OS 固有ファイル ---
+.DS_Store
+Thumbs.db
+
+# --- エージェント / ツール設定 ---
+# AIアシスタントの設定や記憶はパッケージに含めない
+.gemini/
+.serena/
+.agent/
+work_reports/

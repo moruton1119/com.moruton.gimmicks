@@ -1,0 +1,21 @@
+{
+    "name": "com.moruton.gimmicks.Editor",
+    "rootNamespace": "Moruton.Gimmicks.Editor",
+    "references": [
+        "com.moruton.gimmicks",
+        "VRC.Udon",
+        "UdonSharp.Runtime",
+        "UdonSharp.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
