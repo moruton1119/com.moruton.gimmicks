@@ -5,9 +5,9 @@ namespace Moruton.Gimmicks
 {
     /// <summary>
     /// セットアップ用のターゲット情報（説明と対象オブジェクト）を保持するコンポーネント。
-    /// アバター等の特定のオブジェクトへ素早くアクセスするために使用します。
+    /// アバターのセットアップを補助するコンポーネント
     /// </summary>
-    [AddComponentMenu("Moruton/Gimmick Setup Helper")]
+    [AddComponentMenu("Morulab/Avatars/Gimmick Setup Helper")]
     public class GimmickSetupHelper : MorutonAvatarPackage
     {
         [System.Serializable]

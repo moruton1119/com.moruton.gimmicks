@@ -7,6 +7,7 @@ using UdonSharp;
 namespace Moruton.Gimmicks
 {
     // ワールド用の基底クラス
+    [AddComponentMenu("Morulab/Worlds/Base Package")]
 #if UDONSHARP
     public abstract class MorutonGimmickPackage : UdonSharpBehaviour
 #else
