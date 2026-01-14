@@ -1,11 +1,8 @@
 {
-    "name": "com.moruton.gimmicks.Editor",
-    "rootNamespace": "Moruton.Gimmicks.Editor",
+    "name": "com.moruton.gimmicks.Editor.Avatars",
     "references": [
         "com.moruton.gimmicks",
-        "VRC.Udon",
-        "UdonSharp.Runtime",
-        "UdonSharp.Editor"
+        "com.moruton.gimmicks.Editor"
     ],
     "includePlatforms": [
         "Editor"
@@ -15,13 +12,10 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "VRC_SDK_AVATARS"
+    ],
     "versionDefines": [
-        {
-            "name": "com.vrchat.worlds",
-            "expression": "",
-            "define": "VRC_SDK_WORLDS"
-        },
         {
             "name": "com.vrchat.avatars",
             "expression": "",

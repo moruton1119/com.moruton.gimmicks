@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement class="root">
+        <ui:Label text="Morulab Command Info Portal" class="header" />
+        
+        <ui:TextField name="SearchField" label="Search" class="search-field" />
+        
+        <ui:ScrollView name="CommandScrollContainer" class="command-scroll" />
+        
+        <ui:VisualElement name="DetailPanel" class="detail-panel">
+            <ui:VisualElement name="DetailHeaderRow" class="detail-header-row">
+                <ui:VisualElement name="DetailInfo" class="detail-info">
+                    <ui:Label name="DetailTitle" class="detail-title" text="Select a command" />
+                    <ui:Label name="DetailCategory" class="detail-category" text="" />
+                    <ui:Label name="DetailDesc" class="detail-desc" text="" />
+                </ui:VisualElement>
+                <ui:Button name="LaunchButton" class="launch-button" text="OPEN" />
+            </ui:VisualElement>
+            
+            <ui:ScrollView name="DocumentationContainer" class="documentation-container">
+                <ui:Label name="DocumentationLabel" class="documentation-label" text="" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

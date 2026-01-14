@@ -1,47 +1,30 @@
 using UnityEngine;
-using UdonSharp;
+using UnityEditor;
 
-namespace Moruton.Gimmicks
-{
-    // ランタイム用の基底クラス
-    // プロジェクト側の MorutonLaboratry.Script とは独立した名前空間で管理
-    public abstract class MorutonGimmickPackage : UdonSharpBehaviour
-    {
-        //もるらぼのギミックに共通のEditor処理を書き込むための継承用Script
-        [SerializeField] private Texture2D dummyImage;
-    }
-}
-
-#if UNITY_EDITOR
 namespace Moruton.Gimmicks.Editor
 {
-    using UnityEditor;
-
     /// <summary>
-    /// もるらぼギミック共通のエディター表示機能を提供するヘルパークラス
+    /// もるらぼギミック共通のエディター表示機能を提供するヘルパークラス (World用)
     /// </summary>
     public static class MorutonGimmickPackageEditorHelper
     {
         private static string latestVersion = "";
         private static bool isChecking = false;
-        private const string RemotePackageJsonUrl = "https://raw.githubusercontent.com/moruton1119/com.moruton.gimmicks/main/package.json"; // 適切なURLに変更してください
+        private const string RemotePackageJsonUrl = "https://raw.githubusercontent.com/moruton1119/com.moruton.gimmicks/main/package.json";
         private const string PackageName = "com.moruton.gimmicks";
 
         public static void DrawHeader()
         {
-            // パッケージ相対パスから画像をロード
-            Texture2D image = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/" + PackageName + "/Runtime/Morulabw.png");
+            // パッケージ相対パスから画像をロード (Runtime/Common/に配置)
+            Texture2D image = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/" + PackageName + "/Runtime/Common/Morulabw.png");
             GUILayout.Space(10);
 
-            // 画像があれば描画
             if (image != null)
             {
-                // GUILayout.Label("MorutonLaboratory 制作", EditorStyles.boldLabel);
                 var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(100));
                 GUI.DrawTexture(rect, image, ScaleMode.ScaleToFit);
             }
 
-            // バージョンチェックの表示
             CheckVersion();
 
             EditorGUILayout.BeginHorizontal();
@@ -60,9 +43,7 @@ namespace Moruton.Gimmicks.Editor
 
         private static void CheckVersion()
         {
-            // 現在のパッケージバージョンを取得
             string currentVersion = GetCurrentVersion();
-
             if (string.IsNullOrEmpty(latestVersion) && !isChecking)
             {
                 isChecking = true;
@@ -77,7 +58,6 @@ namespace Moruton.Gimmicks.Editor
                     EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
                     if (GUILayout.Button("VCCを起動して更新する (またはBoothを確認)"))
                     {
-                        // VCCのリポジトリ機能での更新を促すか、配布ページを開く
                         Application.OpenURL("https://moruton-world.booth.pm/"); 
                     }
                 }
@@ -93,7 +73,6 @@ namespace Moruton.Gimmicks.Editor
 
         private static string GetCurrentVersion()
         {
-            // Packagesフォルダ内の自身のpackage.jsonを読み込む
             string path = "Packages/" + PackageName + "/package.json";
             var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
             if (asset != null)
@@ -127,4 +106,3 @@ namespace Moruton.Gimmicks.Editor
         }
     }
 }
-#endif

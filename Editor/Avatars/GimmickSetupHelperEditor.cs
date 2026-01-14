@@ -17,17 +17,16 @@ namespace Moruton.Gimmicks.Editor
 
         public override void OnInspectorGUI()
         {
-            // Moruton Gimmick 共通ヘッダーを表示
-            MorutonGimmickPackageEditorHelper.DrawHeader();
+            // アバター用ヘッダーを呼び出す
+            MorutonAvatarPackageEditorHelper.DrawHeader();
 
             serializedObject.Update();
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Gimmick Setup Helper", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Gimmick Setup Helper (Avatar)", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox("設定されたターゲットを選択して調整できます。", MessageType.Info);
             EditorGUILayout.Space();
 
-            // --- User Friendly View (Normal Mode) ---
             if (targetsProp.arraySize == 0)
             {
                 EditorGUILayout.HelpBox("ターゲットが設定されていません。下の 'Developer Mode' から追加してください。", MessageType.Warning);
@@ -35,7 +34,6 @@ namespace Moruton.Gimmicks.Editor
             else
             {
                 GimmickSetupHelper helper = (GimmickSetupHelper)target;
-
                 for (int i = 0; i < targetsProp.arraySize; i++)
                 {
                     string descText = "";
@@ -64,7 +62,6 @@ namespace Moruton.Gimmicks.Editor
                         }
 
                         EditorGUILayout.Space(4);
-
                         GUI.enabled = targetTrans != null;
                         string btnLabel = targetTrans != null ? $"Select: {targetTrans.name}" : "Target Not Assigned";
                         if (GUILayout.Button(new GUIContent(btnLabel, "クリックしてこのオブジェクトを選択状態にします"), GUILayout.Height(30)))
@@ -84,15 +81,11 @@ namespace Moruton.Gimmicks.Editor
             }
 
             EditorGUILayout.Space(15);
-
-            // --- Developer Mode (Hidden by default) ---
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-
             showDevMode = EditorGUILayout.Foldout(showDevMode, "Developer Mode (Edit Settings)");
             if (showDevMode)
             {
                 EditorGUILayout.HelpBox("ここでリストの追加・削除や、説明文・ターゲットの編集が行えます。", MessageType.None);
-
                 for (int i = 0; i < targetsProp.arraySize; i++)
                 {
                     SerializedProperty item = targetsProp.GetArrayElementAtIndex(i);

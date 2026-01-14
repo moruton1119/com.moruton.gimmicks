@@ -1,9 +1,7 @@
 {
-    "name": "com.moruton.gimmicks",
+    "name": "com.moruton.gimmicks.Avatars",
     "references": [
-        "VRC.Udon",
-        "UdonSharp.Runtime",
-        "VRC.SDKBase"
+        "com.moruton.gimmicks"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,12 +9,14 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "VRC_SDK_AVATARS"
+    ],
     "versionDefines": [
         {
-            "name": "com.vrchat.udonsharp",
+            "name": "com.vrchat.avatars",
             "expression": "",
-            "define": "UDONSHARP"
+            "define": "VRC_SDK_AVATARS"
         }
     ],
     "noEngineReferences": false
