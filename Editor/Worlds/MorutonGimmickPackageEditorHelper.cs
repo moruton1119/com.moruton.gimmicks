@@ -21,7 +21,7 @@ namespace Moruton.Gimmicks.Editor
 
             if (image != null)
             {
-                var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(100));
+                var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(150));
                 GUI.DrawTexture(rect, image, ScaleMode.ScaleToFit);
             }
 
@@ -58,7 +58,7 @@ namespace Moruton.Gimmicks.Editor
                     EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
                     if (GUILayout.Button("VCCを起動して更新する (またはBoothを確認)"))
                     {
-                        Application.OpenURL("https://moruton-world.booth.pm/"); 
+                        Application.OpenURL("https://moruton-world.booth.pm/");
                     }
                 }
                 EditorGUILayout.EndVertical();

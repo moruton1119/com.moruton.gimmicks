@@ -21,7 +21,7 @@ namespace Moruton.Gimmicks.Editor
 
             if (image != null)
             {
-                var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(100));
+                var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(150));
                 GUI.DrawTexture(rect, image, ScaleMode.ScaleToFit);
             }
 
