@@ -60,7 +60,7 @@ namespace Moruton.Gimmicks.Editor
                     {
                         // 現在のプロジェクトのパスを取得してVCCで開く
                         string projectPath = System.Uri.EscapeDataString(System.IO.Directory.GetCurrentDirectory());
-                        Application.OpenURL($"vcc://manage/project/{projectPath}");
+                        Application.OpenURL($"vcc://vpm/open?path={projectPath}");
                     }
                 }
                 EditorGUILayout.EndVertical();
