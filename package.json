@@ -1,6 +1,6 @@
 {
     "name": "com.moruton.gimmicks",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "displayName": "Moruton Gimmicks Package",
     "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
     "unity": "2019.4",
