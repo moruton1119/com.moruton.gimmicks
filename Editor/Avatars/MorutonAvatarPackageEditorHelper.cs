@@ -56,10 +56,11 @@ namespace Moruton.Gimmicks.Editor
                 EditorGUILayout.BeginVertical("box");
                 {
                     EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
-                    if (GUILayout.Button("VCCを起動して更新する"))
+                    if (GUILayout.Button("VCCを開いて更新"))
                     {
-                        // 現在のプロジェクトのパスを取得してVCCで開く
-                        string projectPath = System.Uri.EscapeDataString(System.IO.Directory.GetCurrentDirectory());
+                        // 現在のプロジェクトのパスを取得し、バックスラッシュをスラッシュに置換してVCCで開く
+                        string projectPath = System.IO.Directory.GetCurrentDirectory().Replace("\\", "/");
+                        projectPath = System.Uri.EscapeDataString(projectPath);
                         Application.OpenURL($"vcc://vpm/open?path={projectPath}");
                     }
                 }
