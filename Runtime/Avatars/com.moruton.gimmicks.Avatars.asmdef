@@ -1,7 +1,8 @@
 {
     "name": "com.moruton.gimmicks.Avatars",
     "references": [
-        "com.moruton.gimmicks"
+        "com.moruton.gimmicks",
+        "nadena.dev.modular-avatar.core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,6 +18,11 @@
             "name": "com.vrchat.avatars",
             "expression": "",
             "define": "VRC_SDK_AVATARS"
+        },
+        {
+            "name": "nadena.dev.modular-avatar",
+            "expression": "",
+            "define": "MODULAR_AVATAR"
         }
     ],
     "noEngineReferences": false
