@@ -5,14 +5,14 @@
     "packages": {
         "com.moruton.gimmicks": {
             "versions": {
-                "0.0.16": {
+                "0.0.17": {
                     "name": "com.moruton.gimmicks",
-                    "version": "0.0.16",
+                    "version": "0.0.17",
                     "displayName": "Moruton Gimmicks Package",
                     "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
                     "unity": "2019.4",
                     "vpmDependencies": {},
-                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.16/com.moruton.gimmicks-0.0.16.zip"
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.17/com.moruton.gimmicks-0.0.17.zip"
                 },
                 "0.0.15": {
                     "name": "com.moruton.gimmicks",
