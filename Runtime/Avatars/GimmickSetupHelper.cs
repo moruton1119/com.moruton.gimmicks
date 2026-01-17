@@ -10,6 +10,9 @@ namespace Moruton.Gimmicks
     [AddComponentMenu("Morulab/Avatars/Gimmick Setup Helper")]
     public class GimmickSetupHelper : MorutonAvatarPackage
     {
+        [Tooltip("Inspector表示用のイメージ（ダミー）")]
+        public Sprite dummyImage;
+
         [System.Serializable]
         public class SetupTarget
         {

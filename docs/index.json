@@ -5,6 +5,15 @@
     "packages": {
         "com.moruton.gimmicks": {
             "versions": {
+                "0.1.3": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.3",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Corrected GimmickSetupHelper GUID and added dummyImage to restore prefab compatibility.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.3/com.moruton.gimmicks-0.1.3.zip"
+                },
                 "0.1.2": {
                     "name": "com.moruton.gimmicks",
                     "version": "0.1.2",
