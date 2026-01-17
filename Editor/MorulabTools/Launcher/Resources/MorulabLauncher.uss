@@ -18,6 +18,10 @@
     margin-bottom: 10px;
 }
 
+.command-scroll {
+    flex-grow: 1;
+}
+
 .command-item {
     margin: 2px 0 2px 0;
     padding: 8px 12px;
@@ -108,7 +112,8 @@
     border-top-width: 2px;
     border-top-color: #61afef;
     padding: 10px;
-    min-height: 50px;
+    min-height: 150px;
+    max-height: 40%;
     justify-content: flex-start;
 }
 
