@@ -43,17 +43,15 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }} # ハイフンがあれば自動でプレリリース扱いに
 
       # 4. VCC用カタログ(index.json) の更新 & GitHub Pages公開
-      # vrc-get (VRChat用非公式CLI) を使用してリポジトリ情報を更新します
+      # vrc-get (VRChat用非公式CLI) を手動でインストールして使用
+      - name: Install vrc-get
+        run: |
+          curl -sL https://github.com/anatawa12/vrc-get/releases/latest/download/vrc-get-x86_64-unknown-linux-musl -o vrc-get
+          chmod +x vrc-get
+
       - name: Update VPM Repository
-        uses: anatawa12/vrc-get-action@v0
-        with:
-          command: vpm
-          subcommand: repo
-          args: |
-             add-package 
-             --repo-json index.json 
-             --url https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/package.zip 
-             package.json
+        run: |
+          ./vrc-get repo add-package package.json --repo-json index.json --url https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/package.zip
 
       # 5. 更新された index.json を gh-pages ブランチにデプロイ
       - name: Deploy to GitHub Pages
