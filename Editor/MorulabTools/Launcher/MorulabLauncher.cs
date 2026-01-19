@@ -328,14 +328,12 @@ namespace MorulabTools.Launcher
                 var path = AssetDatabase.GUIDToAssetPath(guids[0]);
                 var dir = System.IO.Path.GetDirectoryName(path);
 
-                // 1. Try Localized MD (e.g. MyTool_ja.md)
-                if (_currentLang != "en")
-                {
-                    var locPath = System.IO.Path.Combine(dir, $"{type.Name}_{_currentLang}.md");
-                    if (System.IO.File.Exists(locPath)) return System.IO.File.ReadAllText(locPath);
-                }
+                // 1. Try Localized MD (e.g. MyTool_en.md, MyTool_ja.md)
+                // Always check for explicit language file first
+                var locPath = System.IO.Path.Combine(dir, $"{type.Name}_{_currentLang}.md");
+                if (System.IO.File.Exists(locPath)) return System.IO.File.ReadAllText(locPath);
 
-                // 2. Try Default MD (MyTool.md)
+                // 2. Try Default MD (MyTool.md) - This will be the Fallback (e.g. Japanese)
                 var mdPath = System.IO.Path.Combine(dir, $"{type.Name}.md");
                 if (System.IO.File.Exists(mdPath)) return System.IO.File.ReadAllText(mdPath);
 
