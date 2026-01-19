@@ -1,17 +1,33 @@
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace MorulabTools.Launcher
 {
-    /// <summary>
-    /// 収集した各コマンドのデータを保持するクラス
-    /// </summary>
     public class ToolCommandData
     {
-        public string Title;        // メニューのパスから取得した名前
-        public string Path;         // 完全なメニューパス
-        public string Description;  // 属性から取得した説明
-        public string Category;     // 属性から取得したカテゴリ
-        public string IconName;     // アイコン名
-        public MethodInfo TargetMethod; // 実行対象のメソッド
+        public string Path;        // MenuItem path
+        public string OriginalTitle; // Fallback
+        public string Title => OriginalTitle; // Compatibility alias
+        
+        // Localized Data (Key: "ja", "en", "ko")
+        public Dictionary<string, LocalizedInfo> LocalizedInfos = new Dictionary<string, LocalizedInfo>();
+
+        public MethodInfo TargetMethod;
+        public string IconName;
+
+        // Helper to get localized info
+        public LocalizedInfo GetInfo(string lang)
+        {
+            if (LocalizedInfos.TryGetValue(lang, out var info)) return info;
+            if (LocalizedInfos.TryGetValue("en", out var enInfo)) return enInfo; // Fallback to EN
+            
+            // Last resort: Auto-generated defaults
+            return new LocalizedInfo 
+            { 
+                Title = OriginalTitle, 
+                Description = "No description.", 
+                Category = "General" 
+            };
+        }
     }
 }
