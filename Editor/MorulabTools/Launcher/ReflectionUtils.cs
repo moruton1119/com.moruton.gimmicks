@@ -26,6 +26,7 @@ namespace MorulabTools.Launcher
                     {
                         var menuItemAttrs = method.GetCustomAttributes<MenuItem>(false);
                         var descAttr = method.GetCustomAttribute<MenuDescriptionAttribute>(false);
+                        var locAttrs = method.GetCustomAttributes<ToolLocalizeAttribute>(false);
 
                         foreach (var menuItemAttr in menuItemAttrs)
                         {
@@ -45,26 +46,43 @@ namespace MorulabTools.Launcher
 
                             var parts = relativePath.Split('/');
                             string autoCategory = "General";
-                            if (parts.Length > 1)
-                            {
-                                autoCategory = parts[0];
-                            }
+                            if (parts.Length > 1) autoCategory = parts[0];
+                            string autoTitle = parts.Last();
 
                             var cmd = new ToolCommandData
                             {
                                 Path = menuPath,
-                                Title = menuPath.Split('/').Last(),
+                                OriginalTitle = autoTitle,
                                 TargetMethod = method,
-                                Description = descAttr?.Description ?? "No description available.",
-                                Category = descAttr?.Category ?? autoCategory,
                                 IconName = descAttr?.IconName
                             };
+
+                            // Default (EN) from MenuDescription or Auto
+                            cmd.LocalizedInfos["en"] = new LocalizedInfo
+                            {
+                                Title = autoTitle,
+                                Description = descAttr?.Description ?? "No description available.",
+                                Category = descAttr?.Category ?? autoCategory
+                            };
+
+                            // Multi-lang overrides
+                            foreach (var attr in locAttrs)
+                            {
+                                cmd.LocalizedInfos[attr.Lang] = new LocalizedInfo
+                                {
+                                    Title = attr.Title,
+                                    Description = attr.Description,
+                                    Category = attr.Category ?? cmd.LocalizedInfos["en"].Category
+                                };
+                            }
+
                             commands.Add(cmd);
                         }
                     }
                 }
             }
-            return commands.OrderBy(c => c.Category).ThenBy(c => c.Title).ToList();
+            // 並び替えはUI側で言語決定後に行うのがベターだが、ここではデフォルト(EN)順で返す
+            return commands.OrderBy(c => c.GetInfo("en").Category).ThenBy(c => c.GetInfo("en").Title).ToList();
         }
     }
 }
