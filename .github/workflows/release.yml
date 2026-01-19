@@ -45,7 +45,7 @@ jobs:
       # 4. VCC用カタログ(index.json) の更新 & GitHub Pages公開
       # vrc-get (VRChat用非公式CLI) を使用してリポジトリ情報を更新します
       - name: Update VPM Repository
-        uses: anatawa12/vrc-get-action@v1
+        uses: anatawa12/vrc-get-action@v0
         with:
           command: vpm
           subcommand: repo
