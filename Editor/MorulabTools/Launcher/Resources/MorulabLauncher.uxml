@@ -1,24 +1,34 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:VisualElement class="root">
-        <ui:Label text="Morulab Command Info Portal" class="header" />
-        
-        <ui:TextField name="SearchField" label="Search" class="search-field" />
-        
-        <ui:ScrollView name="CommandScrollContainer" class="command-scroll" />
-        
-        <ui:VisualElement name="DetailPanel" class="detail-panel">
-            <ui:VisualElement name="DetailHeaderRow" class="detail-header-row">
-                <ui:VisualElement name="DetailInfo" class="detail-info">
-                    <ui:Label name="DetailTitle" class="detail-title" text="Select a command" />
-                    <ui:Label name="DetailCategory" class="detail-category" text="" />
-                    <ui:Label name="DetailDesc" class="detail-desc" text="" />
-                </ui:VisualElement>
-                <ui:Button name="LaunchButton" class="launch-button" text="OPEN" />
+    <ui:VisualElement class="app-container">
+        <!-- Sidebar -->
+        <ui:VisualElement name="Sidebar" class="sidebar">
+            <!-- Sidebar Header with Hamburger and Logo -->
+            <ui:VisualElement class="sidebar-top-row">
+                <ui:Button name="HamburgerBtn" class="hamburger-btn" text="≡" />
+                <ui:Label name="BrandLogo" text="MORULAB" class="brand-logo" />
             </ui:VisualElement>
             
-            <ui:ScrollView name="DocumentationContainer" class="documentation-container">
-                <ui:Label name="DocumentationLabel" class="documentation-label" text="" />
-            </ui:ScrollView>
+            <ui:Label name="SidebarHeader" text="TOOLS" class="sidebar-header" />
+            <ui:ScrollView name="ToolList" class="tool-list" />
+            
+            <ui:VisualElement name="SidebarFooter" class="sidebar-footer">
+                <ui:Label text="v1.0.0" class="version-label" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Main Content -->
+        <ui:VisualElement class="main-content">
+            <!-- Tool Header (Description, etc) -->
+            <ui:VisualElement name="ToolHeader" class="tool-header">
+                <ui:Label name="HeaderTitle" text="Welcome" class="header-title" />
+                <ui:Label name="HeaderDesc" text="Select a tool from the sidebar to get started." class="header-desc" />
+            </ui:VisualElement>
+
+            <!-- Tool Body (Embedded Tool Goes Here) -->
+            <ui:VisualElement name="ToolBody" class="tool-body">
+                 <!-- Default Welcome State -->
+                 <ui:Label text="Select a tool..." class="placeholder-text"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

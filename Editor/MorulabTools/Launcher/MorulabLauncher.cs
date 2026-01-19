@@ -3,282 +3,297 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
+using System.Reflection;
 
 namespace MorulabTools.Launcher
 {
     public class MorulabLauncher : EditorWindow
     {
-        [MenuItem("MorulabLauncher/Launcher")]
+        [MenuItem("Morulab/Launcher")]
         public static void ShowWindow()
         {
             MorulabLauncher wnd = GetWindow<MorulabLauncher>();
-            wnd.titleContent = new GUIContent("Morulab Launcher");
+            wnd.titleContent = new GUIContent("Morulab Hub");
+            wnd.minSize = new Vector2(900, 600);
         }
 
-        // Data
-        private List<ToolCommandData> _allCommands = new List<ToolCommandData>();
-        private List<ToolCommandData> _filteredCommands = new List<ToolCommandData>();
-
-        // UI Elements
-        private ScrollView _commandScrollView;
-        private TextField _searchField;
+        // UI References
+        private ScrollView _toolList;
+        private VisualElement _toolBody;
+        private Label _headerTitle;
+        private Label _headerDesc;
 
         // State
         private ToolCommandData _selectedCommand;
-        private Dictionary<string, bool> _foldoutStates = new Dictionary<string, bool>();
-        private Dictionary<ToolCommandData, VisualElement> _commandElements = new Dictionary<ToolCommandData, VisualElement>();
+        private Dictionary<ToolCommandData, VisualElement> _toolItemElements = new Dictionary<ToolCommandData, VisualElement>();
+
+        // Cache for loaded tools
+        private List<ToolCommandData> _allCommands = new List<ToolCommandData>();
 
         public void CreateGUI()
         {
             // Load UXML
             var visualTree = Resources.Load<VisualTreeAsset>("MorulabLauncher");
+            if (visualTree == null)
+            {
+                rootVisualElement.Add(new Label("Error: Could not load MorulabLauncher.uxml"));
+                return;
+            }
             visualTree.CloneTree(rootVisualElement);
 
             // Load USS
             var styleSheet = Resources.Load<StyleSheet>("MorulabLauncher");
-            rootVisualElement.styleSheets.Add(styleSheet);
+            if (styleSheet != null) rootVisualElement.styleSheets.Add(styleSheet);
 
             // Find Elements
-            _commandScrollView = rootVisualElement.Q<ScrollView>("CommandScrollContainer");
-            _searchField = rootVisualElement.Q<TextField>("SearchField");
+            _toolList = rootVisualElement.Q<ScrollView>("ToolList");
+            _toolBody = rootVisualElement.Q<VisualElement>("ToolBody");
+            _headerTitle = rootVisualElement.Q<Label>("HeaderTitle");
+            _headerDesc = rootVisualElement.Q<Label>("HeaderDesc");
 
-            // Setup Search
-            _searchField.RegisterValueChangedCallback(evt => FilterCommands(evt.newValue));
+            // Sidebar Logic
+            var sidebar = rootVisualElement.Q<VisualElement>("Sidebar");
+            var hamburgerBtn = rootVisualElement.Q<Button>("HamburgerBtn");
+            if (hamburgerBtn != null && sidebar != null)
+            {
+                hamburgerBtn.clicked += () => sidebar.ToggleInClassList("collapsed");
+            }
 
-            // Load Data
-            RefreshCommands();
-
-            // Initial Render
-            RefreshUI();
+            // Initialize
+            RefreshToolList();
         }
 
-        private void OnEnable()
+        private void RefreshToolList()
         {
-            if (_commandScrollView != null)
+            _toolList.Clear();
+            _toolItemElements.Clear();
+            _allCommands.Clear();
+
+            // Load commands safely
+            try
             {
-                RefreshCommands();
-                RefreshUI();
+                var cmds = ReflectionUtils.FindCommands("Morulab");
+                if (cmds != null) _allCommands = cmds.Where(c => !c.Title.Contains("Launcher")).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Launcher] Error loading commands: {ex.Message}");
+            }
+
+            // Group by category
+            var groups = _allCommands.GroupBy(c => c.Category).OrderBy(g => g.Key);
+
+            foreach (var group in groups)
+            {
+                string categoryName = string.IsNullOrEmpty(group.Key) ? "General" : group.Key;
+
+                // 1. Create Group Container
+                var groupContainer = new VisualElement();
+                groupContainer.AddToClassList("category-group");
+
+                // 2. Create Header
+                var headerArgs = CreateCategoryHeader(categoryName);
+                var headerElement = headerArgs.Root;
+                var contentContainer = headerArgs.Content;
+                
+                groupContainer.Add(headerElement);
+                groupContainer.Add(contentContainer);
+
+                // 3. Add Items
+                foreach (var command in group)
+                {
+                    var item = CreateSidebarItem(command);
+                    contentContainer.Add(item);
+                    _toolItemElements[command] = item;
+                }
+
+                _toolList.Add(groupContainer);
             }
         }
 
-        private void RefreshUI()
+        private (VisualElement Root, VisualElement Content) CreateCategoryHeader(string title)
         {
-            _commandScrollView.Clear();
-            _commandElements.Clear();
+            // Header Row
+            var header = new VisualElement();
+            header.AddToClassList("category-header");
 
-            // Group by Category
-            var groupedCommands = _filteredCommands
-                .GroupBy(c => c.Category)
-                .OrderBy(g => g.Key);
+            // Arrow
+            var arrow = new Label("▼"); 
+            arrow.AddToClassList("category-arrow");
+            header.Add(arrow);
 
-            foreach (var group in groupedCommands)
+            // Title
+            var label = new Label(title);
+            label.AddToClassList("category-label");
+            header.Add(label);
+
+            // Content Container
+            var content = new VisualElement();
+            content.AddToClassList("category-content");
+
+            // Toggle Logic
+            header.RegisterCallback<ClickEvent>(evt => 
             {
-                var categoryInfo = group.Key;
-
-                // Create Foldout
-                var foldout = new Foldout();
-                foldout.text = categoryInfo;
-                foldout.AddToClassList("command-foldout");
-
-                // Restore open/close state
-                if (_foldoutStates.TryGetValue(categoryInfo, out bool isOpen))
+                bool isCollapsed = content.ClassListContains("collapsed");
+                if (isCollapsed)
                 {
-                    foldout.value = isOpen;
+                    content.RemoveFromClassList("collapsed"); // Expand
+                    arrow.text = "▼";
                 }
                 else
                 {
-                    foldout.value = true; // Default open
+                    content.AddToClassList("collapsed"); // Collapse
+                    arrow.text = "▶";
                 }
+            });
 
-                // Save state on change
-                foldout.RegisterValueChangedCallback(evt =>
-                {
-                    if (_foldoutStates.ContainsKey(categoryInfo))
-                        _foldoutStates[categoryInfo] = evt.newValue;
-                    else
-                        _foldoutStates.Add(categoryInfo, evt.newValue);
-                });
-
-                _commandScrollView.Add(foldout);
-
-                foreach (var command in group)
-                {
-                    var item = new VisualElement();
-                    item.AddToClassList("command-item");
-
-                    // Highlight if previously selected
-                    if (_selectedCommand == command)
-                    {
-                        item.AddToClassList("selected");
-                    }
-
-                    item.RegisterCallback<ClickEvent>(evt => SelectCommand(command, item));
-
-                    var label = new Label(command.Title);
-                    label.AddToClassList("command-item-label");
-                    item.Add(label);
-
-                    foldout.Add(item);
-                    _commandElements[command] = item;
-                }
-            }
+            return (header, content);
         }
 
-        private void SelectCommand(ToolCommandData command, VisualElement itemElement)
+        private VisualElement CreateSidebarItem(ToolCommandData command)
         {
-            // Deselect previous
-            if (_selectedCommand != null && _commandElements.TryGetValue(_selectedCommand, out var prevElement))
-            {
-                prevElement.RemoveFromClassList("selected");
-            }
+            var item = new VisualElement();
+            item.AddToClassList("tool-item");
+
+            var label = new Label(command.Title);
+            label.AddToClassList("tool-item-label");
+
+            item.Add(label);
+
+            item.RegisterCallback<ClickEvent>(evt => SelectTool(command));
+            return item;
+        }
+
+        private void SelectTool(ToolCommandData command)
+        {
+            if (_selectedCommand == command) return;
+
+            // Update UI State
+            if (_selectedCommand != null && _toolItemElements.ContainsKey(_selectedCommand))
+                _toolItemElements[_selectedCommand].RemoveFromClassList("selected");
 
             _selectedCommand = command;
 
-            // Select new
-            if (itemElement != null)
-            {
-                itemElement.AddToClassList("selected");
-            }
+            if (_toolItemElements.ContainsKey(_selectedCommand))
+                _toolItemElements[_selectedCommand].AddToClassList("selected");
 
-            UpdateDetailPanel(command);
+            // Update Header
+            _headerTitle.text = command.Title;
+            _headerDesc.text = string.IsNullOrEmpty(command.Description) ? "No description available." : command.Description;
+
+            // Load Body
+            LoadToolBody(command);
         }
 
-        private void UpdateDetailPanel(ToolCommandData command)
+        private void LoadToolBody(ToolCommandData command)
         {
-            var detailPanel = rootVisualElement.Q<VisualElement>("DetailPanel");
-            var btnLaunch = detailPanel.Q<Button>("LaunchButton");
+            _toolBody.Clear();
 
-            // Clean up old listener
-            if (btnLaunch.userData is System.Action oldAction)
+            // Always show Description + Open Button first
+            var container = new VisualElement();
+            container.style.paddingTop = 20;
+            container.style.paddingBottom = 20;
+            container.style.paddingLeft = 20;
+            container.style.paddingRight = 20;
+
+            // Determine if embedding matches
+            bool canEmbed = CanEmbedTool(command);
+            string btnText = canEmbed ? "Open Tool (Embedded)" : "Open Tool (Window)";
+
+            var openBtn = new Button(() =>
             {
-                btnLaunch.clicked -= oldAction;
-            }
-
-            if (command == null)
-            {
-                detailPanel.Q<Label>("DetailTitle").text = "Select a command";
-                detailPanel.Q<Label>("DetailCategory").text = "";
-                detailPanel.Q<Label>("DetailDesc").text = "";
-                btnLaunch.SetEnabled(false);
-                btnLaunch.userData = null;
-                detailPanel.Q<VisualElement>("EmbeddedToolView")?.Clear();
-                return;
-            }
-
-            detailPanel.Q<Label>("DetailTitle").text = command.Title;
-            detailPanel.Q<Label>("DetailCategory").text = $"Category: {command.Category}";
-            detailPanel.Q<Label>("DetailDesc").text = command.Description;
-
-            btnLaunch.SetEnabled(true);
-
-            // Launch Action
-            System.Action newAction = () =>
-            {
-                ExecuteCommand(command);
-            };
-            btnLaunch.userData = newAction;
-            btnLaunch.clicked += newAction;
-
-            // Load Documentation (Markdown)
-            LoadDocumentation(command, detailPanel.Q<Label>("DocumentationLabel"));
-        }
-
-        private void LoadDocumentation(ToolCommandData command, Label label)
-        {
-            if (label == null) return;
-            label.text = "No documentation found.";
-
-            if (command.TargetMethod == null) return;
-
-            var type = command.TargetMethod.DeclaringType;
-            if (type == null) return;
-
-            // Find the script asset
-            var guids = AssetDatabase.FindAssets($"t:MonoScript {type.Name}");
-            foreach (var guid in guids)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                var script = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-                if (script != null && script.GetClass() == type)
+                if (canEmbed)
                 {
-                    // Look for .md file with same name
-                    var dir = System.IO.Path.GetDirectoryName(path);
-                    var mdPath = System.IO.Path.Combine(dir, type.Name + ".md");
-
-                    if (System.IO.File.Exists(mdPath))
+                    var view = CreateEmbeddedView(command);
+                    if (view != null)
                     {
-                        var text = System.IO.File.ReadAllText(mdPath);
-                        label.text = text;
-                        return;
+                        _toolBody.Clear();
+                        _toolBody.Add(view);
                     }
-
-                    // Fallback: look for "ReadMe.md" in the same folder
-                    var readmePath = System.IO.Path.Combine(dir, "ReadMe.md");
-                    if (System.IO.File.Exists(readmePath))
+                    else
                     {
-                        var text = System.IO.File.ReadAllText(readmePath);
-                        label.text = text;
-                        return;
+                        // Fallback if creation fails
+                        ExecuteCommand(command);
                     }
                 }
-            }
+                else
+                {
+                    ExecuteCommand(command);
+                }
+            })
+            { text = btnText };
+
+            openBtn.AddToClassList("launch-button");
+            container.Add(openBtn);
+
+            var docLabel = new Label("Documentation:");
+            docLabel.style.marginTop = 20;
+            docLabel.style.fontSize = 18;
+            container.Add(docLabel);
+
+            var docContent = new Label(GetDocumentation(command));
+            docContent.style.whiteSpace = WhiteSpace.Normal;
+            docContent.style.marginTop = 10;
+            docContent.style.color = new Color(0.7f, 0.7f, 0.7f);
+            container.Add(docContent);
+
+            _toolBody.Add(container);
         }
 
-        private void OnDisable() { }
-
-        private void ExecuteCommand(ToolCommandData command)
+        private bool CanEmbedTool(ToolCommandData command)
         {
-            if (command.TargetMethod != null)
-            {
-                command.TargetMethod.Invoke(null, null);
-            }
-            else
-            {
-                EditorApplication.ExecuteMenuItem(command.Path);
-            }
-            Debug.Log($"Executed: {command.Title}");
+            if (command.TargetMethod == null) return false;
+            var type = command.TargetMethod.DeclaringType;
+            if (type == null) return false;
+            var method = type.GetMethod("CreateEmbeddedView", BindingFlags.Public | BindingFlags.Static);
+            return (method != null && method.ReturnType == typeof(VisualElement));
         }
 
-        private void RefreshCommands()
+        private VisualElement CreateEmbeddedView(ToolCommandData command)
         {
             try
             {
-                var commands = ReflectionUtils.FindCommands("Morulab") ?? new List<ToolCommandData>();
-                _allCommands = commands.Where(c => !c.Title.Contains("Launcher")).ToList();
+                var type = command.TargetMethod.DeclaringType;
+                var method = type.GetMethod("CreateEmbeddedView", BindingFlags.Public | BindingFlags.Static);
+                var view = method.Invoke(null, null) as VisualElement;
+                if (view != null) view.AddToClassList("embedded-tool-root");
+                return view;
             }
-            catch (System.Exception e)
+            catch (Exception ex)
             {
-                Debug.LogError($"[MorulabLauncher] Failed to refresh commands: {e}");
-                _allCommands = new List<ToolCommandData>();
-            }
-            _filteredCommands = new List<ToolCommandData>(_allCommands);
-
-            if (_searchField != null)
-            {
-                FilterCommands(_searchField.value);
+                Debug.LogError($"Error creating embedded view: {ex}");
+                return null;
             }
         }
 
-        private void FilterCommands(string searchText)
+        private string GetDocumentation(ToolCommandData command)
         {
-            if (string.IsNullOrWhiteSpace(searchText))
+            if (command.TargetMethod == null) return "No documentation.";
+
+            // Try to find markdown next to script
+            var type = command.TargetMethod.DeclaringType;
+            if (type == null) return "No type info.";
+
+            var guids = AssetDatabase.FindAssets($"t:MonoScript {type.Name}");
+            if (guids.Length > 0)
             {
-                _filteredCommands = new List<ToolCommandData>(_allCommands);
-            }
-            else
-            {
-                var lowerSearch = searchText.ToLower();
-                _filteredCommands = _allCommands.Where(c =>
-                    c.Title.ToLower().Contains(lowerSearch) ||
-                    c.Description.ToLower().Contains(lowerSearch) ||
-                    c.Category.ToLower().Contains(lowerSearch)
-                ).ToList();
+                var path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                var dir = System.IO.Path.GetDirectoryName(path);
+                var mdPath = System.IO.Path.Combine(dir, $"{type.Name}.md");
+                if (System.IO.File.Exists(mdPath)) return System.IO.File.ReadAllText(mdPath);
+
+                var readmePath = System.IO.Path.Combine(dir, "ReadMe.md");
+                if (System.IO.File.Exists(readmePath)) return System.IO.File.ReadAllText(readmePath);
             }
 
-            if (_commandScrollView != null)
-            {
-                RefreshUI();
-            }
+            return "No documentation found.";
+        }
+
+        private void ExecuteCommand(ToolCommandData command)
+        {
+            if (command.TargetMethod != null) command.TargetMethod.Invoke(null, null);
+            else EditorApplication.ExecuteMenuItem(command.Path);
         }
     }
 }
