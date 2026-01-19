@@ -89,7 +89,7 @@ namespace MorulabTools.Launcher
             EditorPrefs.SetString(PrefKeyLang, _currentLang);
 
             UpdateLangButtons();
-            RefreshToolList(); // Re-render headers and items
+            // RefreshToolList(); // Sidebar stays EN
 
             // Re-render body if selected
             if (_selectedCommand != null) LoadToolBody(_selectedCommand);
@@ -120,8 +120,8 @@ namespace MorulabTools.Launcher
                 Debug.LogError($"[Launcher] Error loading commands: {ex.Message}");
             }
 
-            // Group by category (using localized category name)
-            var groups = _allCommands.OrderBy(c => c.GetInfo(_currentLang).Category).GroupBy(c => c.GetInfo(_currentLang).Category);
+            // Group by category (ALWAYS EN)
+            var groups = _allCommands.OrderBy(c => c.GetInfo("en").Category).GroupBy(c => c.GetInfo("en").Category);
 
             foreach (var group in groups)
             {
@@ -195,8 +195,8 @@ namespace MorulabTools.Launcher
             var item = new VisualElement();
             item.AddToClassList("tool-item");
 
-            // Localized Title
-            var info = command.GetInfo(_currentLang);
+            // Localized Title (ALWAYS EN)
+            var info = command.GetInfo("en");
             var label = new Label(info.Title);
             label.AddToClassList("tool-item-label");
 
