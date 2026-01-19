@@ -53,7 +53,8 @@ namespace MorulabTools.Launcher
     {
         public string Path;        // MenuItem path
         public string OriginalTitle; // Fallback
-        
+        public string Title => OriginalTitle; // Compatibility alias
+
         // 言語ごとのデータ (Key: "ja", "en", "ko")
         public Dictionary<string, LocalizedInfo> LocalizedInfos = new Dictionary<string, LocalizedInfo>();
 
@@ -65,13 +66,13 @@ namespace MorulabTools.Launcher
         {
             if (LocalizedInfos.TryGetValue(lang, out var info)) return info;
             if (LocalizedInfos.TryGetValue("en", out var enInfo)) return enInfo; // Fallback to EN
-            
+
             // 最後の手段: 自動生成
-            return new LocalizedInfo 
-            { 
-                Title = OriginalTitle, 
-                Description = "No description.", 
-                Category = "General" 
+            return new LocalizedInfo
+            {
+                Title = OriginalTitle,
+                Description = "No description.",
+                Category = "General"
             };
         }
     }
