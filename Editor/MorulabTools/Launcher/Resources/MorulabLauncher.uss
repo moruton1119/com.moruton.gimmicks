@@ -210,11 +210,6 @@
 }
 
 .category-header.collapsed .category-arrow {
-    /* rotate property might resolve poorly in strict USS, using simple text char change in C# is safer, 
-       but here we can try a simple rotation if supported, or just ignore. 
-       Actually, standard Unity toggle convention uses logic or simple transform.
-       For safety, we will control the arrow TEXT in C# (▼ vs ▶) instead of relying on rotate.
-    */
     color: #666;
 }
 
@@ -232,4 +227,34 @@
 
 .category-content.collapsed {
     display: none;
+}
+
+/* Language Switcher */
+.lang-switcher {
+    flex-direction: row;
+    margin-top: 5px;
+    background-color: #202020;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.lang-btn {
+    font-size: 10px;
+    color: #666;
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    -unity-font-style: bold;
+}
+
+.lang-btn:hover {
+    color: #ccc;
+    background-color: #333;
+}
+
+.lang-btn.selected {
+    color: #fff;
+    background-color: #3f8aff;
 }

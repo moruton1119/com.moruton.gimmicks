@@ -18,15 +18,20 @@ namespace MorulabTools.Launcher
             wnd.minSize = new Vector2(900, 600);
         }
 
+        // Constants
+        private const string PrefKeyLang = "MorulabTools.Launcher.Lang";
+
         // UI References
         private ScrollView _toolList;
         private VisualElement _toolBody;
         private Label _headerTitle;
         private Label _headerDesc;
+        private Button _btnLangEN, _btnLangJA, _btnLangKO;
 
         // State
         private ToolCommandData _selectedCommand;
         private Dictionary<ToolCommandData, VisualElement> _toolItemElements = new Dictionary<ToolCommandData, VisualElement>();
+        private string _currentLang = "en"; // en, ja, ko
 
         // Cache for loaded tools
         private List<ToolCommandData> _allCommands = new List<ToolCommandData>();
@@ -52,6 +57,15 @@ namespace MorulabTools.Launcher
             _headerTitle = rootVisualElement.Q<Label>("HeaderTitle");
             _headerDesc = rootVisualElement.Q<Label>("HeaderDesc");
 
+            // Language Buttons
+            _btnLangEN = rootVisualElement.Q<Button>("BtnLangEN");
+            _btnLangJA = rootVisualElement.Q<Button>("BtnLangJA");
+            _btnLangKO = rootVisualElement.Q<Button>("BtnLangKO");
+
+            if (_btnLangEN != null) _btnLangEN.clicked += () => SetLanguage("en");
+            if (_btnLangJA != null) _btnLangJA.clicked += () => SetLanguage("ja");
+            if (_btnLangKO != null) _btnLangKO.clicked += () => SetLanguage("ko");
+
             // Sidebar Logic
             var sidebar = rootVisualElement.Q<VisualElement>("Sidebar");
             var hamburgerBtn = rootVisualElement.Q<Button>("HamburgerBtn");
@@ -60,8 +74,33 @@ namespace MorulabTools.Launcher
                 hamburgerBtn.clicked += () => sidebar.ToggleInClassList("collapsed");
             }
 
+            // Load State
+            _currentLang = EditorPrefs.GetString(PrefKeyLang, "en");
+            UpdateLangButtons();
+
             // Initialize
             RefreshToolList();
+        }
+
+        private void SetLanguage(string lang)
+        {
+            if (_currentLang == lang) return;
+            _currentLang = lang;
+            EditorPrefs.SetString(PrefKeyLang, _currentLang);
+
+            UpdateLangButtons();
+            RefreshToolList(); // Re-render headers and items
+
+            // Re-render body if selected
+            if (_selectedCommand != null) LoadToolBody(_selectedCommand);
+        }
+
+        private void UpdateLangButtons()
+        {
+            if (_btnLangEN == null) return;
+            _btnLangEN.EnableInClassList("selected", _currentLang == "en");
+            _btnLangJA.EnableInClassList("selected", _currentLang == "ja");
+            _btnLangKO.EnableInClassList("selected", _currentLang == "ko");
         }
 
         private void RefreshToolList()
@@ -81,8 +120,8 @@ namespace MorulabTools.Launcher
                 Debug.LogError($"[Launcher] Error loading commands: {ex.Message}");
             }
 
-            // Group by category
-            var groups = _allCommands.GroupBy(c => c.Category).OrderBy(g => g.Key);
+            // Group by category (using localized category name)
+            var groups = _allCommands.OrderBy(c => c.GetInfo(_currentLang).Category).GroupBy(c => c.GetInfo(_currentLang).Category);
 
             foreach (var group in groups)
             {
@@ -96,7 +135,7 @@ namespace MorulabTools.Launcher
                 var headerArgs = CreateCategoryHeader(categoryName);
                 var headerElement = headerArgs.Root;
                 var contentContainer = headerArgs.Content;
-                
+
                 groupContainer.Add(headerElement);
                 groupContainer.Add(contentContainer);
 
@@ -119,7 +158,7 @@ namespace MorulabTools.Launcher
             header.AddToClassList("category-header");
 
             // Arrow
-            var arrow = new Label("▼"); 
+            var arrow = new Label("▼");
             arrow.AddToClassList("category-arrow");
             header.Add(arrow);
 
@@ -133,7 +172,7 @@ namespace MorulabTools.Launcher
             content.AddToClassList("category-content");
 
             // Toggle Logic
-            header.RegisterCallback<ClickEvent>(evt => 
+            header.RegisterCallback<ClickEvent>(evt =>
             {
                 bool isCollapsed = content.ClassListContains("collapsed");
                 if (isCollapsed)
@@ -156,7 +195,9 @@ namespace MorulabTools.Launcher
             var item = new VisualElement();
             item.AddToClassList("tool-item");
 
-            var label = new Label(command.Title);
+            // Localized Title
+            var info = command.GetInfo(_currentLang);
+            var label = new Label(info.Title);
             label.AddToClassList("tool-item-label");
 
             item.Add(label);
@@ -167,7 +208,11 @@ namespace MorulabTools.Launcher
 
         private void SelectTool(ToolCommandData command)
         {
-            if (_selectedCommand == command) return;
+            if (_selectedCommand == command)
+            {
+                // Force reload body if language changed even if same command
+                // But SelectTool usually filters. We can reload body directly in SetLanguage.
+            }
 
             // Update UI State
             if (_selectedCommand != null && _toolItemElements.ContainsKey(_selectedCommand))
@@ -177,10 +222,6 @@ namespace MorulabTools.Launcher
 
             if (_toolItemElements.ContainsKey(_selectedCommand))
                 _toolItemElements[_selectedCommand].AddToClassList("selected");
-
-            // Update Header
-            _headerTitle.text = command.Title;
-            _headerDesc.text = string.IsNullOrEmpty(command.Description) ? "No description available." : command.Description;
 
             // Load Body
             LoadToolBody(command);
@@ -196,6 +237,12 @@ namespace MorulabTools.Launcher
             container.style.paddingBottom = 20;
             container.style.paddingLeft = 20;
             container.style.paddingRight = 20;
+
+            var info = command.GetInfo(_currentLang);
+
+            // Header Title Update (Manual update since it's outside this container)
+            _headerTitle.text = info.Title;
+            _headerDesc.text = info.Description;
 
             // Determine if embedding matches
             bool canEmbed = CanEmbedTool(command);
@@ -271,7 +318,7 @@ namespace MorulabTools.Launcher
         {
             if (command.TargetMethod == null) return "No documentation.";
 
-            // Try to find markdown next to script
+            // Try to find localized markdown
             var type = command.TargetMethod.DeclaringType;
             if (type == null) return "No type info.";
 
@@ -280,9 +327,19 @@ namespace MorulabTools.Launcher
             {
                 var path = AssetDatabase.GUIDToAssetPath(guids[0]);
                 var dir = System.IO.Path.GetDirectoryName(path);
+
+                // 1. Try Localized MD (e.g. MyTool_ja.md)
+                if (_currentLang != "en")
+                {
+                    var locPath = System.IO.Path.Combine(dir, $"{type.Name}_{_currentLang}.md");
+                    if (System.IO.File.Exists(locPath)) return System.IO.File.ReadAllText(locPath);
+                }
+
+                // 2. Try Default MD (MyTool.md)
                 var mdPath = System.IO.Path.Combine(dir, $"{type.Name}.md");
                 if (System.IO.File.Exists(mdPath)) return System.IO.File.ReadAllText(mdPath);
 
+                // 3. Try ReadMe.md
                 var readmePath = System.IO.Path.Combine(dir, "ReadMe.md");
                 if (System.IO.File.Exists(readmePath)) return System.IO.File.ReadAllText(readmePath);
             }
