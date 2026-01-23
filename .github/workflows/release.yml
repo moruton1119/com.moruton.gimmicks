@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: main # Ensure we are on main to push changes back
 
       - name: Extract Version
         id: version
@@ -27,7 +25,7 @@ jobs:
         run: |
           # Create a consistent zip file name and exclude unnecessary files
           ZIP_NAME="com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
-          zip -r "$ZIP_NAME" . -x ".git/*" ".github/*" ".vscode/*" "Tests/*" "obj/*" "*.zip" "old_release.yml" ".gemini/*"
+          zip -r "$ZIP_NAME" . -x ".git/*" ".github/*" ".vscode/*" "Tests/*" "obj/*" "*.zip" ".gemini/*"
 
       - name: Create or Update Release
         uses: softprops/action-gh-release@v1
@@ -50,19 +48,21 @@ jobs:
           VERSION_ZIP="com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
           RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$VERSION_ZIP"
           
-          # Update root index.json
-          ./vrc-get repo add-package "$VERSION_ZIP" --repo-json index.json --url "$RELEASE_URL"
+          # Update root index.json using package.json (Safe and consistent with newer vrc-get API)
+          ./vrc-get vpm-repo add-package index.json package.json "$RELEASE_URL"
           
-          # Sync to docs/index.json for GitHub Pages (main/docs setup)
+          # Sync to docs/index.json for redundancy (Supports both gh-pages root and main/docs setups)
           if [ -d "docs" ]; then
             cp index.json docs/index.json
           fi
 
-      - name: Commit and Push index.json changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.json
-          if [ -d "docs" ]; then git add docs/index.json; fi
-          git commit -m "chore: update index.json for version ${{ steps.version.outputs.VERSION }} [skip ci]" || echo "No changes to commit"
-          git push origin main
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: "chore: update index.json for version ${{ steps.version.outputs.VERSION }} [skip ci]"
