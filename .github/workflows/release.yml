@@ -38,9 +38,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install vrc-get
+      - name: Install vrc-get (Pinned Version)
         run: |
-          curl -sL https://github.com/vrc-get/vrc-get/releases/latest/download/x86_64-unknown-linux-musl-vrc-get -o vrc-get
+          # Pinning to v0.2.0 to ensure compatible CLI commands (repo add-package)
+          curl -sL https://github.com/vrc-get/vrc-get/releases/download/v0.2.0/x86_64-unknown-linux-musl-vrc-get -o vrc-get
           chmod +x vrc-get
 
       - name: Update VPM Repository
@@ -48,10 +49,10 @@ jobs:
           VERSION_ZIP="com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
           RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$VERSION_ZIP"
           
-          # Update root index.json using package.json (Safe and consistent with newer vrc-get API)
-          ./vrc-get vpm-repo add-package index.json package.json "$RELEASE_URL"
+          # Use 'repo add-package' command compatible with v0.x
+          ./vrc-get repo add-package package.json --repo-json index.json --url "$RELEASE_URL"
           
-          # Sync to docs/index.json for redundancy (Supports both gh-pages root and main/docs setups)
+          # Sync to docs/index.json for redundancy
           if [ -d "docs" ]; then
             cp index.json docs/index.json
           fi
