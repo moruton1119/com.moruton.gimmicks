@@ -38,19 +38,34 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install vrc-get (Pinned Version)
+      - name: Update VPM Repository (Manual JSON Update)
         run: |
-          # Pinning to v0.2.0 to ensure compatible CLI commands (repo add-package)
-          curl -sL https://github.com/vrc-get/vrc-get/releases/download/v0.2.0/x86_64-unknown-linux-musl-vrc-get -o vrc-get
-          chmod +x vrc-get
-
-      - name: Update VPM Repository
-        run: |
-          VERSION_ZIP="com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
-          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$VERSION_ZIP"
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          VERSION_ZIP="com.moruton.gimmicks-${VERSION}.zip"
+          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${VERSION_ZIP}"
           
-          # Use 'repo add-package' command compatible with v0.x
-          ./vrc-get repo add-package package.json --repo-json index.json --url "$RELEASE_URL"
+          # Read package.json to get metadata
+          PACKAGE_NAME=$(jq -r '.name' package.json)
+          DISPLAY_NAME=$(jq -r '.displayName' package.json)
+          DESCRIPTION=$(jq -r '.description' package.json)
+          UNITY_VERSION=$(jq -r '.unity' package.json)
+          
+          # Update index.json using jq
+          jq --arg version "$VERSION" \
+             --arg name "$PACKAGE_NAME" \
+             --arg displayName "$DISPLAY_NAME" \
+             --arg description "$DESCRIPTION" \
+             --arg unity "$UNITY_VERSION" \
+             --arg url "$RELEASE_URL" \
+             '.packages["com.moruton.gimmicks"].versions[$version] = {
+               "name": $name,
+               "version": $version,
+               "displayName": $displayName,
+               "description": $description,
+               "unity": $unity,
+               "vpmDependencies": {},
+               "url": $url
+             }' index.json > index.json.tmp && mv index.json.tmp index.json
           
           # Sync to docs/index.json for redundancy
           if [ -d "docs" ]; then
