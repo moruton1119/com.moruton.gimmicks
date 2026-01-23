@@ -23,9 +23,10 @@ jobs:
 
       - name: Pack Package
         run: |
+          # Create a consistent zip file name
           zip -r "com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip" . -x ".git/*" ".github/*" ".vscode/*" "Tests/*" "obj/*"
 
-      - name: Create Release
+      - name: Create or Update Release
         uses: softprops/action-gh-release@v1
         with:
           files: "com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
@@ -33,16 +34,17 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install vrc-get
         run: |
-          curl -sL https://github.com/anatawa12/vrc-get/releases/latest/download/vrc-get-x86_64-unknown-linux-musl -o vrc-get
+          curl -sL https://github.com/vrc-get/vrc-get/releases/latest/download/x86_64-unknown-linux-musl-vrc-get -o vrc-get
           chmod +x vrc-get
 
       - name: Update VPM Repository
         run: |
-          # Use index.json at root as per the recent configuration
-          ./vrc-get repo add-package package.json --repo-json index.json --url https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip
+          ./vrc-get repo add-package package.json --repo-json index.json --url "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -51,3 +53,4 @@ jobs:
           publish_dir: .
           publish_branch: gh-pages
           keep_files: true
+

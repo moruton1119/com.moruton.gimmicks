@@ -366,16 +366,9 @@ namespace MorulabTools
 
         private T LoadAsset<T>(string fileName) where T : UnityEngine.Object
         {
-            string[] paths = {
-                $"Assets/MorulabTools/BLMConnector/Editor/{fileName}",
-                $"Packages/com.moruton.gimmicks/Editor/MorulabTools/BLMConnector/{fileName}"
-            };
-            foreach (var path in paths)
-            {
-                var asset = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (asset != null) return asset;
-            }
-            return null;
+            var guid = AssetDatabase.FindAssets($"{Path.GetFileNameWithoutExtension(fileName)} t:{typeof(T).Name}").FirstOrDefault();
+            if (string.IsNullOrEmpty(guid)) return null;
+            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
         }
 
         private void UpdateQueueStatus()

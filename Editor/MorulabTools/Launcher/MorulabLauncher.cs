@@ -38,18 +38,28 @@ namespace MorulabTools.Launcher
 
         public void CreateGUI()
         {
-            // Load UXML
-            var visualTree = Resources.Load<VisualTreeAsset>("MorulabLauncher");
+            // Load UXML via search (more robust)
+            var uxmlGuid = AssetDatabase.FindAssets("MorulabLauncher t:VisualTreeAsset").FirstOrDefault();
+            if (string.IsNullOrEmpty(uxmlGuid))
+            {
+                rootVisualElement.Add(new Label("Error: Could not find MorulabLauncher.uxml using AssetDatabase.FindAssets"));
+                return;
+            }
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(uxmlGuid));
             if (visualTree == null)
             {
-                rootVisualElement.Add(new Label("Error: Could not load MorulabLauncher.uxml"));
+                rootVisualElement.Add(new Label("Error: Failed to load MorulabLauncher.uxml"));
                 return;
             }
             visualTree.CloneTree(rootVisualElement);
 
             // Load USS
-            var styleSheet = Resources.Load<StyleSheet>("MorulabLauncher");
-            if (styleSheet != null) rootVisualElement.styleSheets.Add(styleSheet);
+            var ussGuid = AssetDatabase.FindAssets("MorulabLauncher t:StyleSheet").FirstOrDefault();
+            if (!string.IsNullOrEmpty(ussGuid))
+            {
+                var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(ussGuid));
+                if (styleSheet != null) rootVisualElement.styleSheets.Add(styleSheet);
+            }
 
             // Find Elements
             _toolList = rootVisualElement.Q<ScrollView>("ToolList");
