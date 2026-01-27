@@ -34,17 +34,13 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
 
-      - name: Install vrc-get
-        run: |
-          # Use the official vrc-get organization and correct asset name
-          curl -fL https://github.com/vrc-get/vrc-get/releases/latest/download/x86_64-unknown-linux-musl-vrc-get -o vrc-get
-          chmod +x vrc-get
-          ./vrc-get --version
+      - name: Setup vrc-get
+        uses: anatawa12/sh-actions/setup-vrc-get@master
 
       - name: Update VPM Repository
         run: |
           # Use index.json at root as per the recent configuration
-          ./vrc-get repo add-package package.json --repo-json index.json --url https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip
+          vpm-get repo add-package package.json --repo-json index.json --url https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
