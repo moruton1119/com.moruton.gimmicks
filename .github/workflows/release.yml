@@ -79,11 +79,18 @@ jobs:
           
           print(f'Adding package {name} version {tag_version}')
           
-          # Save updated index.json
+          print(f'Adding package {name} version {tag_version}')
+          
+          # Save updated index.json (ROOT)
           with open(idx_path, 'w') as f:
               json.dump(idx, f, indent=4)
+
+          # Save updated index.json (DOCS - for legacy support)
+          os.makedirs('docs', exist_ok=True)
+          with open('docs/index.json', 'w') as f:
+              json.dump(idx, f, indent=4)
           
-          print('Successfully updated index.json')
+          print('Successfully updated index.json (both root and docs)')
           "
 
       - name: Deploy to GitHub Pages
