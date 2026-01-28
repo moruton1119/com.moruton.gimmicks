@@ -42,7 +42,7 @@ jobs:
           python3 -c "
           import json, sys, os
           pkg_path = 'package.json'
-          idx_path = 'docs/index.json'
+          idx_path = 'index.json'
           tag_version = '${{ steps.version.outputs.VERSION }}'
           repo_name = '${{ github.event.repository.name }}'
           repo_url = f'https://moruton1119.github.io/{repo_name}/index.json'
@@ -57,7 +57,7 @@ jobs:
           pkg['version'] = tag_version
           
           # Load or create index.json
-          os.makedirs(os.path.dirname(idx_path), exist_ok=True)
+          # os.makedirs(os.path.dirname(idx_path), exist_ok=True) # Root does not need dirs
           if os.path.exists(idx_path):
               with open(idx_path, 'r') as f: idx = json.load(f)
           else:
@@ -93,6 +93,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs
+          publish_dir: .
           publish_branch: gh-pages
           keep_files: true
