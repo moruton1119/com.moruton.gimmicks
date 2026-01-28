@@ -1,9 +1,9 @@
 {
     "name": "com.moruton.gimmicks.Worlds",
     "references": [
-        "com.moruton.gimmicks",
         "VRC.Udon",
-        "UdonSharp.Runtime"
+        "UdonSharp.Runtime",
+        "com.moruton.gimmicks"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
