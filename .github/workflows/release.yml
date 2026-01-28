@@ -34,6 +34,58 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
 
+      - name: Update VPM Repository
+        run: |
+          python3 -c "
+          import json, sys, os
+          pkg_path = 'package.json'
+          idx_path = 'index.json'
+          tag_version = '${{ steps.version.outputs.VERSION }}'
+          repo_name = '${{ github.event.repository.name }}'
+          repo_url = f'https://moruton1119.github.io/{repo_name}/index.json'
+          zip_url = f'https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/com.moruton.gimmicks-{tag_version}.zip'
+          
+          print(f'Updating {idx_path} with version {tag_version}...')
+          
+          # Load package.json
+          with open(pkg_path, 'r') as f: pkg = json.load(f)
+          
+          # Use tag version as the authoritative version for this release
+          pkg['version'] = tag_version
+          
+          # Load or create index.json
+          # os.makedirs(os.path.dirname(idx_path), exist_ok=True) # Root does not need dirs
+          if os.path.exists(idx_path):
+              with open(idx_path, 'r') as f: idx = json.load(f)
+          else:
+              idx = {}
+
+          # Ensure base metadata
+          idx.setdefault('name', 'Moruton Laboratory')
+          idx.setdefault('author', 'moruton1119')
+          idx['id'] = repo_url
+          idx['url'] = repo_url
+          if 'packages' not in idx: idx['packages'] = {}
+          
+          name = pkg['name']
+          
+          # Ensure package structure exists
+          if name not in idx['packages']:
+              idx['packages'][name] = {'versions': {}}
+          
+          # Add/Update version
+          pkg['url'] = zip_url
+          idx['packages'][name]['versions'][tag_version] = pkg
+          
+          print(f'Adding package {name} version {tag_version}')
+          
+          # Save updated index.json
+          with open(idx_path, 'w') as f:
+              json.dump(idx, f, indent=4)
+          
+          print('Successfully updated index.json')
+          "
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
