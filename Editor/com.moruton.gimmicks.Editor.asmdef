@@ -23,6 +23,11 @@
             "define": "VRC_SDK_WORLDS"
         },
         {
+            "name": "com.vrchat.worlds",
+            "expression": "",
+            "define": "UDONSHARP"
+        },
+        {
             "name": "com.vrchat.avatars",
             "expression": "",
             "define": "VRC_SDK_AVATARS"

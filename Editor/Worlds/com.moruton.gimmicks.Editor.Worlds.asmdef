@@ -24,6 +24,11 @@
             "name": "com.vrchat.worlds",
             "expression": "",
             "define": "VRC_SDK_WORLDS"
+        },
+        {
+            "name": "com.vrchat.worlds",
+            "expression": "",
+            "define": "UDONSHARP"
         }
     ],
     "noEngineReferences": false
