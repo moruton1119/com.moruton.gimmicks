@@ -1,8 +1,6 @@
 {
     "name": "com.moruton.gimmicks",
     "references": [
-        "VRC.Udon",
-        "UdonSharp.Runtime",
         "VRC.SDKBase"
     ],
     "includePlatforms": [],
@@ -12,17 +10,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [
-        {
-            "name": "com.vrchat.udonsharp",
-            "expression": "",
-            "define": "UDONSHARP"
-        },
-        {
-            "name": "com.vrchat.worlds",
-            "expression": "",
-            "define": "UDONSHARP"
-        }
-    ],
+    "versionDefines": [],
     "noEngineReferences": false
 }
