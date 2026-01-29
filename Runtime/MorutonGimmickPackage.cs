@@ -1,13 +1,17 @@
-using UnityEngine;
-// using nadena.dev.modular_avatar.core; // 必要に応じてコメントアウト解除
+#if MODULAR_AVATAR
+using nadena.dev.modular_avatar.core;
+#endif
 
 namespace Moruton.Gimmicks
 {
     /// <summary>
     /// Base class for Moruton Laboratory gimmicks (Avatar Only).
     /// </summary>
-    [RequireComponent(typeof(RectTransform))] // アバターギミックは大抵RectTransformを使うため
+#if MODULAR_AVATAR
+    public abstract class MorutonGimmickPackage : AvatarTagComponent
+#else
     public abstract class MorutonGimmickPackage : MonoBehaviour
+#endif
     {
         // 共通の処理があればここに記述
     }

@@ -3,10 +3,7 @@
     "rootNamespace": "Moruton.Gimmicks.Editor",
     "references": [
         "com.moruton.gimmicks",
-        "VRC.Udon",
-        "VRC.Udon.Editor",
-        "UdonSharp.Runtime",
-        "UdonSharp.Editor"
+        "nadena.dev.modular-avatar.core"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,19 +16,14 @@
     "defineConstraints": [],
     "versionDefines": [
         {
-            "name": "com.vrchat.worlds",
-            "expression": "",
-            "define": "VRC_SDK_WORLDS"
-        },
-        {
-            "name": "com.vrchat.worlds",
-            "expression": "",
-            "define": "UDONSHARP"
-        },
-        {
             "name": "com.vrchat.avatars",
             "expression": "",
             "define": "VRC_SDK_AVATARS"
+        },
+        {
+            "name": "nadena.dev.modular-avatar",
+            "expression": "",
+            "define": "MODULAR_AVATAR"
         }
     ],
     "noEngineReferences": false
