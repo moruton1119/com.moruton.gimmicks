@@ -6,6 +6,26 @@
     "packages": {
         "com.moruton.gimmicks": {
             "versions": {
+                "0.1.11": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.11",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.11/com.moruton.gimmicks-0.1.11.zip"
+                },
+                "0.1.10": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.10",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks. Fixed asmdef structure for Avatar projects.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.10/com.moruton.gimmicks-0.1.10.zip"
+                },
                 "0.1.9": {
                     "name": "com.moruton.gimmicks",
                     "version": "0.1.9",
