@@ -1,6 +1,8 @@
 {
     "name": "com.moruton.gimmicks",
     "references": [
+        "VRC.Udon",
+        "UdonSharp.Runtime",
         "VRC.SDKBase"
     ],
     "includePlatforms": [],
