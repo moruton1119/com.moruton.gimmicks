@@ -11,20 +11,5 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "UDONSHARP"
-    ],
-    "versionDefines": [
-        {
-            "name": "com.vrchat.udonsharp",
-            "expression": "",
-            "define": "UDONSHARP"
-        },
-        {
-            "name": "com.vrchat.worlds",
-            "expression": "",
-            "define": "UDONSHARP"
-        }
-    ],
     "noEngineReferences": false
 }
