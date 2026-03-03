@@ -1,0 +1,25 @@
+{
+  "items": [
+    {"key": "language_name", "value": "日本語"},
+    {"key": "ok", "value": "OK"},
+    {"key": "cancel", "value": "キャンセル"},
+    {"key": "yes", "value": "はい"},
+    {"key": "no", "value": "いいえ"},
+    {"key": "error", "value": "エラー"},
+    {"key": "warning", "value": "警告"},
+    {"key": "info", "value": "情報"},
+    {"key": "success", "value": "成功"},
+    {"key": "dialog_ok", "value": "OK"},
+    {"key": "error_dialog_title", "value": "エラー"},
+    {"key": "error_dialog_message", "value": "model, animator, offTargets をすべてセットしてください。"},
+    {"key": "setup_button", "value": "変身ギミックをセットアップ"},
+    {"key": "dev_mode_title", "value": "開発者モード"},
+    {"key": "colabo_shop_button", "value": "ショップへ行く"},
+    {"key": "colabo_info", "value": "この項目は、上記のショップ様とのコラボレーション衣装でのみ動作確認しています。\n基本はデフォルト設定のままご使用ください\n衣装の対応希望のショップ様等あればDiscordでご連絡ください"},
+    {"key": "unpack_dialog_info", "value": "Prefab解除するアイテムが選択されていません。"},
+    {"key": "unpack_success", "value": "Prefab '{0}' を正常に解除しました。"},
+    {"key": "unpack_not_prefab", "value": "'{0}' はPrefabではないため、処理をスキップしました。"},
+    {"key": "unpack_success_title", "value": "成功"},
+    {"key": "unpack_info_title", "value": "情報"}
+  ]
+}
