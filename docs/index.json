@@ -437,6 +437,15 @@
                     "unity": "2022.3",
                     "vpmDependencies": {},
                     "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.30/com.moruton.gimmicks-0.1.30.zip"
+                },
+                "0.2.0": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.2.0",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.2.0/com.moruton.gimmicks-0.2.0.zip"
                 }
             }
         }
