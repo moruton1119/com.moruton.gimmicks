@@ -17,9 +17,12 @@ namespace Moruton.Gimmicks.Editor
 
         public override void OnInspectorGUI()
         {
-            // アバター用ヘッダーを呼び出す
             MorutonAvatarPackageEditorHelper.DrawHeader();
+            DrawGimmickSetupHelperInspector(serializedObject, targetsProp, ref showDevMode, (GimmickSetupHelper)target);
+        }
 
+        public static void DrawGimmickSetupHelperInspector(SerializedObject serializedObject, SerializedProperty targetsProp, ref bool showDevMode, GimmickSetupHelper helper)
+        {
             serializedObject.Update();
 
             EditorGUILayout.Space();
@@ -33,55 +36,71 @@ namespace Moruton.Gimmicks.Editor
             }
             else
             {
-                GimmickSetupHelper helper = (GimmickSetupHelper)target;
-                for (int i = 0; i < targetsProp.arraySize; i++)
-                {
-                    string descText = "";
-                    Transform targetTrans = null;
-
-                    if (helper != null && helper.targets != null && i < helper.targets.Count)
-                    {
-                        descText = helper.targets[i].description;
-                        targetTrans = helper.targets[i].targetObject;
-                    }
-                    else
-                    {
-                        SerializedProperty item = targetsProp.GetArrayElementAtIndex(i);
-                        descText = item.FindPropertyRelative("description").stringValue;
-                        targetTrans = item.FindPropertyRelative("targetObject").objectReferenceValue as Transform;
-                    }
-
-                    GUILayout.BeginVertical("box");
-                    {
-                        if (!string.IsNullOrEmpty(descText))
-                        {
-                            GUIStyle style = new GUIStyle(EditorStyles.label);
-                            style.wordWrap = true;
-                            style.fontSize = 12;
-                            EditorGUILayout.LabelField(descText, style);
-                        }
-
-                        EditorGUILayout.Space(4);
-                        GUI.enabled = targetTrans != null;
-                        string btnLabel = targetTrans != null ? $"Select: {targetTrans.name}" : "Target Not Assigned";
-                        if (GUILayout.Button(new GUIContent(btnLabel, "クリックしてこのオブジェクトを選択状態にします"), GUILayout.Height(30)))
-                        {
-                            if (targetTrans != null)
-                            {
-                                Selection.activeGameObject = targetTrans.gameObject;
-                                EditorGUIUtility.PingObject(targetTrans.gameObject);
-                                SceneView.FrameLastActiveSceneView();
-                            }
-                        }
-                        GUI.enabled = true;
-                    }
-                    GUILayout.EndVertical();
-                    EditorGUILayout.Space(4);
-                }
+                DrawTargetsList(targetsProp, helper);
             }
 
             EditorGUILayout.Space(15);
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            DrawDeveloperMode(targetsProp, ref showDevMode);
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        public static void DrawTargetsList(SerializedProperty targetsProp, GimmickSetupHelper helper)
+        {
+            for (int i = 0; i < targetsProp.arraySize; i++)
+            {
+                DrawTargetItem(targetsProp, i, helper);
+                EditorGUILayout.Space(4);
+            }
+        }
+
+        public static void DrawTargetItem(SerializedProperty targetsProp, int index, GimmickSetupHelper helper)
+        {
+            string descText = "";
+            Transform targetTrans = null;
+
+            if (helper != null && helper.targets != null && index < helper.targets.Count)
+            {
+                descText = helper.targets[index].description;
+                targetTrans = helper.targets[index].targetObject;
+            }
+            else
+            {
+                SerializedProperty item = targetsProp.GetArrayElementAtIndex(index);
+                descText = item.FindPropertyRelative("description").stringValue;
+                targetTrans = item.FindPropertyRelative("targetObject").objectReferenceValue as Transform;
+            }
+
+            GUILayout.BeginVertical("box");
+            {
+                if (!string.IsNullOrEmpty(descText))
+                {
+                    GUIStyle style = new GUIStyle(EditorStyles.label);
+                    style.wordWrap = true;
+                    style.fontSize = 12;
+                    EditorGUILayout.LabelField(descText, style);
+                }
+
+                EditorGUILayout.Space(4);
+                GUI.enabled = targetTrans != null;
+                string btnLabel = targetTrans != null ? $"Select: {targetTrans.name}" : "Target Not Assigned";
+                if (GUILayout.Button(new GUIContent(btnLabel, "クリックしてこのオブジェクトを選択状態にします"), GUILayout.Height(30)))
+                {
+                    if (targetTrans != null)
+                    {
+                        Selection.activeGameObject = targetTrans.gameObject;
+                        EditorGUIUtility.PingObject(targetTrans.gameObject);
+                        SceneView.FrameLastActiveSceneView();
+                    }
+                }
+                GUI.enabled = true;
+            }
+            GUILayout.EndVertical();
+        }
+
+        public static void DrawDeveloperMode(SerializedProperty targetsProp, ref bool showDevMode)
+        {
             showDevMode = EditorGUILayout.Foldout(showDevMode, "Developer Mode (Edit Settings)");
             if (showDevMode)
             {
@@ -118,8 +137,6 @@ namespace Moruton.Gimmicks.Editor
                     newItem.FindPropertyRelative("targetObject").objectReferenceValue = null;
                 }
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }
