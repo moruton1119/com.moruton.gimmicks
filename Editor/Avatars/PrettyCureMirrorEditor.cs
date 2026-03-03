@@ -39,13 +39,37 @@ namespace Moruton.Gimmicks.Editor
             LocalizationManager.Load("PrettyCureMirror", langCode);
         }
 
+        private GUIStyle stepButtonStyle;
+        private GUIStyle stepLabelStyle;
+        
         public override void OnInspectorGUI()
         {
+            if (stepButtonStyle == null)
+            {
+                stepButtonStyle = new GUIStyle(GUI.skin.button)
+                {
+                    alignment = TextAnchor.MiddleLeft,
+                    fontSize = 14,
+                    fontStyle = FontStyle.Bold,
+                    fixedHeight = 36,
+                    margin = new RectOffset(0, 0, 4, 4),
+                    padding = new RectOffset(10, 10, 0, 0)
+                };
+            }
+            
+            if (stepLabelStyle == null)
+            {
+                stepLabelStyle = new GUIStyle(EditorStyles.boldLabel)
+                {
+                    fontSize = 12,
+                    margin = new RectOffset(0, 0, 8, 4)
+                };
+            }
+            
             MorutonAvatarPackageEditorHelper.DrawHeader();
             
-            // 言語選択
             int prevLang = selectedLanguage;
-            selectedLanguage = EditorGUILayout.Popup("Language", selectedLanguage, LocalizationManager.SupportedLanguageNames);
+            selectedLanguage = GUILayout.Toolbar(selectedLanguage, LocalizationManager.SupportedLanguageNames, GUILayout.Height(28));
             if (prevLang != selectedLanguage)
             {
                 EditorPrefs.SetInt("PrettyCureMirror_Language", selectedLanguage);
@@ -54,107 +78,177 @@ namespace Moruton.Gimmicks.Editor
             
             serializedObject.Update();
             
-            EditorGUILayout.Space(10);
+            EditorGUILayout.Space(8);
             
-            // ステップ1: 基本設定
             DrawStep1();
-            
-            EditorGUILayout.Space();
-            
-            // ステップ2: 変身後の衣装を準備
+            EditorGUILayout.Space(4);
             DrawStep2();
-            
-            EditorGUILayout.Space();
-            
-            // ステップ3: ギミックの色を変更
+            EditorGUILayout.Space(4);
             DrawStep3();
-            
-            EditorGUILayout.Space();
-            
-            // ステップ4: 特殊設定
+            EditorGUILayout.Space(4);
             DrawStep4();
-            
-            EditorGUILayout.Space(10);
-            
-            // 開発者モード
+            EditorGUILayout.Space(8);
             DrawDeveloperMode();
             
             EditorGUILayout.Space(10);
             
-            // セットアップボタン
-            if (GUILayout.Button(LC("setup_button"), GUILayout.Height(40)))
+            GUI.backgroundColor = new Color(0.4f, 0.8f, 0.4f);
+            if (GUILayout.Button(LC("setup_button"), GUILayout.Height(44)))
             {
                 SetupTransformation();
             }
+            GUI.backgroundColor = Color.white;
             
             serializedObject.ApplyModifiedProperties();
         }
         
         private void DrawStep1()
         {
-            stepOpenStates[0] = EditorGUILayout.Foldout(stepOpenStates[0], L("step1_title"), true, EditorStyles.boldLabel);
+            string foldSymbol = stepOpenStates[0] ? "▼ " : "▶ ";
+            if (GUILayout.Button(foldSymbol + L("step1_title"), stepButtonStyle))
+            {
+                stepOpenStates[0] = !stepOpenStates[0];
+            }
+            
             if (!stepOpenStates[0]) return;
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField(L("step1_description"), EditorStyles.wordWrappedLabel);
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(8);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("avatar"), new GUIContent(L("step1_avatar_label")));
+            EditorGUILayout.LabelField(L("step1_avatar_label"), stepLabelStyle);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("avatar"), GUIContent.none);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("model"), new GUIContent(L("step1_model")));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("animator"), new GUIContent(L("step1_animator")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("offTargets"), new GUIContent(L("step1_before_clothes_label")), true);
+            
+            EditorGUILayout.Space(6);
+            EditorGUILayout.LabelField(L("step1_before_clothes_label"), stepLabelStyle);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("offTargets"), GUIContent.none, true);
             
             EditorGUILayout.EndVertical();
         }
         
         private void DrawStep2()
         {
-            stepOpenStates[1] = EditorGUILayout.Foldout(stepOpenStates[1], L("step2_title"), true, EditorStyles.boldLabel);
+            string foldSymbol = stepOpenStates[1] ? "▼ " : "▶ ";
+            if (GUILayout.Button(foldSymbol + L("step2_title"), stepButtonStyle))
+            {
+                stepOpenStates[1] = !stepOpenStates[1];
+            }
+            
             if (!stepOpenStates[1]) return;
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField(L("step2_description"), EditorStyles.wordWrappedLabel);
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(8);
             
-            // Unpack section
-            EditorGUILayout.LabelField(L("step2_unpack_title"), EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("step2_unpack_title"), stepLabelStyle);
             EditorGUILayout.HelpBox(L("step2_unpack_help"), MessageType.Info);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("itemToUnpack"), new GUIContent(L("step2_unpack_object_label")));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("itemToUnpack"), GUIContent.none);
             
-            if (GUILayout.Button(L("step2_unpack_button")))
+            EditorGUILayout.Space(4);
+            if (GUILayout.Button(L("step2_unpack_button"), GUILayout.Height(28)))
             {
                 UnpackSelectedPrefab();
             }
             
-            EditorGUILayout.Space(10);
+            EditorGUILayout.Space(12);
             
-            // Parts section
-            EditorGUILayout.LabelField(L("step2_parts_title"), EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("step2_parts_title"), stepLabelStyle);
             EditorGUILayout.HelpBox(L("step2_parts_help"), MessageType.Info);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("headTarget"), new GUIContent(L("step2_head_target")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("headItems"), new GUIContent(L("step2_head_items")), true);
+            EditorGUILayout.Space(4);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("bodyTarget"), new GUIContent(L("step2_body_target")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("bodyItems"), new GUIContent(L("step2_body_items")), true);
+            var script = (PrettyCureMirror)target;
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("handTarget"), new GUIContent(L("step2_hand_target")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("handItems"), new GUIContent(L("step2_hand_items")), true);
+            DrawPartSection(L("step2_head_target"), L("step2_head_items"), 
+                serializedObject.FindProperty("headTarget"), serializedObject.FindProperty("headItems"),
+                script.headItems);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("legTarget"), new GUIContent(L("step2_leg_target")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("legItems"), new GUIContent(L("step2_leg_items")), true);
+            DrawPartSection(L("step2_body_target"), L("step2_body_items"),
+                serializedObject.FindProperty("bodyTarget"), serializedObject.FindProperty("bodyItems"),
+                script.bodyItems);
+            
+            DrawPartSection(L("step2_hand_target"), L("step2_hand_items"),
+                serializedObject.FindProperty("handTarget"), serializedObject.FindProperty("handItems"),
+                script.handItems);
+            
+            DrawPartSection(L("step2_leg_target"), L("step2_leg_items"),
+                serializedObject.FindProperty("legTarget"), serializedObject.FindProperty("legItems"),
+                script.legItems);
             
             EditorGUILayout.EndVertical();
         }
         
+        private void DrawPartSection(string targetLabel, string itemsLabel, SerializedProperty targetProp, SerializedProperty itemsProp, GameObject[] items)
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(targetLabel);
+            EditorGUILayout.PropertyField(targetProp, GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.PropertyField(itemsProp, new GUIContent(itemsLabel), true);
+            
+            if (items != null && items.Length > 0)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                
+                int previewSize = 64;
+                int maxShow = Mathf.Min(items.Length, 4);
+                int totalWidth = maxShow * previewSize + (maxShow - 1) * 4;
+                
+                EditorGUILayout.BeginHorizontal(GUILayout.Width(totalWidth));
+                for (int i = 0; i < maxShow; i++)
+                {
+                    if (items[i] != null)
+                    {
+                        Texture2D preview = AssetPreview.GetAssetPreview(items[i]);
+                        if (preview != null)
+                        {
+                            GUILayout.Box(preview, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
+                        }
+                        else
+                        {
+                            GUILayout.Box("", GUILayout.Width(previewSize), GUILayout.Height(previewSize));
+                        }
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+                
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+                
+                if (items.Length > maxShow)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    EditorGUILayout.LabelField($"+{items.Length - maxShow} more...", EditorStyles.centeredGreyMiniLabel);
+                    GUILayout.FlexibleSpace();
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+            
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space(4);
+        }
+        
         private void DrawStep3()
         {
-            stepOpenStates[2] = EditorGUILayout.Foldout(stepOpenStates[2], L("step3_title"), true, EditorStyles.boldLabel);
+            string foldSymbol = stepOpenStates[2] ? "▼ " : "▶ ";
+            if (GUILayout.Button(foldSymbol + L("step3_title"), stepButtonStyle))
+            {
+                stepOpenStates[2] = !stepOpenStates[2];
+            }
+            
             if (!stepOpenStates[2]) return;
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField(L("step3_description"), EditorStyles.wordWrappedLabel);
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(8);
             
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("gimmickColor"), new GUIContent(L("step3_color_label")));
@@ -168,86 +262,144 @@ namespace Moruton.Gimmicks.Editor
         
         private void DrawStep4()
         {
-            stepOpenStates[3] = EditorGUILayout.Foldout(stepOpenStates[3], L("step4_title"), true, EditorStyles.boldLabel);
+            string foldSymbol = stepOpenStates[3] ? "▼ " : "▶ ";
+            if (GUILayout.Button(foldSymbol + L("step4_title"), stepButtonStyle))
+            {
+                stepOpenStates[3] = !stepOpenStates[3];
+            }
+            
             if (!stepOpenStates[3]) return;
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField(L("step4_description"), EditorStyles.wordWrappedLabel);
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(8);
             
             var script = (PrettyCureMirror)target;
             
-            // コラボ情報表示
             if (script.colaboShopTex != null)
             {
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                GUILayout.Box(script.colaboShopTex, GUILayout.Width(100), GUILayout.Height(100));
+                GUILayout.Box(script.colaboShopTex, GUILayout.Width(120), GUILayout.Height(120));
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.EndHorizontal();
                 
                 if (!string.IsNullOrEmpty(script.colaboShopInfo))
                 {
-                    if (GUILayout.Button(LC("colabo_shop_button"), GUILayout.Height(30)))
+                    if (GUILayout.Button(LC("colabo_shop_button"), GUILayout.Height(32)))
                     {
                         Application.OpenURL(script.colaboShopInfo);
                     }
                 }
-                EditorGUILayout.Space();
+                EditorGUILayout.Space(8);
             }
             
             EditorGUILayout.HelpBox(LC("colabo_info"), MessageType.Info);
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(8);
             
-            // ワンピース差し替え
-            EditorGUILayout.LabelField(L("step4_onepiece_title"), EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("onePiece"), new GUIContent(L("step4_onepiece_label")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboFBX"), new GUIContent("FBX"));
-            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(L("step4_onepiece_title"), stepLabelStyle);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(L("step4_onepiece_label"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("onePiece"), GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("FBX");
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboFBX"), GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(8);
             
-            // 追加アイテム
-            EditorGUILayout.LabelField(L("step4_additional_item_title"), EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboItemTarget"), new GUIContent(L("step4_additional_item_target")));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboItem"), new GUIContent(L("step4_additional_item")));
-            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(L("step4_additional_item_title"), stepLabelStyle);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(L("step4_additional_item_target"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboItemTarget"), GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(L("step4_additional_item"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboItem"), GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(8);
             
-            // フェード演出
-            EditorGUILayout.LabelField(L("step4_fade_fx_title"), EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHead"), new GUIContent("Target"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHeadItems"), new GUIContent(L("step4_fade_head_items")), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHeadMaterial"), new GUIContent("Material"));
-            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(L("step4_fade_fx_title"), stepLabelStyle);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBody"), new GUIContent("Target"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBodyItems"), new GUIContent(L("step4_fade_body_items")), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBodyMaterial"), new GUIContent("Material"));
-            EditorGUILayout.Space();
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Head", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHead"), GUIContent.none);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHeadItems"), GUIContent.none, true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHeadMaterial"), GUIContent.none);
+            EditorGUILayout.EndVertical();
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArm"), new GUIContent("Target"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArmItems"), new GUIContent(L("step4_fade_arm_items")), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArmMaterial"), new GUIContent("Material"));
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(4);
             
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLeg"), new GUIContent("Target"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLegItems"), new GUIContent(L("step4_fade_leg_items")), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLegMaterial"), new GUIContent("Material"));
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Body", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBody"), GUIContent.none);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBodyItems"), GUIContent.none, true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBodyMaterial"), GUIContent.none);
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.Space(4);
+            
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Arm", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArm"), GUIContent.none);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArmItems"), GUIContent.none, true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArmMaterial"), GUIContent.none);
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.Space(4);
+            
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Leg", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLeg"), GUIContent.none);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLegItems"), GUIContent.none, true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLegMaterial"), GUIContent.none);
+            EditorGUILayout.EndVertical();
             
             EditorGUILayout.EndVertical();
         }
         
         private void DrawDeveloperMode()
         {
-            isDeveloperMode = EditorGUILayout.Foldout(isDeveloperMode, LC("dev_mode_title"), true);
+            string foldSymbol = isDeveloperMode ? "▼ " : "▶ ";
+            Color prevColor = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(0.6f, 0.6f, 0.7f);
+            
+            if (GUILayout.Button(foldSymbol + LC("dev_mode_title"), stepButtonStyle))
+            {
+                isDeveloperMode = !isDeveloperMode;
+            }
+            GUI.backgroundColor = prevColor;
+            
             if (!isDeveloperMode) return;
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            
+            EditorGUILayout.LabelField(LC("dev_basic_label"), EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("dummyImage"), new GUIContent(L("dev_dummy_image")));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboShopTex"), new GUIContent(L("dev_colabo_shop_tex")));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboShopInfo"), new GUIContent(L("dev_colabo_shop_info")));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("model"), new GUIContent("Model"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("animator"), new GUIContent("Animator"));
             
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField(LC("dev_target_label"), EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("headTarget"), new GUIContent("Head Target"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("bodyTarget"), new GUIContent("Body Target"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("handTarget"), new GUIContent("Hand Target"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("legTarget"), new GUIContent("Leg Target"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("onePiece"), new GUIContent("OnePiece"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colaboItemTarget"), new GUIContent("Colabo Item Target"));
+            
+            EditorGUILayout.Space(4);
             EditorGUILayout.LabelField(LC("dev_material_label"), EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("gimmickCollar"), new GUIContent(LC("dev_gimmick_color_targets")), true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeHeadMaterial"), new GUIContent("Head Material"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeBodyMaterial"), new GUIContent("Body Material"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeArmMaterial"), new GUIContent("Arm Material"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeLegMaterial"), new GUIContent("Leg Material"));
+            
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField(LC("dev_gimmick_color_targets"), EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("gimmickCollar"), GUIContent.none, true);
             
             EditorGUILayout.EndVertical();
         }

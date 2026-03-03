@@ -1,0 +1,25 @@
+{
+  "items": [
+    {"key": "language_name", "value": "Italiano"},
+    {"key": "ok", "value": "OK"},
+    {"key": "cancel", "value": "Annulla"},
+    {"key": "yes", "value": "Sì"},
+    {"key": "no", "value": "No"},
+    {"key": "error", "value": "Errore"},
+    {"key": "warning", "value": "Avviso"},
+    {"key": "info", "value": "Informazioni"},
+    {"key": "success", "value": "Successo"},
+    {"key": "dialog_ok", "value": "OK"},
+    {"key": "error_dialog_title", "value": "Errore"},
+    {"key": "error_dialog_message", "value": "Per favore, imposta model, animator e offTargets."},
+    {"key": "setup_button", "value": "Configura Gimmick di Trasformazione"},
+    {"key": "dev_mode_title", "value": "Modalità Sviluppatore"},
+    {"key": "colabo_shop_button", "value": "Vai al Negozio"},
+    {"key": "colabo_info", "value": "Questo elemento è stato testato solo con abiti di collaborazione del negozio sopra.\nFondamentalmente, usalo con le impostazioni predefinite.\nSe sei un proprietario di negozio e desideri collaborare, contattaci tramite Discord"},
+    {"key": "unpack_dialog_info", "value": "Nessun elemento selezionato da decomprimere."},
+    {"key": "unpack_success", "value": "Prefab '{0}' è stato decompresso con successo."},
+    {"key": "unpack_not_prefab", "value": "'{0}' non è un Prefab, quindi l'elaborazione è stata saltata."},
+    {"key": "unpack_success_title", "value": "Successo"},
+    {"key": "unpack_info_title", "value": "Informazioni"}
+  ]
+}
