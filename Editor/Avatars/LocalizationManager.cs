@@ -95,19 +95,39 @@ namespace Moruton.Gimmicks.Editor
             return key;
         }
         
+        private static string GetAbsolutePath(string packageRelativePath)
+        {
+            if (packageRelativePath.StartsWith("Packages/"))
+            {
+                var segments = packageRelativePath.Split(new[] { '/' }, 4);
+                if (segments.Length >= 4)
+                {
+                    string relativeInPackage = segments[2] + "/" + segments[3];
+                    var packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(LocalizationManager).Assembly);
+                    if (packageInfo != null)
+                    {
+                        return Path.Combine(packageInfo.resolvedPath, relativeInPackage);
+                    }
+                }
+            }
+            return packageRelativePath;
+        }
+        
         private static Dictionary<string, string> LoadJson(string path)
         {
             var result = new Dictionary<string, string>();
             
-            if (!File.Exists(path))
+            string absolutePath = GetAbsolutePath(path);
+            
+            if (!File.Exists(absolutePath))
             {
-                Debug.LogWarning($"Localization file not found: {path}");
+                Debug.LogWarning($"Localization file not found: {absolutePath}");
                 return result;
             }
             
             try
             {
-                string json = File.ReadAllText(path);
+                string json = File.ReadAllText(absolutePath);
                 var wrapper = JsonUtility.FromJson<LocalizationData>(json);
                 
                 if (wrapper.items != null)
