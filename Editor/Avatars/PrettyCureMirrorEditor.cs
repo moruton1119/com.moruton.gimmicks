@@ -15,7 +15,7 @@ namespace Moruton.Gimmicks.Editor
         private bool[] stepOpenStates = { true, false, false, false };
         private bool isDeveloperMode = false;
         
-        private readonly string[] languageCodes = { "ja", "en" };
+        private readonly string[] languageCodes = { "ja", "en", "ko", "it", "es" };
         
         private string L(string key)
         {
