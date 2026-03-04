@@ -102,7 +102,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update package.json and index.json for release ${{ steps.version.outputs.VERSION }} [skip ci]"
-            # Pull latest changes to avoid conflicts
-            git pull origin main --rebase
-            git push origin HEAD:main
+            # Pre-release versions go to Dev branch, stable versions go to main
+            if [[ "${{ steps.version.outputs.VERSION }}" == *-* ]]; then
+              echo "Pre-release detected, pushing to Dev branch"
+              git pull origin Dev --rebase
+              git push origin HEAD:Dev
+            else
+              echo "Stable release detected, pushing to main branch"
+              git pull origin main --rebase
+              git push origin HEAD:main
+            fi
           fi
