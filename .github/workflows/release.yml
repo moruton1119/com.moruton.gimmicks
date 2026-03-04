@@ -39,7 +39,7 @@ jobs:
           python3 -c "
           import json, sys, os
           pkg_path = 'package.json'
-          idx_path = 'index.json'
+          idx_path = 'docs/index.json'
           tag_version = '${{ steps.version.outputs.VERSION }}'
           repo_name = '${{ github.event.repository.name }}'
           repo_url = f'https://moruton1119.github.io/{repo_name}/index.json'
@@ -54,7 +54,7 @@ jobs:
           pkg['version'] = tag_version
           
           # Load or create index.json
-          # os.makedirs(os.path.dirname(idx_path), exist_ok=True) # Root does not need dirs
+          os.makedirs(os.path.dirname(idx_path), exist_ok=True)
           if os.path.exists(idx_path):
               with open(idx_path, 'r') as f: idx = json.load(f)
           else:
@@ -73,36 +73,35 @@ jobs:
           if name not in idx['packages']:
               idx['packages'][name] = {'versions': {}}
           
-          # Add/Update version
-          pkg['url'] = zip_url
-          idx['packages'][name]['versions'][tag_version] = pkg
+          # Add/Update version in index.json
+          idx_pkg = pkg.copy()
+          idx_pkg['url'] = zip_url
+          idx['packages'][name]['versions'][tag_version] = idx_pkg
           
           print(f'Adding package {name} version {tag_version}')
           
-          print(f'Adding package {name} version {tag_version}')
+          # Save updated package.json (without url field)
+          with open(pkg_path, 'w') as f:
+              json.dump(pkg, f, indent=4)
+          print(f'Successfully updated {pkg_path} to version {tag_version}')
           
-          # Save updated index.json (ROOT)
-          with open(idx_path, 'w') as f:
-              json.dump(idx, f, indent=4)
-
-          # Save updated index.json (DOCS - for legacy support)
+          # Save updated index.json (docs folder for GitHub Pages)
           os.makedirs('docs', exist_ok=True)
           with open('docs/index.json', 'w') as f:
               json.dump(idx, f, indent=4)
-          
-          print('Successfully updated index.json (both root and docs)')
+          print('Successfully updated docs/index.json')
           "
 
       - name: Commit & Push index.json
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.json docs/index.json
+          git add package.json docs/index.json
           # Check if there are changes
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: update index.json for release ${{ steps.version.outputs.VERSION }} [skip ci]"
+            git commit -m "chore: update package.json and index.json for release ${{ steps.version.outputs.VERSION }} [skip ci]"
             # Pull latest changes to avoid conflicts
             git pull origin main --rebase
             git push origin HEAD:main
