@@ -42,3 +42,6 @@ Thumbs.db
 .serena/
 .agent/
 work_reports/
+
+# --- ドキュメント ---
+Documentation/
