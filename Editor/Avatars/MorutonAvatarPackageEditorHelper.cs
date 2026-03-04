@@ -15,7 +15,7 @@ namespace Moruton.Gimmicks.Editor
         private static bool isChecking = false;
         private static bool isUpdating = false;
         private static string updateStatus = "";
-        private const string RemotePackageJsonUrl = "https://raw.githubusercontent.com/moruton1119/com.moruton.gimmicks/main/package.json";
+        private const string RemotePackageJsonUrl = "https://moruton1119.github.io/com.moruton.gimmicks/index.json";
         private const string PackageName = "com.moruton.gimmicks";
         private const string GitHubReleaseBaseUrl = "https://github.com/moruton1119/com.moruton.gimmicks/releases/download";
 
@@ -49,7 +49,7 @@ namespace Moruton.Gimmicks.Editor
         private static void CheckVersion()
         {
             string currentVersion = GetCurrentVersion();
-            
+
             if (!string.IsNullOrEmpty(updateStatus))
             {
                 EditorGUILayout.HelpBox(updateStatus, MessageType.Info);
@@ -66,13 +66,13 @@ namespace Moruton.Gimmicks.Editor
                 FetchRemoteVersion();
             }
 
-            if (!string.IsNullOrEmpty(latestVersion) && latestVersion != currentVersion)
+            if (!string.IsNullOrEmpty(latestVersion) && IsNewerVersion(latestVersion, currentVersion))
             {
                 GUI.backgroundColor = Color.yellow;
                 EditorGUILayout.BeginVertical("box");
                 {
                     EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
-                    
+
                     EditorGUILayout.BeginHorizontal();
                     if (GUILayout.Button("自動更新", GUILayout.Height(25)))
                     {
@@ -83,6 +83,10 @@ namespace Moruton.Gimmicks.Editor
                         string projectPath = Directory.GetCurrentDirectory().Replace("\\", "/");
                         projectPath = Uri.EscapeDataString(projectPath);
                         Application.OpenURL($"vcc://vpm/open?path={projectPath}");
+                    }
+                    if (GUILayout.Button("手動ダウンロード", GUILayout.Height(25)))
+                    {
+                        Application.OpenURL($"https://github.com/moruton1119/com.moruton.gimmicks/releases/latest");
                     }
                     EditorGUILayout.EndHorizontal();
                 }
@@ -96,6 +100,21 @@ namespace Moruton.Gimmicks.Editor
             }
 
             GUI.enabled = true;
+        }
+
+        private static bool IsNewerVersion(string latest, string current)
+        {
+            if (latest == current) return false;
+            try
+            {
+                Version vLat = new Version(latest);
+                Version vCur = new Version(current);
+                return vLat > vCur;
+            }
+            catch
+            {
+                return latest != current;
+            }
         }
 
         private static string GetCurrentVersion()
@@ -119,8 +138,26 @@ namespace Moruton.Gimmicks.Editor
 
                 if (request.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
                 {
-                    var pkg = JsonUtility.FromJson<PackageInfo>(request.downloadHandler.text);
-                    latestVersion = pkg.version;
+                    string json = request.downloadHandler.text;
+                    // JsonUtility doesn't support Dictionary, so we parse manually for the VPM repo structure
+                    // Look for "com.moruton.gimmicks": { "versions": { "X.Y.Z": ...
+                    string searchPattern = $"\"{PackageName}\"";
+                    int pkgIndex = json.IndexOf(searchPattern);
+                    if (pkgIndex != -1)
+                    {
+                        int versionsIndex = json.IndexOf("\"versions\"", pkgIndex);
+                        if (versionsIndex != -1)
+                        {
+                            // Find the start of the first version string after "versions": { "
+                            int firstQuote = json.IndexOf("\"", versionsIndex + 10);
+                            // Find the end of that version string
+                            int nextQuote = json.IndexOf("\"", firstQuote + 1);
+                            if (firstQuote != -1 && nextQuote != -1)
+                            {
+                                latestVersion = json.Substring(firstQuote + 1, nextQuote - firstQuote - 1);
+                            }
+                        }
+                    }
                 }
                 isChecking = false;
             }
@@ -151,6 +188,7 @@ namespace Moruton.Gimmicks.Editor
         private static async Task PerformUpdate()
         {
             string targetVersion = latestVersion;
+            // リポジトリ整理後の命名規則に合わせる
             string zipUrl = $"{GitHubReleaseBaseUrl}/v{targetVersion}/{PackageName}-{targetVersion}.zip";
             string tempPath = Path.Combine(Path.GetTempPath(), "MorutonGimmicks_Update");
             string zipPath = Path.Combine(tempPath, "update.zip");
@@ -168,7 +206,18 @@ namespace Moruton.Gimmicks.Editor
             using (var httpClient = new HttpClient())
             {
                 httpClient.Timeout = TimeSpan.FromMinutes(5);
-                var bytes = await httpClient.GetByteArrayAsync(zipUrl);
+                var response = await httpClient.GetAsync(zipUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    // vなしも試行する
+                    string fallbackUrl = $"{GitHubReleaseBaseUrl}/{targetVersion}/{PackageName}-{targetVersion}.zip";
+                    response = await httpClient.GetAsync(fallbackUrl);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"Download failed: {response.StatusCode} at {zipUrl}");
+                    }
+                }
+                var bytes = await response.Content.ReadAsByteArrayAsync();
                 File.WriteAllBytes(zipPath, bytes);
             }
 
@@ -185,6 +234,7 @@ namespace Moruton.Gimmicks.Editor
             string absolutePackagePath = Path.GetFullPath(packagePath);
 
             string sourceContentPath = extractPath;
+            // ZIPの中にパッケージ名ディレクトリがある場合とない場合の両方に対応
             if (Directory.Exists(Path.Combine(extractPath, PackageName)))
             {
                 sourceContentPath = Path.Combine(extractPath, PackageName);
@@ -196,7 +246,7 @@ namespace Moruton.Gimmicks.Editor
                 {
                     string relativePath = file.Substring(absolutePackagePath.Length).TrimStart(Path.DirectorySeparatorChar);
                     string destFile = Path.Combine(sourceContentPath, relativePath);
-                    
+
                     if (!File.Exists(destFile))
                     {
                         string metaFile = file + ".meta";
@@ -218,12 +268,12 @@ namespace Moruton.Gimmicks.Editor
                 string relativePath = file.Substring(sourceContentPath.Length).TrimStart(Path.DirectorySeparatorChar);
                 string destFile = Path.Combine(absolutePackagePath, relativePath);
                 string destDir = Path.GetDirectoryName(destFile);
-                
+
                 if (!Directory.Exists(destDir))
                 {
                     Directory.CreateDirectory(destDir);
                 }
-                
+
                 File.Copy(file, destFile, true);
             }
 
@@ -257,7 +307,7 @@ namespace Moruton.Gimmicks.Editor
             }
 
             string json = File.ReadAllText(vpmManifestPath);
-            
+
             json = UpdateJsonVersion(json, "dependencies", PackageName, newVersion);
             json = UpdateJsonVersion(json, "locked", PackageName, newVersion);
 
@@ -268,7 +318,7 @@ namespace Moruton.Gimmicks.Editor
         {
             string searchPattern = $"\"{packageName}\"";
             int packageIndex = json.IndexOf(searchPattern);
-            
+
             while (packageIndex != -1)
             {
                 int sectionStart = json.LastIndexOf($"\"{section}\"", packageIndex);
@@ -312,7 +362,7 @@ namespace Moruton.Gimmicks.Editor
 
                 int valueStart = json.IndexOf("\"", versionStart + 10) + 1;
                 int valueEnd = json.IndexOf("\"", valueStart);
-                
+
                 if (valueStart > 0 && valueEnd > valueStart)
                 {
                     json = json.Substring(0, valueStart) + newVersion + json.Substring(valueEnd);
