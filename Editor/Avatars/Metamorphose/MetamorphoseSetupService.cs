@@ -171,7 +171,7 @@ namespace Moruton.Gimmicks.Editor
             if (script.Avatar == null) return;
 
             var mergeAnimator = script.Avatar.AddComponent<ModularAvatarMergeAnimator>();
-            mergeAnimator.animator = script.Animator;
+            mergeAnimator.animator = script.Animator.runtimeAnimatorController;
             mergeAnimator.pathMode = MergeAnimatorPathMode.Relative;
 
             EditorUtility.SetDirty(script.Avatar);
