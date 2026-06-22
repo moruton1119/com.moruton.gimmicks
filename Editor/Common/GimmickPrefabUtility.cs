@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Moruton.Gimmicks.Editor
 {
@@ -33,7 +34,7 @@ namespace Moruton.Gimmicks.Editor
         {
             if (source == null || parent == null) return null;
 
-            var instance = Instantiate(source, parent);
+            var instance = Object.Instantiate(source, parent);
             instance.name = overrideName ?? source.name;
             return instance;
         }
@@ -49,10 +50,10 @@ namespace Moruton.Gimmicks.Editor
             while (parent.childCount > 0)
             {
                 var child = parent.GetChild(0);
-                DestroyImmediate(child.gameObject);
+                Object.DestroyImmediate(child.gameObject);
             }
 
-            var instance = Instantiate(replacement, parent);
+            var instance = Object.Instantiate(replacement, parent);
             instance.name = name ?? replacement.name;
         }
 
@@ -70,10 +71,10 @@ namespace Moruton.Gimmicks.Editor
                 while (item.targetParent.childCount > 0)
                 {
                     var child = item.targetParent.GetChild(0);
-                    DestroyImmediate(child.gameObject);
+                    Object.DestroyImmediate(child.gameObject);
                 }
 
-                var instance = Instantiate(item.sourceObject, item.targetParent);
+                var instance = Object.Instantiate(item.sourceObject, item.targetParent);
                 instance.name = item.sourceObject.name;
             }
         }
