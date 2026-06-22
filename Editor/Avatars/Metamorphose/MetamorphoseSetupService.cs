@@ -170,17 +170,9 @@ namespace Moruton.Gimmicks.Editor
         {
             if (script.Avatar == null) return;
 
-            var mergeAnimator = script.Avatar.AddComponent<MergeAnimator>();
+            var mergeAnimator = script.Avatar.AddComponent<ModularAvatarMergeAnimator>();
             mergeAnimator.animator = script.Animator;
-
-            if (script.OnePiece != null && script.Model != null)
-            {
-                var pathMap = new MergeBlendShapePathMap();
-                pathMap.Object = script.Model;
-                pathMap.BlendShapeName = "nul";
-
-                mergeAnimator.PathMap.AddItem(pathMap);
-            }
+            mergeAnimator.pathMode = MergeAnimatorPathMode.Relative;
 
             EditorUtility.SetDirty(script.Avatar);
         }
