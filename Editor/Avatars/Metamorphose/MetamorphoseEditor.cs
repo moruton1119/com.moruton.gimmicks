@@ -336,18 +336,7 @@ namespace Moruton.Gimmicks.Editor
                 Repaint();
             };
 
-            // Developer
-            root.Q<Button>("btn-gen-anim").clicked += () =>
-            {
-                MetamorphoseSetupService.GenerateAnimations((PrettyCureMirror)target);
-            };
-
-            root.Q<Button>("btn-reprocess").clicked += () =>
-            {
-                MetamorphoseSetupService.ExecuteFullSetup((PrettyCureMirror)target);
-                serializedObject.Update();
-                Repaint();
-            };
+            // Developer buttons removed (no longer needed)
         }
 
         private void SwitchLanguage(int index)

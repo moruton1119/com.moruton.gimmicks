@@ -210,8 +210,7 @@
         <ui:VisualElement class="spacer-sm" />
 
         <!-- Actions -->
-        <ui:Button name="btn-gen-anim" class="dev-btn" text="Generate Animations" />
-        <ui:Button name="btn-reprocess" class="dev-btn" text="Full Re-process" />
+        <!-- Developer buttons removed -->
       </ui:VisualElement>
     </ui:VisualElement>
 
