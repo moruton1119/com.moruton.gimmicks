@@ -58,40 +58,32 @@ namespace Moruton.Gimmicks.Editor
 
         public override VisualElement CreateInspectorGUI()
         {
-            _root = new VisualElement();
-
-            // UXML/USS 読み込み
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath);
             if (visualTree == null)
             {
-                _root.Add(new Label($"Error: Could not load {UxmlPath}"));
-                return _root;
+                return new Label($"Error: Could not load {UxmlPath}");
             }
-            var clone = visualTree.CloneTree();
-            _root.Add(clone);
 
-            // USS（UXMLのStyle srcからも読まれるが、念のため）
-            // var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
-            // if (styleSheet != null) clone.styleSheets.Add(styleSheet);
+            // CloneTreeの戻り値をそのまま返す（CustomEditorは自動bind）
+            _root = visualTree.CloneTree();
 
-            // SerializedObject バインディング
-            clone.Bind(serializedObject);
+            // InspectorがserializedObjectを自動bindするので手動Bindは不要
 
             // Header (IMGUI wrapped)
-            var headerContainer = clone.Q<VisualElement>("header-container");
+            var headerContainer = _root.Q<VisualElement>("header-container");
             headerContainer.Add(new IMGUIContainer(() => MorutonAvatarPackageEditorHelper.DrawHeader()));
 
             // ローカライゼーション適用
-            ApplyLocalization(clone);
+            ApplyLocalization(_root);
 
             // ステップトグル
-            SetupStepToggles(clone);
+            SetupStepToggles(_root);
 
             // ボタン コールバック
-            SetupButtonCallbacks(clone);
+            SetupButtonCallbacks(_root);
 
             // 初期プレビュー
-            UpdateAllPreviews(clone);
+            UpdateAllPreviews(_root);
 
             return _root;
         }
@@ -168,8 +160,7 @@ namespace Moruton.Gimmicks.Editor
         private void ReloadAndApplyLocalization()
         {
             LocalizationManager.Load("PrettyCureMirror", languageCodes[_selectedLanguage]);
-            var clone = _root?.Q<VisualElement>("root");
-            if (clone != null) ApplyLocalization(clone);
+            if (_root != null) ApplyLocalization(_root);
         }
 
         #endregion
