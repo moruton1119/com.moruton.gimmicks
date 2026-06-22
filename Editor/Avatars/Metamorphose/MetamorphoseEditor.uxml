@@ -24,12 +24,12 @@
         <ui:Label name="step1-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
         <ui:Label name="step1-avatar-label" class="section-label" />
-        <ui:PropertyField binding-path="avatar" name="pf-avatar" />
-        <ui:PropertyField binding-path="model" name="pf-model" />
-        <ui:PropertyField binding-path="animator" name="pf-animator" />
+        <ui:VisualElement name="slot-avatar" />
+        <ui:VisualElement name="slot-model" />
+        <ui:VisualElement name="slot-animator" />
         <ui:VisualElement class="spacer-md" />
         <ui:Label name="step1-off-label" class="section-label" />
-        <ui:PropertyField binding-path="offTargets" name="pf-offTargets" />
+        <ui:VisualElement name="slot-offTargets" />
       </ui:VisualElement>
     </ui:VisualElement>
 
@@ -45,7 +45,7 @@
         <!-- Unpack Section -->
         <ui:Label name="step2-unpack-label" class="section-label" />
         <ui:HelpBox name="step2-unpack-help" message-type="Info" />
-        <ui:PropertyField binding-path="itemToUnpack" name="pf-itemToUnpack" />
+        <ui:VisualElement name="slot-itemToUnpack" />
         <ui:Button name="btn-unpack" class="action-btn" text="Unpack Prefab" />
 
         <ui:VisualElement class="spacer-md" />
@@ -58,36 +58,36 @@
         <!-- Head -->
         <ui:VisualElement class="part-section">
           <ui:Label name="label-head-target" class="part-label" />
-          <ui:PropertyField binding-path="headTarget" name="pf-headTarget" label="Target" />
+          <ui:VisualElement name="slot-headTarget" />
           <ui:Label name="label-head-items" class="part-label" />
-          <ui:PropertyField binding-path="headItems" name="pf-headItems" label="Items" />
+          <ui:VisualElement name="slot-headItems" />
           <ui:VisualElement name="head-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Body -->
         <ui:VisualElement class="part-section">
           <ui:Label name="label-body-target" class="part-label" />
-          <ui:PropertyField binding-path="bodyTarget" name="pf-bodyTarget" label="Target" />
+          <ui:VisualElement name="slot-bodyTarget" />
           <ui:Label name="label-body-items" class="part-label" />
-          <ui:PropertyField binding-path="bodyItems" name="pf-bodyItems" label="Items" />
+          <ui:VisualElement name="slot-bodyItems" />
           <ui:VisualElement name="body-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Hand -->
         <ui:VisualElement class="part-section">
           <ui:Label name="label-hand-target" class="part-label" />
-          <ui:PropertyField binding-path="handTarget" name="pf-handTarget" label="Target" />
+          <ui:VisualElement name="slot-handTarget" />
           <ui:Label name="label-hand-items" class="part-label" />
-          <ui:PropertyField binding-path="handItems" name="pf-handItems" label="Items" />
+          <ui:VisualElement name="slot-handItems" />
           <ui:VisualElement name="hand-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Leg -->
         <ui:VisualElement class="part-section">
           <ui:Label name="label-leg-target" class="part-label" />
-          <ui:PropertyField binding-path="legTarget" name="pf-legTarget" label="Target" />
+          <ui:VisualElement name="slot-legTarget" />
           <ui:Label name="label-leg-items" class="part-label" />
-          <ui:PropertyField binding-path="legItems" name="pf-legItems" label="Items" />
+          <ui:VisualElement name="slot-legItems" />
           <ui:VisualElement name="leg-preview" class="preview-row" />
         </ui:VisualElement>
       </ui:VisualElement>
@@ -101,7 +101,7 @@
       <ui:VisualElement name="step3-body" class="step-body collapsed">
         <ui:Label name="step3-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
-        <ui:PropertyField binding-path="gimmickColor" name="pf-gimmickColor" label="Gimmick Color" />
+        <ui:VisualElement name="slot-gimmickColor" />
       </ui:VisualElement>
     </ui:VisualElement>
 
@@ -123,14 +123,14 @@
 
         <!-- OnePiece -->
         <ui:Label name="step4-onepiece-label" class="section-label" />
-        <ui:PropertyField binding-path="onePiece" name="pf-onePiece" label="OnePiece" />
-        <ui:PropertyField binding-path="colaboFBX" name="pf-colaboFBX" label="FBX" />
+        <ui:VisualElement name="slot-onePiece" />
+        <ui:VisualElement name="slot-colaboFBX" />
         <ui:VisualElement class="spacer-sm" />
 
         <!-- Additional Item -->
         <ui:Label name="step4-additem-label" class="section-label" />
-        <ui:PropertyField binding-path="colaboItemTarget" name="pf-colaboItemTarget" label="Target" />
-        <ui:PropertyField binding-path="colaboItem" name="pf-colaboItem" label="Item" />
+        <ui:VisualElement name="slot-colaboItemTarget" />
+        <ui:VisualElement name="slot-colaboItem" />
         <ui:VisualElement class="spacer-sm" />
 
         <!-- Fade Effects -->
@@ -138,30 +138,30 @@
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Head" class="fade-part-label" />
-          <ui:PropertyField binding-path="fadeHead" name="pf-fadeHead" />
-          <ui:PropertyField binding-path="fadeHeadItems" name="pf-fadeHeadItems" />
-          <ui:PropertyField binding-path="fadeHeadMaterial" name="pf-fadeHeadMaterial" />
+          <ui:VisualElement name="slot-fadeHead" />
+          <ui:VisualElement name="slot-fadeHeadItems" />
+          <ui:VisualElement name="slot-fadeHeadMaterial" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Body" class="fade-part-label" />
-          <ui:PropertyField binding-path="fadeBody" name="pf-fadeBody" />
-          <ui:PropertyField binding-path="fadeBodyItems" name="pf-fadeBodyItems" />
-          <ui:PropertyField binding-path="fadeBodyMaterial" name="pf-fadeBodyMaterial" />
+          <ui:VisualElement name="slot-fadeBody" />
+          <ui:VisualElement name="slot-fadeBodyItems" />
+          <ui:VisualElement name="slot-fadeBodyMaterial" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Arm" class="fade-part-label" />
-          <ui:PropertyField binding-path="fadeArm" name="pf-fadeArm" />
-          <ui:PropertyField binding-path="fadeArmItems" name="pf-fadeArmItems" />
-          <ui:PropertyField binding-path="fadeArmMaterial" name="pf-fadeArmMaterial" />
+          <ui:VisualElement name="slot-fadeArm" />
+          <ui:VisualElement name="slot-fadeArmItems" />
+          <ui:VisualElement name="slot-fadeArmMaterial" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Leg" class="fade-part-label" />
-          <ui:PropertyField binding-path="fadeLeg" name="pf-fadeLeg" />
-          <ui:PropertyField binding-path="fadeLegItems" name="pf-fadeLegItems" />
-          <ui:PropertyField binding-path="fadeLegMaterial" name="pf-fadeLegMaterial" />
+          <ui:VisualElement name="slot-fadeLeg" />
+          <ui:VisualElement name="slot-fadeLegItems" />
+          <ui:VisualElement name="slot-fadeLegMaterial" />
         </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>

@@ -15,7 +15,6 @@ namespace Moruton.Gimmicks.Editor
     public class MetamorphoseEditor : UnityEditor.Editor
     {
         private const string UxmlPath = "Packages/com.moruton.gimmicks/Editor/Avatars/Metamorphose/MetamorphoseEditor.uxml";
-        private const string UssPath = "Packages/com.moruton.gimmicks/Editor/Avatars/Metamorphose/MetamorphoseEditor.uss";
 
         private readonly string[] languageCodes = { "ja", "en", "ko", "it", "es" };
 
@@ -23,7 +22,41 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private Color _lastGimmickColor;
 
-        // Localization helpers
+        // binding-path → 表示ラベル のマッピング
+        private static readonly (string path, string label)[] FieldBindings = new[]
+        {
+            ("avatar", null),
+            ("model", null),
+            ("animator", null),
+            ("offTargets", null),
+            ("itemToUnpack", null),
+            ("headTarget", "Target"),
+            ("headItems", "Items"),
+            ("bodyTarget", "Target"),
+            ("bodyItems", "Items"),
+            ("handTarget", "Target"),
+            ("handItems", "Items"),
+            ("legTarget", "Target"),
+            ("legItems", "Items"),
+            ("gimmickColor", "Gimmick Color"),
+            ("onePiece", "OnePiece"),
+            ("colaboFBX", "FBX"),
+            ("colaboItemTarget", "Target"),
+            ("colaboItem", "Item"),
+            ("fadeHead", null),
+            ("fadeHeadItems", null),
+            ("fadeHeadMaterial", null),
+            ("fadeBody", null),
+            ("fadeBodyItems", null),
+            ("fadeBodyMaterial", null),
+            ("fadeArm", null),
+            ("fadeArmItems", null),
+            ("fadeArmMaterial", null),
+            ("fadeLeg", null),
+            ("fadeLegItems", null),
+            ("fadeLegMaterial", null),
+        };
+
         private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
         private string LC(string key) => LocalizationManager.GetCommon(key);
 
@@ -47,7 +80,6 @@ namespace Moruton.Gimmicks.Editor
         {
             if (target == null) return;
 
-            // ギミック色の変更を監視
             var script = (PrettyCureMirror)target;
             if (script.gimmickColor != _lastGimmickColor)
             {
@@ -64,16 +96,16 @@ namespace Moruton.Gimmicks.Editor
                 return new Label($"Error: Could not load {UxmlPath}");
             }
 
-            // CloneTreeの戻り値をそのまま返す（CustomEditorは自動bind）
             _root = visualTree.CloneTree();
 
-            // InspectorがserializedObjectを自動bindするので手動Bindは不要
+            // PropertyField をスロットに手動生成
+            CreatePropertyFields();
 
             // Header (IMGUI wrapped)
             var headerContainer = _root.Q<VisualElement>("header-container");
             headerContainer.Add(new IMGUIContainer(() => MorutonAvatarPackageEditorHelper.DrawHeader()));
 
-            // ローカライゼーション適用
+            // ローカライゼーション
             ApplyLocalization(_root);
 
             // ステップトグル
@@ -82,11 +114,31 @@ namespace Moruton.Gimmicks.Editor
             // ボタン コールバック
             SetupButtonCallbacks(_root);
 
+            // Bind
+            _root.Bind(serializedObject);
+
             // 初期プレビュー
             UpdateAllPreviews(_root);
 
             return _root;
         }
+
+        #region PropertyField Generation
+
+        private void CreatePropertyFields()
+        {
+            foreach (var (path, label) in FieldBindings)
+            {
+                var slot = _root.Q<VisualElement>($"slot-{path}");
+                if (slot == null) continue;
+
+                var pf = new PropertyField { bindingPath = path };
+                if (label != null) pf.label = label;
+                slot.Add(pf);
+            }
+        }
+
+        #endregion
 
         #region Localization
 
@@ -109,9 +161,9 @@ namespace Moruton.Gimmicks.Editor
             // Step 1
             root.Q<Label>("step1-desc").text = L("step1_description");
             root.Q<Label>("step1-avatar-label").text = L("step1_avatar_label");
-            SetPropLabel(root, "pf-avatar", L("step1_avatar"));
-            SetPropLabel(root, "pf-model", L("step1_model"));
-            SetPropLabel(root, "pf-animator", L("step1_animator"));
+            SetPropLabel(root, "slot-avatar", L("step1_avatar"));
+            SetPropLabel(root, "slot-model", L("step1_model"));
+            SetPropLabel(root, "slot-animator", L("step1_animator"));
             root.Q<Label>("step1-off-label").text = L("step1_before_clothes_label");
 
             // Step 2
@@ -133,28 +185,32 @@ namespace Moruton.Gimmicks.Editor
 
             // Step 3
             root.Q<Label>("step3-desc").text = L("step3_description");
-            SetPropLabel(root, "pf-gimmickColor", L("step3_color_label"));
+            SetPropLabel(root, "slot-gimmickColor", L("step3_color_label"));
 
             // Step 4
             root.Q<Label>("step4-desc").text = L("step4_description");
             root.Q<Button>("btn-colabo-shop").text = LC("colabo_shop_button");
             root.Q<HelpBox>("step4-colabo-help").text = LC("colabo_info");
             root.Q<Label>("step4-onepiece-label").text = L("step4_onepiece_title");
-            SetPropLabel(root, "pf-onePiece", L("step4_onepiece_label"));
-            SetPropLabel(root, "pf-colaboFBX", "FBX");
+            SetPropLabel(root, "slot-onePiece", L("step4_onepiece_label"));
+            SetPropLabel(root, "slot-colaboFBX", "FBX");
             root.Q<Label>("step4-additem-label").text = L("step4_additional_item_title");
-            SetPropLabel(root, "pf-colaboItemTarget", L("step4_additional_item_target"));
-            SetPropLabel(root, "pf-colaboItem", L("step4_additional_item"));
+            SetPropLabel(root, "slot-colaboItemTarget", L("step4_additional_item_target"));
+            SetPropLabel(root, "slot-colaboItem", L("step4_additional_item"));
             root.Q<Label>("step4-fade-label").text = L("step4_fade_fx_title");
 
             // Setup Button
             root.Q<Button>("btn-setup").text = LC("setup_button");
         }
 
-        private void SetPropLabel(VisualElement root, string name, string label)
+        private void SetPropLabel(VisualElement root, string slotName, string label)
         {
-            var pf = root.Q<PropertyField>(name);
-            if (pf != null) pf.label = label;
+            var slot = root.Q<VisualElement>(slotName);
+            if (slot != null)
+            {
+                var pf = slot.Query<PropertyField>().First();
+                if (pf != null) pf.label = label;
+            }
         }
 
         private void ReloadAndApplyLocalization()
@@ -262,14 +318,12 @@ namespace Moruton.Gimmicks.Editor
             _selectedLanguage = index;
             EditorPrefs.SetInt("MetamorphoseEditor_Language", _selectedLanguage);
 
-            // ボタンUI更新
             for (int i = 0; i < languageCodes.Length; i++)
             {
                 var btn = _root.Q<Button>($"lang-btn-{i}");
                 if (btn != null) btn.EnableInClassList("selected", i == index);
             }
 
-            // テキスト更新
             ReloadAndApplyLocalization();
         }
 
