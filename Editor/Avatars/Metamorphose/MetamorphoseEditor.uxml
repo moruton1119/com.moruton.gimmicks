@@ -57,8 +57,6 @@
 
         <!-- Head -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-head-target" class="part-label" />
-          <ui:VisualElement name="slot-headTarget" />
           <ui:Label name="label-head-items" class="part-label" />
           <ui:VisualElement name="slot-headItems" />
           <ui:VisualElement name="head-preview" class="preview-row" />
@@ -66,8 +64,6 @@
 
         <!-- Body -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-body-target" class="part-label" />
-          <ui:VisualElement name="slot-bodyTarget" />
           <ui:Label name="label-body-items" class="part-label" />
           <ui:VisualElement name="slot-bodyItems" />
           <ui:VisualElement name="body-preview" class="preview-row" />
@@ -75,8 +71,6 @@
 
         <!-- Hand -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-hand-target" class="part-label" />
-          <ui:VisualElement name="slot-handTarget" />
           <ui:Label name="label-hand-items" class="part-label" />
           <ui:VisualElement name="slot-handItems" />
           <ui:VisualElement name="hand-preview" class="preview-row" />
@@ -84,8 +78,6 @@
 
         <!-- Leg -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-leg-target" class="part-label" />
-          <ui:VisualElement name="slot-legTarget" />
           <ui:Label name="label-leg-items" class="part-label" />
           <ui:VisualElement name="slot-legItems" />
           <ui:VisualElement name="leg-preview" class="preview-row" />
@@ -121,48 +113,7 @@
         <ui:HelpBox name="step4-colabo-help" message-type="Info" />
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- OnePiece -->
-        <ui:Label name="step4-onepiece-label" class="section-label" />
-        <ui:VisualElement name="slot-onePiece" />
-        <ui:VisualElement name="slot-colaboFBX" />
-        <ui:VisualElement class="spacer-sm" />
-
-        <!-- Additional Item -->
-        <ui:Label name="step4-additem-label" class="section-label" />
-        <ui:VisualElement name="slot-colaboItemTarget" />
-        <ui:VisualElement name="slot-colaboItem" />
-        <ui:VisualElement class="spacer-sm" />
-
-        <!-- Fade Effects -->
-        <ui:Label name="step4-fade-label" class="section-label" />
-
-        <ui:VisualElement class="fade-section">
-          <ui:Label text="Head" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeHead" />
-          <ui:VisualElement name="slot-fadeHeadItems" />
-          <ui:VisualElement name="slot-fadeHeadMaterial" />
-        </ui:VisualElement>
-
-        <ui:VisualElement class="fade-section">
-          <ui:Label text="Body" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeBody" />
-          <ui:VisualElement name="slot-fadeBodyItems" />
-          <ui:VisualElement name="slot-fadeBodyMaterial" />
-        </ui:VisualElement>
-
-        <ui:VisualElement class="fade-section">
-          <ui:Label text="Arm" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeArm" />
-          <ui:VisualElement name="slot-fadeArmItems" />
-          <ui:VisualElement name="slot-fadeArmMaterial" />
-        </ui:VisualElement>
-
-        <ui:VisualElement class="fade-section">
-          <ui:Label text="Leg" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeLeg" />
-          <ui:VisualElement name="slot-fadeLegItems" />
-          <ui:VisualElement name="slot-fadeLegMaterial" />
-        </ui:VisualElement>
+        <!-- Colabo Shop / Preview only (OnePiece, Colabo, Fade are developer-only) -->
       </ui:VisualElement>
     </ui:VisualElement>
 
@@ -191,6 +142,21 @@
         <ui:VisualElement name="slot-devLegTarget" />
         <ui:VisualElement name="slot-devOnePiece" />
         <ui:VisualElement name="slot-devColaboItemTarget" />
+        <ui:VisualElement name="slot-devColaboItem" />
+        <ui:VisualElement name="slot-devColaboFBX" />
+
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- dev_fade_label -->
+        <ui:Label name="dev-fade-label" class="section-label" />
+        <ui:VisualElement name="slot-devFadeHead" />
+        <ui:VisualElement name="slot-devFadeHeadItems" />
+        <ui:VisualElement name="slot-devFadeBody" />
+        <ui:VisualElement name="slot-devFadeBodyItems" />
+        <ui:VisualElement name="slot-devFadeArm" />
+        <ui:VisualElement name="slot-devFadeArmItems" />
+        <ui:VisualElement name="slot-devFadeLeg" />
+        <ui:VisualElement name="slot-devFadeLegItems" />
 
         <ui:VisualElement class="spacer-sm" />
 
@@ -206,11 +172,6 @@
         <!-- dev_gimmick_color_targets -->
         <ui:Label name="dev-gimmick-color-label" class="section-label" />
         <ui:VisualElement name="slot-gimmickCollar" />
-
-        <ui:VisualElement class="spacer-sm" />
-
-        <!-- Actions -->
-        <!-- Developer buttons removed -->
       </ui:VisualElement>
     </ui:VisualElement>
 

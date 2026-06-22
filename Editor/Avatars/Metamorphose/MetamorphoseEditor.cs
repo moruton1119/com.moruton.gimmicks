@@ -22,8 +22,7 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private Color _lastGimmickColor;
 
-        // binding-path → 表示ラベル のマッピング
-        // Step フィールド (ユーザー向け)
+        // Step フィールド (ユーザー向け) — ターゲット・フェード・マテリアルはDevModeのみ
         private static readonly (string path, string label)[] FieldBindings = new[]
         {
             ("avatar", null),
@@ -31,31 +30,11 @@ namespace Moruton.Gimmicks.Editor
             ("animator", null),
             ("offTargets", null),
             ("itemToUnpack", null),
-            ("headTarget", "Target"),
-            ("headItems", "Items"),
-            ("bodyTarget", "Target"),
-            ("bodyItems", "Items"),
-            ("handTarget", "Target"),
-            ("handItems", "Items"),
-            ("legTarget", "Target"),
-            ("legItems", "Items"),
-            ("gimmickColor", "Gimmick Color"),
-            ("onePiece", "OnePiece"),
-            ("colaboFBX", "FBX"),
-            ("colaboItemTarget", "Target"),
-            ("colaboItem", "Item"),
-            ("fadeHead", null),
-            ("fadeHeadItems", null),
-            ("fadeHeadMaterial", null),
-            ("fadeBody", null),
-            ("fadeBodyItems", null),
-            ("fadeBodyMaterial", null),
-            ("fadeArm", null),
-            ("fadeArmItems", null),
-            ("fadeArmMaterial", null),
-            ("fadeLeg", null),
-            ("fadeLegItems", null),
-            ("fadeLegMaterial", null),
+            ("headItems", null),
+            ("bodyItems", null),
+            ("handItems", null),
+            ("legItems", null),
+            ("gimmickColor", null),
         };
 
         // Developer Mode フィールド (開発者向け)
@@ -72,6 +51,16 @@ namespace Moruton.Gimmicks.Editor
             ("legTarget", "Leg Target", "slot-devLegTarget"),
             ("onePiece", "OnePiece", "slot-devOnePiece"),
             ("colaboItemTarget", "Colabo Item Target", "slot-devColaboItemTarget"),
+            ("colaboItem", "Colabo Item", "slot-devColaboItem"),
+            ("colaboFBX", "Colabo FBX", "slot-devColaboFBX"),
+            ("fadeHead", "Fade Head", "slot-devFadeHead"),
+            ("fadeHeadItems", "Fade Head Items", "slot-devFadeHeadItems"),
+            ("fadeBody", "Fade Body", "slot-devFadeBody"),
+            ("fadeBodyItems", "Fade Body Items", "slot-devFadeBodyItems"),
+            ("fadeArm", "Fade Arm", "slot-devFadeArm"),
+            ("fadeArmItems", "Fade Arm Items", "slot-devFadeArmItems"),
+            ("fadeLeg", "Fade Leg", "slot-devFadeLeg"),
+            ("fadeLegItems", "Fade Leg Items", "slot-devFadeLegItems"),
             ("fadeHeadMaterial", "Head Material", "slot-devFadeHeadMaterial"),
             ("fadeBodyMaterial", "Body Material", "slot-devFadeBodyMaterial"),
             ("fadeArmMaterial", "Arm Material", "slot-devFadeArmMaterial"),
@@ -223,13 +212,6 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("step4-desc").text = L("step4_description");
             root.Q<Button>("btn-colabo-shop").text = LC("colabo_shop_button");
             root.Q<HelpBox>("step4-colabo-help").text = LC("colabo_info");
-            root.Q<Label>("step4-onepiece-label").text = L("step4_onepiece_title");
-            SetPropLabel(root, "slot-onePiece", L("step4_onepiece_label"));
-            SetPropLabel(root, "slot-colaboFBX", "FBX");
-            root.Q<Label>("step4-additem-label").text = L("step4_additional_item_title");
-            SetPropLabel(root, "slot-colaboItemTarget", L("step4_additional_item_target"));
-            SetPropLabel(root, "slot-colaboItem", L("step4_additional_item"));
-            root.Q<Label>("step4-fade-label").text = L("step4_fade_fx_title");
 
             // Setup Button
             root.Q<Button>("btn-setup").text = LC("setup_button");
@@ -237,6 +219,7 @@ namespace Moruton.Gimmicks.Editor
             // Developer Mode labels
             root.Q<Label>("dev-basic-label").text = LC("dev_basic_label");
             root.Q<Label>("dev-target-label").text = LC("dev_target_label");
+            root.Q<Label>("dev-fade-label").text = L("step4_fade_fx_title");
             root.Q<Label>("dev-material-label").text = LC("dev_material_label");
             root.Q<Label>("dev-gimmick-color-label").text = LC("dev_gimmick_color_targets");
         }
