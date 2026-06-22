@@ -23,7 +23,7 @@ namespace Moruton.Gimmicks.Editor
         private Color _lastGimmickColor;
 
         // Step フィールド (ユーザー向け) — ターゲット・フェード・マテリアルはDevModeのみ
-        private static readonly (string path, string label)[] FieldBindings = new[]
+        private static readonly (string path, string label)[] FieldBindings = new (string, string)[]
         {
             ("avatar", null),
             ("model", null),
@@ -38,7 +38,7 @@ namespace Moruton.Gimmicks.Editor
         };
 
         // Developer Mode フィールド (開発者向け)
-        private static readonly (string path, string label, string slot)[] DevFieldBindings = new[]
+        private static readonly (string path, string label, string slot)[] DevFieldBindings = new (string, string, string)[]
         {
             ("dummyImage", "Dummy Image", "slot-dummyImage"),
             ("colaboShopTex", "Colabo Shop Tex", "slot-colaboShopTex"),
