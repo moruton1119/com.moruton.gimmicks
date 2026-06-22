@@ -1,23 +1,18 @@
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
+using Moruton.Gimmicks.Core;
 
 namespace Moruton.Gimmicks.Editor
 {
     public static class MorutonAvatarPackageEditorHelper
     {
-        private static string latestVersion = "";
-        private static bool isChecking = false;
-        private static bool isUpdating = false;
-        private static string updateStatus = "";
-        private const string RemotePackageJsonUrl = "https://raw.githubusercontent.com/moruton1119/com.moruton.gimmicks/main/package.json";
         private const string PackageName = "com.moruton.gimmicks";
-        private const string GitHubReleaseBaseUrl = "https://github.com/moruton1119/com.moruton.gimmicks/releases/download";
+
+        private static string _latestVersion = "";
+        private static bool _versionChecked = false;
 
         public static void DrawHeader()
         {
@@ -48,47 +43,65 @@ namespace Moruton.Gimmicks.Editor
 
         private static void CheckVersion()
         {
-            string currentVersion = GetCurrentVersion();
-            
-            if (!string.IsNullOrEmpty(updateStatus))
+            string currentVersion = GimmicksUpdateChecker.GetCurrentVersion();
+
+            // ステータスメッセージ表示
+            if (!string.IsNullOrEmpty(GimmicksUpdateChecker.UpdateStatus))
             {
-                EditorGUILayout.HelpBox(updateStatus, MessageType.Info);
+                EditorGUILayout.HelpBox(GimmicksUpdateChecker.UpdateStatus, MessageType.Info);
             }
 
-            if (isUpdating)
+            // 更新中はボタンを無効化
+            if (GimmicksUpdateChecker.IsUpdating)
             {
                 GUI.enabled = false;
             }
 
-            if (string.IsNullOrEmpty(latestVersion) && !isChecking)
+            // 初回のみバックグラウンドでフェッチ開始
+            if (!_versionChecked)
             {
-                isChecking = true;
-                FetchRemoteVersion();
+                _versionChecked = true;
+                GimmicksUpdateChecker.PrefetchLatestVersion();
+
+                // 数秒後にフェッチ結果を反映
+                EditorApplication.delayCall += async () =>
+                {
+                    await Task.Delay(3000);
+                    string latest = await GimmicksUpdateChecker.GetLatestVersionAsync();
+                    if (!string.IsNullOrEmpty(latest))
+                    {
+                        _latestVersion = latest;
+                    }
+                };
             }
 
-            if (!string.IsNullOrEmpty(latestVersion) && latestVersion != currentVersion)
+            // キャッシュまたは既取得の最新バージョンを確認
+            string latestFromCache = _latestVersion;
+            if (string.IsNullOrEmpty(latestFromCache))
             {
-                GUI.backgroundColor = Color.yellow;
-                EditorGUILayout.BeginVertical("box");
+                latestFromCache = GimmicksUpdateChecker.GetLatestVersionCached();
+            }
+
+            if (!string.IsNullOrEmpty(latestFromCache))
+            {
+                _latestVersion = latestFromCache;
+
+                if (SemVer.TryParse(latestFromCache, out var latVer) &&
+                    SemVer.TryParse(currentVersion, out var curVer))
                 {
-                    EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
-                    
-                    EditorGUILayout.BeginHorizontal();
-                    if (GUILayout.Button("自動更新", GUILayout.Height(25)))
+                    if (!latVer.IsPreRelease && latVer > curVer)
                     {
-                        StartAutoUpdate();
+                        DrawUpdateBanner(currentVersion, latestFromCache);
                     }
-                    if (GUILayout.Button("VCCで更新", GUILayout.Height(25)))
+                    else
                     {
-                        string projectPath = Directory.GetCurrentDirectory().Replace("\\", "/");
-                        projectPath = Uri.EscapeDataString(projectPath);
-                        Application.OpenURL($"vcc://vpm/open?path={projectPath}");
+                        EditorGUILayout.LabelField($"Version: {currentVersion} (Latest)", EditorStyles.miniLabel);
                     }
-                    EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndVertical();
-                GUI.backgroundColor = Color.white;
-                GUILayout.Space(5);
+                else
+                {
+                    EditorGUILayout.LabelField($"Version: {currentVersion}", EditorStyles.miniLabel);
+                }
             }
             else
             {
@@ -98,237 +111,44 @@ namespace Moruton.Gimmicks.Editor
             GUI.enabled = true;
         }
 
-        private static string GetCurrentVersion()
+        private static void DrawUpdateBanner(string currentVersion, string latestVersion)
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Packages", PackageName, "package.json");
-            if (File.Exists(path))
+            GUI.backgroundColor = Color.yellow;
+            EditorGUILayout.BeginVertical("box");
             {
-                string json = File.ReadAllText(path);
-                var pkg = JsonUtility.FromJson<PackageInfo>(json);
-                return pkg.version;
+                EditorGUILayout.LabelField($"🆕 アップデートが利用可能です! (v{currentVersion} -> v{latestVersion})", EditorStyles.boldLabel);
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("自動更新", GUILayout.Height(25)))
+                {
+                    StartAutoUpdate(latestVersion);
+                }
+                if (GUILayout.Button("VCCで更新", GUILayout.Height(25)))
+                {
+                    string projectPath = Directory.GetCurrentDirectory().Replace("\\", "/");
+                    projectPath = Uri.EscapeDataString(projectPath);
+                    Application.OpenURL($"vcc://vpm/open?path={projectPath}");
+                }
+                if (GUILayout.Button("手動ダウンロード", GUILayout.Height(25)))
+                {
+                    Application.OpenURL($"https://github.com/moruton1119/com.moruton.gimmicks/releases/latest");
+                }
+                EditorGUILayout.EndHorizontal();
             }
-            return "0.0.0";
+            EditorGUILayout.EndVertical();
+            GUI.backgroundColor = Color.white;
+            GUILayout.Space(5);
         }
 
-        private static async void FetchRemoteVersion()
+        private static async void StartAutoUpdate(string targetVersion)
         {
-            using (var request = UnityEngine.Networking.UnityWebRequest.Get(RemotePackageJsonUrl))
-            {
-                var operation = request.SendWebRequest();
-                while (!operation.isDone) await Task.Yield();
+            if (GimmicksUpdateChecker.IsUpdating) return;
 
-                if (request.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
-                {
-                    var pkg = JsonUtility.FromJson<PackageInfo>(request.downloadHandler.text);
-                    latestVersion = pkg.version;
-                }
-                isChecking = false;
+            bool success = await GimmicksUpdateChecker.DownloadAndInstallUpdateAsync(targetVersion);
+            if (success)
+            {
+                _latestVersion = targetVersion;
             }
-        }
-
-        private static async void StartAutoUpdate()
-        {
-            if (isUpdating || string.IsNullOrEmpty(latestVersion)) return;
-
-            isUpdating = true;
-            updateStatus = "アップデートを開始しています...";
-
-            try
-            {
-                await PerformUpdate();
-            }
-            catch (System.Exception e)
-            {
-                updateStatus = $"アップデートに失敗しました: {e.Message}";
-                Debug.LogError($"[MorutonGimmicks] Update failed: {e}");
-            }
-            finally
-            {
-                isUpdating = false;
-            }
-        }
-
-        private static async Task PerformUpdate()
-        {
-            string targetVersion = latestVersion;
-            string zipUrl = $"{GitHubReleaseBaseUrl}/v{targetVersion}/{PackageName}-{targetVersion}.zip";
-            string tempPath = Path.Combine(Path.GetTempPath(), "MorutonGimmicks_Update");
-            string zipPath = Path.Combine(tempPath, "update.zip");
-            string extractPath = Path.Combine(tempPath, "extracted");
-
-            updateStatus = $"v{targetVersion} をダウンロード中...";
-
-            if (Directory.Exists(tempPath))
-            {
-                Directory.Delete(tempPath, true);
-            }
-            Directory.CreateDirectory(tempPath);
-            Directory.CreateDirectory(extractPath);
-
-            using (var httpClient = new HttpClient())
-            {
-                httpClient.Timeout = TimeSpan.FromMinutes(5);
-                var bytes = await httpClient.GetByteArrayAsync(zipUrl);
-                File.WriteAllBytes(zipPath, bytes);
-            }
-
-            updateStatus = "ダウンロード完了。展開中...";
-
-            await Task.Run(() =>
-            {
-                ZipFile.ExtractToDirectory(zipPath, extractPath);
-            });
-
-            updateStatus = "パッケージを更新中...";
-
-            string packagePath = $"Packages/{PackageName}";
-            string absolutePackagePath = Path.GetFullPath(packagePath);
-
-            string sourceContentPath = extractPath;
-            if (Directory.Exists(Path.Combine(extractPath, PackageName)))
-            {
-                sourceContentPath = Path.Combine(extractPath, PackageName);
-            }
-
-            if (Directory.Exists(absolutePackagePath))
-            {
-                foreach (string file in Directory.GetFiles(absolutePackagePath, "*", SearchOption.AllDirectories))
-                {
-                    string relativePath = file.Substring(absolutePackagePath.Length).TrimStart(Path.DirectorySeparatorChar);
-                    string destFile = Path.Combine(sourceContentPath, relativePath);
-                    
-                    if (!File.Exists(destFile))
-                    {
-                        string metaFile = file + ".meta";
-                        if (File.Exists(metaFile))
-                        {
-                            File.Delete(metaFile);
-                        }
-                        File.Delete(file);
-                    }
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(absolutePackagePath);
-            }
-
-            foreach (string file in Directory.GetFiles(sourceContentPath, "*", SearchOption.AllDirectories))
-            {
-                string relativePath = file.Substring(sourceContentPath.Length).TrimStart(Path.DirectorySeparatorChar);
-                string destFile = Path.Combine(absolutePackagePath, relativePath);
-                string destDir = Path.GetDirectoryName(destFile);
-                
-                if (!Directory.Exists(destDir))
-                {
-                    Directory.CreateDirectory(destDir);
-                }
-                
-                File.Copy(file, destFile, true);
-            }
-
-            updateStatus = "vpm-manifest.json を更新中...";
-
-            UpdateVpmManifest(targetVersion);
-
-            try
-            {
-                Directory.Delete(tempPath, true);
-            }
-            catch { }
-
-            AssetDatabase.Refresh();
-
-            updateStatus = $"✅ v{targetVersion} に更新完了しました！";
-            Debug.Log($"[MorutonGimmicks] Successfully updated to v{targetVersion}");
-
-            latestVersion = targetVersion;
-        }
-
-        private static void UpdateVpmManifest(string newVersion)
-        {
-            string projectPath = Directory.GetCurrentDirectory();
-            string vpmManifestPath = Path.Combine(projectPath, "Packages", "vpm-manifest.json");
-
-            if (!File.Exists(vpmManifestPath))
-            {
-                Debug.LogWarning("[MorutonGimmicks] vpm-manifest.json not found");
-                return;
-            }
-
-            string json = File.ReadAllText(vpmManifestPath);
-            
-            json = UpdateJsonVersion(json, "dependencies", PackageName, newVersion);
-            json = UpdateJsonVersion(json, "locked", PackageName, newVersion);
-
-            File.WriteAllText(vpmManifestPath, json);
-        }
-
-        private static string UpdateJsonVersion(string json, string section, string packageName, string newVersion)
-        {
-            string searchPattern = $"\"{packageName}\"";
-            int packageIndex = json.IndexOf(searchPattern);
-            
-            while (packageIndex != -1)
-            {
-                int sectionStart = json.LastIndexOf($"\"{section}\"", packageIndex);
-                if (sectionStart == -1)
-                {
-                    packageIndex = json.IndexOf(searchPattern, packageIndex + 1);
-                    continue;
-                }
-
-                int braceDepth = 0;
-                int sectionBraceStart = -1;
-                for (int i = sectionStart; i < json.Length; i++)
-                {
-                    if (json[i] == '{')
-                    {
-                        braceDepth++;
-                        if (sectionBraceStart == -1) sectionBraceStart = i;
-                    }
-                    else if (json[i] == '}')
-                    {
-                        braceDepth--;
-                        if (braceDepth == 0)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                if (packageIndex < sectionStart)
-                {
-                    packageIndex = json.IndexOf(searchPattern, packageIndex + 1);
-                    continue;
-                }
-
-                int versionStart = json.IndexOf("\"version\"", packageIndex);
-                if (versionStart == -1)
-                {
-                    packageIndex = json.IndexOf(searchPattern, packageIndex + 1);
-                    continue;
-                }
-
-                int valueStart = json.IndexOf("\"", versionStart + 10) + 1;
-                int valueEnd = json.IndexOf("\"", valueStart);
-                
-                if (valueStart > 0 && valueEnd > valueStart)
-                {
-                    json = json.Substring(0, valueStart) + newVersion + json.Substring(valueEnd);
-                    break;
-                }
-
-                packageIndex = json.IndexOf(searchPattern, packageIndex + 1);
-            }
-
-            return json;
-        }
-
-        [System.Serializable]
-        private class PackageInfo
-        {
-            public string version;
         }
     }
 }
