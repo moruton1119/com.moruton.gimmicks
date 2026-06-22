@@ -3,7 +3,8 @@
     "rootNamespace": "Moruton.Gimmicks.Editor",
     "references": [
         "com.moruton.gimmicks",
-        "nadena.dev.modular-avatar.core"
+        "nadena.dev.modular-avatar.core",
+        "MorutonGimmicks.UpdateChecker.Editor"
     ],
     "includePlatforms": [
         "Editor"
