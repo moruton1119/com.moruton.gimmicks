@@ -152,8 +152,6 @@ namespace Moruton.Gimmicks.Editor
             return _root;
         }
 
-        #endregion
-
         #region PropertyField Generation
 
         private void CreatePropertyFields()
