@@ -1,0 +1,480 @@
+{
+    "name": "Moruton Laboratory",
+    "author": "moruton1119",
+    "id": "https://moruton1119.github.io/com.moruton.gimmicks/index.json",
+    "url": "https://moruton1119.github.io/com.moruton.gimmicks/index.json",
+    "packages": {
+        "com.moruton.gimmicks": {
+            "versions": {
+                "0.1.27": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.27",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.27/com.moruton.gimmicks-0.1.27.zip"
+                },
+                "0.1.26": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.26",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.26/com.moruton.gimmicks-0.1.26.zip"
+                },
+                "0.1.25": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.25",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.25/com.moruton.gimmicks-0.1.25.zip"
+                },
+                "0.1.24": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.24",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.24/com.moruton.gimmicks-0.1.24.zip"
+                },
+                "0.1.23": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.23",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.23/com.moruton.gimmicks-0.1.23.zip"
+                },
+                "0.1.22": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.22",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.22/com.moruton.gimmicks-0.1.22.zip"
+                },
+                "0.1.21": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.21",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.21/com.moruton.gimmicks-0.1.21.zip"
+                },
+                "0.1.20": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.20",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Fixed UdonSharp crash by wrapping Avatar dummy class in preprocessor guards.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.20/com.moruton.gimmicks-0.1.20.zip"
+                },
+                "0.1.19": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.19",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.19/com.moruton.gimmicks-0.1.19.zip"
+                },
+                "0.1.17": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.17",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.17/com.moruton.gimmicks-0.1.17.zip"
+                },
+                "0.1.16": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.16",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.16/com.moruton.gimmicks-0.1.16.zip"
+                },
+                "0.1.15": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.15",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.15/com.moruton.gimmicks-0.1.15.zip"
+                },
+                "0.1.14": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.14",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.14/com.moruton.gimmicks-0.1.14.zip"
+                },
+                "0.1.13": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.13",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.13/com.moruton.gimmicks-0.1.13.zip"
+                },
+                "0.1.11": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.11",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.11/com.moruton.gimmicks-0.1.11.zip"
+                },
+                "0.1.10": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.10",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks. Fixed asmdef structure for Avatar projects.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.10/com.moruton.gimmicks-0.1.10.zip"
+                },
+                "0.1.9": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.9",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Cleaned up redundant code.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.9/com.moruton.gimmicks-0.1.9.zip"
+                },
+                "0.1.8": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.8",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Cleaned up redundant code.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.8/com.moruton.gimmicks-0.1.8.zip"
+                },
+                "0.1.7": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.7",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Cleaned up redundant code.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.7/com.moruton.gimmicks-0.1.7.zip"
+                },
+                "0.1.6": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.6",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "BLM Connector and Morulab Launcher (UI Overhaul & Localization Fixes).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.6/com.moruton.gimmicks-0.1.6.zip"
+                },
+                "0.1.3": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.3",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Corrected GimmickSetupHelper GUID and added dummyImage to restore prefab compatibility.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.3/com.moruton.gimmicks-0.1.3.zip"
+                },
+                "0.1.2": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.2",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Fixed missing meta files and restored script links.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.2/com.moruton.gimmicks-0.1.2.zip"
+                },
+                "0.1.1": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.1",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Removed ImportManager.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.1/com.moruton.gimmicks-0.1.1.zip"
+                },
+                "0.1.0": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.0",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars). Fixed Launcher layout.",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.0/com.moruton.gimmicks-0.1.0.zip"
+                },
+                "0.0.20": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.20",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.20/com.moruton.gimmicks-0.0.20.zip"
+                },
+                "0.0.19": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.19",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.19/com.moruton.gimmicks-0.0.19.zip"
+                },
+                "0.0.18": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.18",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.18/com.moruton.gimmicks-0.0.18.zip"
+                },
+                "0.0.17": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.17",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.17/com.moruton.gimmicks-0.0.17.zip"
+                },
+                "0.0.15": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.15",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.15/com.moruton.gimmicks-0.0.15.zip"
+                },
+                "0.0.14": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.14",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.14/com.moruton.gimmicks-0.0.14.zip"
+                },
+                "0.0.13": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.13",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.13/com.moruton.gimmicks-0.0.13.zip"
+                },
+                "0.0.12": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.12",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.12/com.moruton.gimmicks-0.0.12.zip"
+                },
+                "0.0.11": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.11",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.11/com.moruton.gimmicks-0.0.11.zip"
+                },
+                "0.0.10": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.10",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.10/com.moruton.gimmicks-0.0.10.zip"
+                },
+                "0.0.9": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.9",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.9/com.moruton.gimmicks-0.0.9.zip"
+                },
+                "0.0.8": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.8",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.8/com.moruton.gimmicks-0.0.8.zip"
+                },
+                "0.0.7": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.7",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2019.4",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.7/com.moruton.gimmicks-0.0.7.zip"
+                },
+                "0.0.6": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.6",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.6/com.moruton.gimmicks-0.0.6.zip"
+                },
+                "0.0.5": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.5",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class for Moruton Laboratory gimmicks.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.5/com.moruton.gimmicks-0.0.5.zip"
+                },
+                "0.0.4": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.4",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class for Moruton Laboratory gimmicks.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.4/com.moruton.gimmicks-0.0.4.zip"
+                },
+                "0.0.3": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.3",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class for Moruton Laboratory gimmicks.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0",
+                        "com.vrchat.udonsharp": "1.0.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.3/com.moruton.gimmicks-0.0.3.zip"
+                },
+                "0.0.2": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.0.2",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class for Moruton Laboratory gimmicks.",
+                    "unity": "2022.3",
+                    "vpmDependencies": {
+                        "com.vrchat.worlds": "3.5.0",
+                        "com.vrchat.udonsharp": "1.0.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.0.2/com.moruton.gimmicks-0.0.2.zip"
+                },
+                "0.1.12": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.12",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Supports Worlds & Avatars).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.12/com.moruton.gimmicks-0.1.12.zip"
+                },
+                "0.1.28": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.28",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.28/com.moruton.gimmicks-0.1.28.zip"
+                },
+                "0.1.29": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.29",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.29/com.moruton.gimmicks-0.1.29.zip"
+                },
+                "0.1.30": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.1.30",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.1.30/com.moruton.gimmicks-0.1.30.zip"
+                },
+                "0.2.0": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.2.0",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.2.0/com.moruton.gimmicks-0.2.0.zip"
+                },
+                "0.2.1": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.2.1",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.2.1/com.moruton.gimmicks-0.2.1.zip"
+                },
+                "0.2.2": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.2.2",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.2.2/com.moruton.gimmicks-0.2.2.zip"
+                },
+                "0.3.0-beta.1": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.3.0-beta.1",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.1/com.moruton.gimmicks-0.3.0-beta.1.zip"
+                }
+            }
+        }
+    }
+}
