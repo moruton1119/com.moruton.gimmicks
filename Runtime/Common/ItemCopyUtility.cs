@@ -23,13 +23,13 @@ namespace Moruton.Gimmicks
                 {
                     var child = item.targetParent.GetChild(0);
                     if (Application.isPlaying)
-                        Destroy(child.gameObject);
+                        Object.Destroy(child.gameObject);
                     else
-                        DestroyImmediate(child.gameObject);
+                        Object.DestroyImmediate(child.gameObject);
                 }
 
                 // 新規インスタンスを作成
-                var instance = Instantiate(item.sourceObject, item.targetParent);
+                var instance = Object.Instantiate(item.sourceObject, item.targetParent);
                 instance.name = item.sourceObject.name;
             }
         }
