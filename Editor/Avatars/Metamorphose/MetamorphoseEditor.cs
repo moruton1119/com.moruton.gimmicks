@@ -101,6 +101,24 @@ namespace Moruton.Gimmicks.Editor
 
         public override VisualElement CreateInspectorGUI()
         {
+            try
+            {
+                return BuildInspector();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[MetamorphoseEditor] CreateInspectorGUI failed: {e}");
+                // フォールバック: デフォルトInspectorを返す
+                var fallback = new VisualElement();
+                var label = new Label("MetamorphoseEditor error - check Console");
+                label.style.color = Color.red;
+                fallback.Add(label);
+                return fallback;
+            }
+        }
+
+        private VisualElement BuildInspector()
+        {
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath);
             if (visualTree == null)
             {
@@ -133,6 +151,8 @@ namespace Moruton.Gimmicks.Editor
 
             return _root;
         }
+
+        #endregion
 
         #region PropertyField Generation
 
@@ -195,13 +215,9 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("step2-parts-label").text = L("step2_parts_title");
             root.Q<HelpBox>("step2-parts-help").text = L("step2_parts_help");
 
-            root.Q<Label>("label-head-target").text = L("step2_head_target");
             root.Q<Label>("label-head-items").text = L("step2_head_items");
-            root.Q<Label>("label-body-target").text = L("step2_body_target");
             root.Q<Label>("label-body-items").text = L("step2_body_items");
-            root.Q<Label>("label-hand-target").text = L("step2_hand_target");
             root.Q<Label>("label-hand-items").text = L("step2_hand_items");
-            root.Q<Label>("label-leg-target").text = L("step2_leg_target");
             root.Q<Label>("label-leg-items").text = L("step2_leg_items");
 
             // Step 3
