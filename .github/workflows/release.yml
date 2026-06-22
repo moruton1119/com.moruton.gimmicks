@@ -77,6 +77,8 @@ jobs:
           
           # Add/Update version
           pkg['url'] = zip_url
+          if '-' in tag_version:
+              pkg['prerelease'] = True
           idx['packages'][name]['versions'][tag_version] = pkg
           
           print(f'Adding package {name} version {tag_version}')
