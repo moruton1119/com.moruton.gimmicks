@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -28,54 +27,55 @@ namespace Moruton.Gimmicks.Editor
         }
 
         /// <summary>
-        /// Prefabを指定親の下にインスタンス化する。
+        /// 親の子のうち、指定名と一致しないものを削除し、
+        /// 一致するものが無ければ新規にインスタンス化して配置する（元の ReplaceOnePieceChild と同じロジック）。
+        /// Prefabの場合は接続を維持。Undo対応。
         /// </summary>
-        public static GameObject InstantiateUnder(GameObject source, Transform parent, string overrideName = null)
+        public static void ReplaceChild(Transform parent, GameObject newItem)
         {
-            if (source == null || parent == null) return null;
+            if (parent == null || newItem == null) return;
 
-            var instance = Object.Instantiate(source, parent);
-            instance.name = overrideName ?? source.name;
-            return instance;
-        }
-
-        /// <summary>
-        /// 親オブジェクトの子を別オブジェクトで置き換える。
-        /// 既存の子を削除して新しいものを追加する。
-        /// </summary>
-        public static void ReplaceChild(Transform parent, GameObject replacement, string name = null)
-        {
-            if (parent == null || replacement == null) return;
-
-            while (parent.childCount > 0)
+            // 既存の子を削除（名前が一致しないもの）
+            var toDelete = new System.Collections.Generic.List<Transform>();
+            foreach (Transform child in parent)
             {
-                var child = parent.GetChild(0);
-                Object.DestroyImmediate(child.gameObject);
+                if (child.name != newItem.name)
+                    toDelete.Add(child);
+            }
+            foreach (var child in toDelete)
+            {
+                Undo.DestroyObjectImmediate(child.gameObject);
             }
 
-            var instance = Object.Instantiate(replacement, parent);
-            instance.name = name ?? replacement.name;
-        }
-
-        /// <summary>
-        /// 複数アイテムをそれぞれのターゲット親にコピーする。
-        /// </summary>
-        public static void CopyItems(List<ItemData> items)
-        {
-            if (items == null) return;
-
-            foreach (var item in items)
+            // 新しいアイテムを追加
+            bool exists = false;
+            foreach (Transform child in parent)
             {
-                if (item.sourceObject == null || item.targetParent == null) continue;
-
-                while (item.targetParent.childCount > 0)
+                if (child.name == newItem.name)
                 {
-                    var child = item.targetParent.GetChild(0);
-                    Object.DestroyImmediate(child.gameObject);
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                GameObject instance;
+                if (PrefabUtility.IsPartOfPrefabAsset(newItem))
+                {
+                    instance = (GameObject)PrefabUtility.InstantiatePrefab(newItem, parent);
+                    Undo.RegisterCreatedObjectUndo(instance, "Create " + instance.name);
+                }
+                else
+                {
+                    instance = newItem;
+                    Undo.SetTransformParent(instance.transform, parent, "Move Item");
                 }
 
-                var instance = Object.Instantiate(item.sourceObject, item.targetParent);
-                instance.name = item.sourceObject.name;
+                instance.transform.localPosition = Vector3.zero;
+                instance.transform.localRotation = Quaternion.identity;
+                instance.transform.localScale = Vector3.one;
+                instance.name = newItem.name;
             }
         }
     }

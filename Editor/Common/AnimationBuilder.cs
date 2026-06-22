@@ -71,7 +71,7 @@ namespace Moruton.Gimmicks.Editor
         }
 
         /// <summary>
-        /// root から target までの相対パスを取得する。
+        /// root から target までの相対パスを取得する（元の PrettyCureMirrorEditor.GetPath と同じロジック）。
         /// </summary>
         public static string GetRelativePath(GameObject root, GameObject child)
         {
