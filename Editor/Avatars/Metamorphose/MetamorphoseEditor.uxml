@@ -1,0 +1,186 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
+  <Style src="MetamorphoseEditor.uss" />
+
+  <ui:VisualElement name="root" class="metamorphose-root">
+
+    <!-- ===== Header (IMGUI wrapped) ===== -->
+    <ui:VisualElement name="header-container" class="header-container" />
+
+    <!-- ===== Language Toolbar ===== -->
+    <ui:VisualElement name="lang-bar" class="lang-bar">
+      <ui:Button name="lang-btn-0" class="lang-btn selected" />
+      <ui:Button name="lang-btn-1" class="lang-btn" />
+      <ui:Button name="lang-btn-2" class="lang-btn" />
+      <ui:Button name="lang-btn-3" class="lang-btn" />
+      <ui:Button name="lang-btn-4" class="lang-btn" />
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-sm" />
+
+    <!-- ===== Step 1: 基本設定 ===== -->
+    <ui:VisualElement name="step1" class="step-section">
+      <ui:Button name="step1-toggle" class="step-toggle expanded" />
+      <ui:VisualElement name="step1-body" class="step-body">
+        <ui:Label name="step1-desc" class="step-desc" />
+        <ui:VisualElement class="spacer-sm" />
+        <ui:Label name="step1-avatar-label" class="section-label" />
+        <ui:PropertyField binding-path="avatar" name="pf-avatar" />
+        <ui:PropertyField binding-path="model" name="pf-model" />
+        <ui:PropertyField binding-path="animator" name="pf-animator" />
+        <ui:VisualElement class="spacer-md" />
+        <ui:Label name="step1-off-label" class="section-label" />
+        <ui:PropertyField binding-path="offTargets" name="pf-offTargets" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-xs" />
+
+    <!-- ===== Step 2: 変身後の衣装 ===== -->
+    <ui:VisualElement name="step2" class="step-section">
+      <ui:Button name="step2-toggle" class="step-toggle" />
+      <ui:VisualElement name="step2-body" class="step-body collapsed">
+        <ui:Label name="step2-desc" class="step-desc" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- Unpack Section -->
+        <ui:Label name="step2-unpack-label" class="section-label" />
+        <ui:HelpBox name="step2-unpack-help" message-type="Info" />
+        <ui:PropertyField binding-path="itemToUnpack" name="pf-itemToUnpack" />
+        <ui:Button name="btn-unpack" class="action-btn" text="Unpack Prefab" />
+
+        <ui:VisualElement class="spacer-md" />
+
+        <!-- Parts Section -->
+        <ui:Label name="step2-parts-label" class="section-label" />
+        <ui:HelpBox name="step2-parts-help" message-type="Info" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- Head -->
+        <ui:VisualElement class="part-section">
+          <ui:Label name="label-head-target" class="part-label" />
+          <ui:PropertyField binding-path="headTarget" name="pf-headTarget" label="Target" />
+          <ui:Label name="label-head-items" class="part-label" />
+          <ui:PropertyField binding-path="headItems" name="pf-headItems" label="Items" />
+          <ui:VisualElement name="head-preview" class="preview-row" />
+        </ui:VisualElement>
+
+        <!-- Body -->
+        <ui:VisualElement class="part-section">
+          <ui:Label name="label-body-target" class="part-label" />
+          <ui:PropertyField binding-path="bodyTarget" name="pf-bodyTarget" label="Target" />
+          <ui:Label name="label-body-items" class="part-label" />
+          <ui:PropertyField binding-path="bodyItems" name="pf-bodyItems" label="Items" />
+          <ui:VisualElement name="body-preview" class="preview-row" />
+        </ui:VisualElement>
+
+        <!-- Hand -->
+        <ui:VisualElement class="part-section">
+          <ui:Label name="label-hand-target" class="part-label" />
+          <ui:PropertyField binding-path="handTarget" name="pf-handTarget" label="Target" />
+          <ui:Label name="label-hand-items" class="part-label" />
+          <ui:PropertyField binding-path="handItems" name="pf-handItems" label="Items" />
+          <ui:VisualElement name="hand-preview" class="preview-row" />
+        </ui:VisualElement>
+
+        <!-- Leg -->
+        <ui:VisualElement class="part-section">
+          <ui:Label name="label-leg-target" class="part-label" />
+          <ui:PropertyField binding-path="legTarget" name="pf-legTarget" label="Target" />
+          <ui:Label name="label-leg-items" class="part-label" />
+          <ui:PropertyField binding-path="legItems" name="pf-legItems" label="Items" />
+          <ui:VisualElement name="leg-preview" class="preview-row" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-xs" />
+
+    <!-- ===== Step 3: ギミック色 ===== -->
+    <ui:VisualElement name="step3" class="step-section">
+      <ui:Button name="step3-toggle" class="step-toggle" />
+      <ui:VisualElement name="step3-body" class="step-body collapsed">
+        <ui:Label name="step3-desc" class="step-desc" />
+        <ui:VisualElement class="spacer-sm" />
+        <ui:PropertyField binding-path="gimmickColor" name="pf-gimmickColor" label="Gimmick Color" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-xs" />
+
+    <!-- ===== Step 4: コラボ・フェード演出 ===== -->
+    <ui:VisualElement name="step4" class="step-section">
+      <ui:Button name="step4-toggle" class="step-toggle" />
+      <ui:VisualElement name="step4-body" class="step-body collapsed">
+        <ui:Label name="step4-desc" class="step-desc" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- Colabo Shop Preview -->
+        <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
+        <ui:Button name="btn-colabo-shop" class="link-btn" text="Open Shop" />
+
+        <ui:HelpBox name="step4-colabo-help" message-type="Info" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- OnePiece -->
+        <ui:Label name="step4-onepiece-label" class="section-label" />
+        <ui:PropertyField binding-path="onePiece" name="pf-onePiece" label="OnePiece" />
+        <ui:PropertyField binding-path="colaboFBX" name="pf-colaboFBX" label="FBX" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- Additional Item -->
+        <ui:Label name="step4-additem-label" class="section-label" />
+        <ui:PropertyField binding-path="colaboItemTarget" name="pf-colaboItemTarget" label="Target" />
+        <ui:PropertyField binding-path="colaboItem" name="pf-colaboItem" label="Item" />
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- Fade Effects -->
+        <ui:Label name="step4-fade-label" class="section-label" />
+
+        <ui:VisualElement class="fade-section">
+          <ui:Label text="Head" class="fade-part-label" />
+          <ui:PropertyField binding-path="fadeHead" name="pf-fadeHead" />
+          <ui:PropertyField binding-path="fadeHeadItems" name="pf-fadeHeadItems" />
+          <ui:PropertyField binding-path="fadeHeadMaterial" name="pf-fadeHeadMaterial" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="fade-section">
+          <ui:Label text="Body" class="fade-part-label" />
+          <ui:PropertyField binding-path="fadeBody" name="pf-fadeBody" />
+          <ui:PropertyField binding-path="fadeBodyItems" name="pf-fadeBodyItems" />
+          <ui:PropertyField binding-path="fadeBodyMaterial" name="pf-fadeBodyMaterial" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="fade-section">
+          <ui:Label text="Arm" class="fade-part-label" />
+          <ui:PropertyField binding-path="fadeArm" name="pf-fadeArm" />
+          <ui:PropertyField binding-path="fadeArmItems" name="pf-fadeArmItems" />
+          <ui:PropertyField binding-path="fadeArmMaterial" name="pf-fadeArmMaterial" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="fade-section">
+          <ui:Label text="Leg" class="fade-part-label" />
+          <ui:PropertyField binding-path="fadeLeg" name="pf-fadeLeg" />
+          <ui:PropertyField binding-path="fadeLegItems" name="pf-fadeLegItems" />
+          <ui:PropertyField binding-path="fadeLegMaterial" name="pf-fadeLegMaterial" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-sm" />
+
+    <!-- ===== Developer Mode ===== -->
+    <ui:VisualElement name="devmode" class="step-section devmode-section">
+      <ui:Button name="devmode-toggle" class="step-toggle devmode-toggle" text="Developer Mode" />
+      <ui:VisualElement name="devmode-body" class="step-body collapsed">
+        <ui:Button name="btn-gen-anim" class="dev-btn" text="Generate Animations" />
+        <ui:Button name="btn-reprocess" class="dev-btn" text="Full Re-process" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:VisualElement class="spacer-md" />
+
+    <!-- ===== Setup Button ===== -->
+    <ui:Button name="btn-setup" class="setup-btn" text="Setup Transformation" />
+
+  </ui:VisualElement>
+</ui:UXML>
