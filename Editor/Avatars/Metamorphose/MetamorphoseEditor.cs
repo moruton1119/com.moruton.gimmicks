@@ -23,6 +23,7 @@ namespace Moruton.Gimmicks.Editor
         private Color _lastGimmickColor;
 
         // binding-path → 表示ラベル のマッピング
+        // Step フィールド (ユーザー向け)
         private static readonly (string path, string label)[] FieldBindings = new[]
         {
             ("avatar", null),
@@ -55,6 +56,27 @@ namespace Moruton.Gimmicks.Editor
             ("fadeLeg", null),
             ("fadeLegItems", null),
             ("fadeLegMaterial", null),
+        };
+
+        // Developer Mode フィールド (開発者向け)
+        private static readonly (string path, string label, string slot)[] DevFieldBindings = new[]
+        {
+            ("dummyImage", "Dummy Image", "slot-dummyImage"),
+            ("colaboShopTex", "Colabo Shop Tex", "slot-colaboShopTex"),
+            ("colaboShopInfo", "Colabo Shop Info", "slot-colaboShopInfo"),
+            ("model", "Model", "slot-devmodel"),
+            ("animator", "Animator", "slot-devanimator"),
+            ("headTarget", "Head Target", "slot-devHeadTarget"),
+            ("bodyTarget", "Body Target", "slot-devBodyTarget"),
+            ("handTarget", "Hand Target", "slot-devHandTarget"),
+            ("legTarget", "Leg Target", "slot-devLegTarget"),
+            ("onePiece", "OnePiece", "slot-devOnePiece"),
+            ("colaboItemTarget", "Colabo Item Target", "slot-devColaboItemTarget"),
+            ("fadeHeadMaterial", "Head Material", "slot-devFadeHeadMaterial"),
+            ("fadeBodyMaterial", "Body Material", "slot-devFadeBodyMaterial"),
+            ("fadeArmMaterial", "Arm Material", "slot-devFadeArmMaterial"),
+            ("fadeLegMaterial", "Leg Material", "slot-devFadeLegMaterial"),
+            ("gimmickCollar", "Gimmick Collar", "slot-gimmickCollar"),
         };
 
         private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
@@ -136,6 +158,16 @@ namespace Moruton.Gimmicks.Editor
                 if (label != null) pf.label = label;
                 slot.Add(pf);
             }
+
+            // Developer Mode フィールド
+            foreach (var (path, label, slot) in DevFieldBindings)
+            {
+                var slotEl = _root.Q<VisualElement>(slot);
+                if (slotEl == null) continue;
+
+                var pf = new PropertyField { bindingPath = path, label = label };
+                slotEl.Add(pf);
+            }
         }
 
         #endregion
@@ -201,6 +233,12 @@ namespace Moruton.Gimmicks.Editor
 
             // Setup Button
             root.Q<Button>("btn-setup").text = LC("setup_button");
+
+            // Developer Mode labels
+            root.Q<Label>("dev-basic-label").text = LC("dev_basic_label");
+            root.Q<Label>("dev-target-label").text = LC("dev_target_label");
+            root.Q<Label>("dev-material-label").text = LC("dev_material_label");
+            root.Q<Label>("dev-gimmick-color-label").text = LC("dev_gimmick_color_targets");
         }
 
         private void SetPropLabel(VisualElement root, string slotName, string label)
