@@ -31,9 +31,7 @@ namespace Moruton.Gimmicks
         [Header("変身後の衣装 - 脚部")]
         [SerializeField] public Transform legTarget;
         [SerializeField] public GameObject[] legItems;
-        
-        [SerializeField] public GameObject itemToUnpack;
-        
+
         [Header("特殊設定 - ワンピース差し替え")]
         [SerializeField] private GameObject onePiece;
         [SerializeField] private GameObject colaboFBX;

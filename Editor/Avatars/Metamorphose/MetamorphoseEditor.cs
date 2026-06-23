@@ -22,20 +22,14 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private Color _lastGimmickColor;
 
-        // Step フィールド (ユーザー向け) — ターゲット・フェード・マテリアルはDevModeのみ
+        // Step フィールド (ユーザー向け)
         private static readonly (string path, string label)[] FieldBindings = new (string, string)[]
         {
-            ("avatar", null),
-            ("model", null),
-            ("animator", null),
-            ("offTargets", null),
-            ("itemToUnpack", null),
             ("headItems", null),
             ("bodyItems", null),
             ("handItems", null),
             ("legItems", null),
             ("gimmickColor", null),
-            ("fadeHeadItems", null),
             ("fadeBodyItems", null),
             ("fadeArmItems", null),
             ("fadeLegItems", null),
@@ -208,9 +202,6 @@ namespace Moruton.Gimmicks.Editor
 
             // Step 2
             root.Q<Label>("step2-desc").text = L("step2_description");
-            root.Q<Label>("step2-unpack-label").text = L("step2_unpack_title");
-            root.Q<HelpBox>("step2-unpack-help").text = L("step2_unpack_help");
-            root.Q<Button>("btn-unpack").text = L("step2_unpack_button");
             root.Q<Label>("step2-parts-label").text = L("step2_parts_title");
             root.Q<HelpBox>("step2-parts-help").text = L("step2_parts_help");
 
@@ -361,13 +352,6 @@ namespace Moruton.Gimmicks.Editor
                     btn.clicked += () => SwitchLanguage(index);
                 }
             }
-
-            // Unpack
-            root.Q<Button>("btn-unpack").clicked += () =>
-            {
-                var itemToUnpack = serializedObject.FindProperty("itemToUnpack").objectReferenceValue as GameObject;
-                MetamorphoseSetupService.UnpackPrefab(itemToUnpack);
-            };
 
             // Colabo Shop
             root.Q<Button>("btn-colabo-shop").clicked += () =>

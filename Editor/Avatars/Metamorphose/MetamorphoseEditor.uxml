@@ -42,14 +42,6 @@
         <ui:Label name="step2-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- Unpack Section -->
-        <ui:Label name="step2-unpack-label" class="section-label" />
-        <ui:HelpBox name="step2-unpack-help" message-type="Info" />
-        <ui:VisualElement name="slot-itemToUnpack" />
-        <ui:Button name="btn-unpack" class="action-btn" text="Unpack Prefab" />
-
-        <ui:VisualElement class="spacer-md" />
-
         <!-- Parts Section -->
         <ui:Label name="step2-parts-label" class="section-label" />
         <ui:HelpBox name="step2-parts-help" message-type="Info" />
