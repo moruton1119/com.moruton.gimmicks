@@ -1,7 +1,7 @@
 using nadena.dev.ndmf;
 using UnityEngine;
 
-namespace Moruton.Gimmicks.Editor.NDMF
+namespace Moruton.Gimmicks.Editor
 {
     public sealed class MetamorphosePlugin : Plugin<MetamorphosePlugin>
     {

@@ -3,6 +3,7 @@
     "rootNamespace": "Moruton.Gimmicks.Editor",
     "references": [
         "com.moruton.gimmicks",
+        "nadena.dev.ndmf",
         "nadena.dev.modular-avatar.core",
         "MorutonGimmicks.UpdateChecker.Editor"
     ],

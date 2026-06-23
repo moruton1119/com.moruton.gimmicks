@@ -4,9 +4,8 @@ using nadena.dev.ndmf;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using Moruton.Gimmicks.Editor;
 
-namespace Moruton.Gimmicks.Editor.NDMF
+namespace Moruton.Gimmicks.Editor
 {
     /// <summary>
     /// NDMF Build Pass: ビルド時にアイテム配置＋アニメーション生成を行う。
