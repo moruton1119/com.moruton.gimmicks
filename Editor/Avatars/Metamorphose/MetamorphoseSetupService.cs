@@ -4,21 +4,20 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using nadena.dev.modular_avatar.core;
 
 namespace Moruton.Gimmicks.Editor
 {
     /// <summary>
-    /// 変身ギミックのセットアップ実行サービス。
-    /// MetamorphoseEditor (UI) から分離されたロジック層。
-    /// 元の PrettyCureMirrorEditor のロジックをそのまま移植。
+    /// 変身ギミックのセットアップ実行サービス（エディタプレビュー用）。
+    /// NDMFによるビルド時処理は別途 MetamorphosePlugin で実行。
     /// </summary>
     public static class MetamorphoseSetupService
     {
         #region Public API
 
         /// <summary>
-        /// 全工程を実行: ワンピース差し替え → アイテム装着 → コラボ → フェード → アニメーション生成
+        /// 全工程を実行: アイテム配置 → フェード配置 → アニメーション生成（エディタプレビュー用）。
+        /// ビルド時は NDMF が自動処理するため、ここはメインのセットアップではない。
         /// </summary>
         public static void ExecuteFullSetup(PrettyCureMirror script)
         {
@@ -31,38 +30,22 @@ namespace Moruton.Gimmicks.Editor
                 return;
             }
 
-            // ワンピース差し替え
-            if (script.ColaboFBX != null && script.OnePiece != null)
-            {
-                ReplaceOnePieceChild(script.OnePiece.transform, script.ColaboFBX);
-            }
+            // アイテム配置（プレビュー用、削除なし）
+            PlaceItems(script.headTarget, script.headItems);
+            PlaceItems(script.bodyTarget, script.bodyItems);
+            PlaceItems(script.handTarget, script.handItems);
+            PlaceItems(script.legTarget, script.legItems);
 
-            // アイテム装着
-            ProcessItemAttachment(script.headTarget, script.headItems);
-            ProcessItemAttachment(script.bodyTarget, script.bodyItems);
-            ProcessItemAttachment(script.handTarget, script.handItems);
-            ProcessItemAttachment(script.legTarget, script.legItems);
+            // フェード配置（プレビュー用、削除なし）
+            PlaceFadeItems(script.fadeHead, script.fadeHeadItems, script.fadeHeadMaterial);
+            PlaceFadeItems(script.fadeBody, script.fadeBodyItems, script.fadeBodyMaterial);
+            PlaceFadeItems(script.fadeArm, script.fadeArmItems, script.fadeArmMaterial);
+            PlaceFadeItems(script.fadeLeg, script.fadeLegItems, script.fadeLegMaterial);
 
-            // 追加アイテム
-            if (script.colaboItemTarget != null && script.colaboItem != null)
-            {
-                ReplaceOnePieceChild(script.colaboItemTarget, script.colaboItem);
-            }
-
-            // フェード演出
-            if (script.fadeHead != null)
-                ProcessFadeAttachment(script.fadeHead, script.fadeHeadItems, script.fadeHeadMaterial);
-            if (script.fadeBody != null)
-                ProcessFadeAttachment(script.fadeBody, script.fadeBodyItems, script.fadeBodyMaterial);
-            if (script.fadeArm != null)
-                ProcessFadeAttachment(script.fadeArm, script.fadeArmItems, script.fadeArmMaterial);
-            if (script.fadeLeg != null)
-                ProcessFadeAttachment(script.fadeLeg, script.fadeLegItems, script.fadeLegMaterial);
-
-            // アニメーション生成
+            // アニメーション生成（プレビュー用）
             CreateAnimations(script);
 
-            Debug.Log("[Metamorphose] Setup complete!");
+            Debug.Log("[Metamorphose] Editor preview complete!");
         }
 
         /// <summary>
@@ -70,108 +53,57 @@ namespace Moruton.Gimmicks.Editor
         /// </summary>
         public static void ApplyGimmickColor(PrettyCureMirror script)
         {
+            if (script.GimmickCollar == null) return;
 
-        #region ProcessItemAttachment (元のまま)
-
-        private static void ProcessItemAttachment(Transform target, GameObject[] items)
-        {
-            if (target == null) return;
-            if (items == null) items = new GameObject[0];
-
-            var itemSet = new HashSet<GameObject>(items);
-
-            // 不要な子を削除
-            var toDelete = new List<Transform>();
-            foreach (Transform child in target)
+            foreach (var collar in script.GimmickCollar)
             {
-                var source = PrefabUtility.GetCorrespondingObjectFromSource(child.gameObject);
-                if (source != null && itemSet.Contains(source)) continue;
-                if (itemSet.Contains(child.gameObject)) continue;
-                toDelete.Add(child);
-            }
-            foreach (var child in toDelete)
-            {
-                Undo.DestroyObjectImmediate(child.gameObject);
-            }
+                if (collar == null) continue;
 
-            // 新しいアイテムを追加
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-
-                bool exists = false;
-                foreach (Transform child in target)
+                var renderers = collar.GetComponentsInChildren<Renderer>(true);
+                foreach (var renderer in renderers)
                 {
-                    var source = PrefabUtility.GetCorrespondingObjectFromSource(child.gameObject);
-                    if (source == item || child.gameObject == item)
+                    foreach (var mat in renderer.sharedMaterials)
                     {
-                        exists = true;
-                        break;
+                        if (mat == null || !mat.HasProperty("_Color")) continue;
+                        mat.color = script.gimmickColor;
                     }
-                }
-
-                if (!exists)
-                {
-                    GameObject instance;
-                    if (PrefabUtility.IsPartOfPrefabAsset(item))
-                    {
-                        instance = (GameObject)PrefabUtility.InstantiatePrefab(item, target);
-                        Undo.RegisterCreatedObjectUndo(instance, "Create " + instance.name);
-                    }
-                    else
-                    {
-                        instance = item;
-                        Undo.SetTransformParent(instance.transform, target, "Move Item");
-                    }
-
-                    instance.transform.localPosition = Vector3.zero;
-                    instance.transform.localRotation = Quaternion.identity;
-                    instance.transform.localScale = Vector3.one;
-                    instance.name = item.name;
                 }
             }
         }
 
         #endregion
 
-        #region ProcessFadeAttachment (元のまま)
+        #region Simple Placement (No Deletion)
 
-        private static void ProcessFadeAttachment(Transform target, GameObject[] items, Material material)
+        private static void PlaceItems(Transform target, GameObject[] items)
         {
-            if (target == null) return;
-
-            // 既存の子を全削除
-            var toDelete = new List<Transform>();
-            foreach (Transform child in target)
-            {
-                toDelete.Add(child);
-            }
-            foreach (var child in toDelete)
-            {
-                Undo.DestroyObjectImmediate(child.gameObject);
-            }
-
-            if (items == null) return;
+            if (target == null || items == null) return;
 
             foreach (var item in items)
             {
                 if (item == null) continue;
 
-                GameObject instance;
-                if (PrefabUtility.IsPartOfPrefabAsset(item))
-                {
-                    instance = (GameObject)PrefabUtility.InstantiatePrefab(item, target);
-                }
-                else
-                {
-                    instance = Object.Instantiate(item, target);
-                }
-                Undo.RegisterCreatedObjectUndo(instance, "Create Fade Item");
-
+                var instance = Object.Instantiate(item, target);
+                instance.name = item.name;
                 instance.transform.localPosition = Vector3.zero;
                 instance.transform.localRotation = Quaternion.identity;
                 instance.transform.localScale = Vector3.one;
+            }
+        }
+
+        private static void PlaceFadeItems(Transform target, GameObject[] items, Material material)
+        {
+            if (target == null || items == null) return;
+
+            foreach (var item in items)
+            {
+                if (item == null) continue;
+
+                var instance = Object.Instantiate(item, target);
                 instance.name = target.name;
+                instance.transform.localPosition = Vector3.zero;
+                instance.transform.localRotation = Quaternion.identity;
+                instance.transform.localScale = Vector3.one;
 
                 // マテリアル差し替え
                 if (material != null)
@@ -181,9 +113,7 @@ namespace Moruton.Gimmicks.Editor
                     {
                         var mats = new Material[r.sharedMaterials.Length];
                         for (int i = 0; i < mats.Length; i++)
-                        {
                             mats[i] = material;
-                        }
                         r.sharedMaterials = mats;
                     }
                 }
@@ -192,96 +122,67 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-        #region CreateAnimations (元のまま)
+        #region Animation Creation (Editor Preview Only)
 
         private static void CreateAnimations(PrettyCureMirror script)
         {
-            string scriptAssetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(script);
-            string basePath;
+            if (script.Animator == null) return;
 
-            if (!string.IsNullOrEmpty(scriptAssetPath))
+            var controller = script.Animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null) return;
+
+            // コントローラをクローン（元のアセットを変更しないため）
+            var cloned = Object.Instantiate(controller);
+            cloned.name = controller.name + "_Metamorphose";
+            script.Animator.runtimeAnimatorController = cloned;
+
+            // Enable クリップ: 旧衣装OFF、新モデルON
+            var enableClip = new AnimationClip { name = "Enable" };
+            // Disable クリップ: 旧衣装ON、新モデルOFF
+            var disableClip = new AnimationClip { name = "Disable" };
+
+            if (script.OffTargets != null)
             {
-                basePath = Path.GetDirectoryName(scriptAssetPath);
-            }
-            else
-            {
-                basePath = "Assets/Morulab/PrettyCureMirror";
-                if (!Directory.Exists(basePath))
+                foreach (var obj in script.OffTargets)
                 {
-                    Directory.CreateDirectory(basePath);
+                    if (obj == null) continue;
+                    string path = GetRelativePath(script.Avatar, obj);
+                    enableClip.SetCurve(path, typeof(GameObject), "m_IsActive",
+                        AnimationCurve.Constant(0f, 1f / 60f, 0f));
+                    disableClip.SetCurve(path, typeof(GameObject), "m_IsActive",
+                        AnimationCurve.Constant(0f, 1f / 60f, 1f));
                 }
             }
 
-            string animFolder = Path.Combine(basePath, "Animation");
-            if (!Directory.Exists(animFolder))
+            if (script.Model != null)
             {
-                Directory.CreateDirectory(animFolder);
+                string modelPath = GetRelativePath(script.Avatar, script.Model);
+                enableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive",
+                    AnimationCurve.Constant(0f, 1f / 60f, 1f));
+                disableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive",
+                    AnimationCurve.Constant(0f, 1f / 60f, 0f));
             }
 
-            string enablePath = Path.Combine(animFolder, "Enable.anim");
-            string disablePath = Path.Combine(animFolder, "Disable.anim");
-
-            // Enable Animation
-            AnimationClip enableClip = new AnimationClip();
-            foreach (var obj in script.OffTargets)
-            {
-                if (obj == null) continue;
-                string path = GetPath(script.Avatar, obj);
-                enableClip.SetCurve(path, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 0));
-            }
-
-            string modelPath = GetPath(script.Avatar, script.Model);
-            enableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 1));
-
-            AssetDatabase.CreateAsset(enableClip, enablePath);
-
-            // Disable Animation
-            AnimationClip disableClip = new AnimationClip();
-            foreach (var obj in script.OffTargets)
-            {
-                if (obj == null) continue;
-                string path = GetPath(script.Avatar, obj);
-                disableClip.SetCurve(path, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 1));
-            }
-
-            disableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 0));
-
-            AssetDatabase.CreateAsset(disableClip, disablePath);
-
-            AssetDatabase.SaveAssets();
-
-            // AnimatorControllerに適用
-            var controller = script.Animator.runtimeAnimatorController as AnimatorController;
-            if (controller != null)
-            {
-                SetAnimationToState(controller, "Enable", enableClip);
-                SetAnimationToState(controller, "Disable", disableClip);
-                Debug.Log("[Metamorphose] Animations applied successfully.");
-            }
-            else
-            {
-                EditorUtility.DisplayDialog(
-                    LocalizationManager.GetCommon("error_dialog_title"),
-                    "AnimatorController not set.",
-                    LocalizationManager.GetCommon("ok"));
-            }
+            SetClipToState(cloned, "Enable", enableClip);
+            SetClipToState(cloned, "Disable", disableClip);
         }
 
-        private static string GetPath(GameObject root, GameObject child)
+        private static string GetRelativePath(GameObject root, GameObject child)
         {
-            var path = new List<string>();
+            var parts = new List<string>();
             var current = child.transform;
             while (current != null && current != root.transform)
             {
-                path.Add(current.name);
+                parts.Add(current.name);
                 current = current.parent;
             }
-            path.Reverse();
-            return string.Join("/", path);
+            parts.Reverse();
+            return string.Join("/", parts);
         }
 
-        private static void SetAnimationToState(AnimatorController controller, string stateName, AnimationClip clip)
+        private static void SetClipToState(AnimatorController controller, string stateName, AnimationClip clip)
         {
+            // 既存のステートを探す
             foreach (var layer in controller.layers)
             {
                 foreach (var state in layer.stateMachine.states)
@@ -294,6 +195,7 @@ namespace Moruton.Gimmicks.Editor
                 }
             }
 
+            // なければ作成
             var newState = controller.layers[0].stateMachine.AddState(stateName);
             newState.motion = clip;
         }
