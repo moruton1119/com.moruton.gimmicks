@@ -1,0 +1,415 @@
+/* ============================================
+   MetamorphoseEditor — Dark Theme + Neon Accents
+   Launcher (MorulabLauncher.uss) 準拠
+   ============================================ */
+
+/* --- CSS Variables --- */
+.metamorphose-root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2a2a2a;
+    --bg-tertiary: #333333;
+    --bg-hover: #252525;
+    --bg-input: #181818;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaa;
+    --text-dim: #666;
+    --accent-blue: #3f8aff;
+    --accent-purple: #8B5CF6;
+    --accent-green: #4CAF50;
+    --accent-green-hover: #5BC960;
+    --accent-orange: #F59E0B;
+    --border-subtle: #333;
+    --border-dim: #252525;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+}
+
+/* --- Root --- */
+.metamorphose-root {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 4px;
+    font-size: 13px;
+}
+
+/* --- Header --- */
+.header-container {
+    margin-bottom: 4px;
+}
+
+/* --- Language Bar --- */
+.lang-bar {
+    flex-direction: row;
+    background-color: var(--bg-input);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    margin: 4px 0;
+}
+
+.lang-btn {
+    flex: 1;
+    height: 26px;
+    font-size: 12px;
+    color: var(--text-dim);
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: normal;
+    margin-left: 1px;
+    margin-right: 1px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.lang-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+.lang-btn.selected {
+    color: #ffffff;
+    background-color: var(--accent-blue);
+    -unity-font-style: bold;
+}
+
+/* --- Spacers --- */
+.spacer-xs { height: 4px; }
+.spacer-sm { height: 8px; }
+.spacer-md { height: 16px; }
+
+/* --- Step Section --- */
+.step-section {
+    flex-direction: column;
+    border-left-width: 3px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+    transition: border-left-color 0.15s;
+}
+
+.step-section:hover {
+    border-left-color: var(--border-subtle);
+}
+
+/* --- Step Toggle Button --- */
+.step-toggle {
+    height: 34px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 12px;
+    margin-bottom: 2px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.step-toggle:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.step-toggle.expanded {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    color: #ffffff;
+    background-color: var(--accent-blue);
+}
+
+/* --- Step Body --- */
+.step-body {
+    background-color: var(--bg-input);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+    padding: 10px 12px;
+    flex-direction: column;
+}
+
+.step-body.collapsed {
+    display: none;
+}
+
+/* --- Description Label --- */
+.step-desc {
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: normal;
+    -unity-font-style: normal;
+    margin-bottom: 4px;
+}
+
+/* --- Section Label --- */
+.section-label {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--accent-purple);
+    margin-bottom: 4px;
+    margin-top: 8px;
+    padding-bottom: 2px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(139, 92, 246, 0.2);
+}
+
+/* --- Part Section --- */
+.part-section {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    margin-bottom: 4px;
+    flex-direction: column;
+}
+
+.part-label {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Preview Row --- */
+.preview-row {
+    flex-direction: row;
+    height: 64px;
+    margin-top: 4px;
+    align-items: center;
+}
+
+.preview-thumb {
+    width: 56px;
+    height: 56px;
+    margin-right: 4px;
+    border-radius: var(--radius-sm);
+    border-width: 1px;
+    border-color: var(--border-subtle);
+    object-fit: scale-down;
+}
+
+.preview-more {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 8px;
+}
+
+/* --- Part Toggle Button --- */
+.part-toggle {
+    height: 24px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: var(--accent-green);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 8px;
+    margin-bottom: 4px;
+    transition: background-color 0.15s;
+}
+
+.part-toggle:hover {
+    background-color: var(--accent-green-hover);
+}
+
+.part-toggle-off {
+    color: var(--text-dim);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.part-toggle-off:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* --- Items Row (wraps label + slot + preview) --- */
+.items-row {
+    flex-direction: column;
+}
+
+/* --- Item Toggle (Step 3) --- */
+.item-toggle {
+    height: 24px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: var(--accent-green);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 8px;
+    margin-bottom: 4px;
+    transition: background-color 0.15s;
+}
+
+.item-toggle:hover {
+    background-color: var(--accent-green-hover);
+}
+
+.item-toggle.part-toggle-off {
+    color: var(--text-dim);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Fade Section --- */
+.dev-toggle-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.dev-toggle-grid > .part-toggle {
+    flex: 1;
+    min-width: 80px;
+    margin: 2px;
+}
+.fade-section {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    margin-bottom: 4px;
+    flex-direction: column;
+}
+
+.fade-part-label {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: var(--accent-orange);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+/* --- Colabo Preview --- */
+.colabo-preview {
+    justify-content: center;
+    align-items: center;
+    height: 128px;
+    margin-bottom: 4px;
+}
+
+.colabo-shop-image {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-md);
+    border-width: 1px;
+    border-color: var(--border-subtle);
+}
+
+/* --- Action Button --- */
+.action-btn {
+    height: 28px;
+    font-size: 12px;
+    color: #ffffff;
+    background-color: var(--accent-blue);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    margin-top: 4px;
+    transition: background-color 0.15s;
+}
+
+.action-btn:hover {
+    background-color: #5193ff;
+}
+
+.action-btn:active {
+    background-color: #2a70e0;
+}
+
+/* --- Link Button --- */
+.link-btn {
+    height: 30px;
+    font-size: 12px;
+    color: var(--accent-blue);
+    background-color: rgba(63, 138, 255, 0.1);
+    border-width: 1px;
+    border-color: rgba(63, 138, 255, 0.3);
+    border-radius: var(--radius-sm);
+    transition: background-color 0.15s;
+}
+
+.link-btn:hover {
+    background-color: rgba(63, 138, 255, 0.2);
+}
+
+/* --- Setup Button --- */
+.setup-btn {
+    height: 46px;
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: #ffffff;
+    background-color: var(--accent-green);
+    border-width: 0;
+    border-radius: var(--radius-lg);
+    margin-top: 4px;
+    transition: background-color 0.15s;
+}
+
+.setup-btn:hover {
+    background-color: var(--accent-green-hover);
+}
+
+.setup-btn:active {
+    background-color: #3d9140;
+}
+
+/* --- Developer Mode --- */
+.devmode-section {
+    opacity: 0.7;
+}
+
+.devmode-section:hover {
+    opacity: 1;
+}
+
+.devmode-toggle {
+    color: var(--text-dim);
+    background-color: rgba(255, 255, 255, 0.05);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.devmode-toggle:hover {
+    color: var(--text-secondary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.devmode-toggle.expanded {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.dev-btn {
+    height: 30px;
+    font-size: 12px;
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    margin-bottom: 4px;
+    transition: background-color 0.15s;
+}
+
+.dev-btn:hover {
+    background-color: #444;
+}
+
+/* --- PropertyField Override (Dark theme) --- */
+.step-body > PropertyField {
+    margin-bottom: 2px;
+}
+
+.step-body > PropertyField > .unity-property-field__label {
+    color: var(--text-secondary);
+    min-width: 80px;
+}
+
+.step-body > PropertyField > .unity-base-field {
+    background-color: var(--bg-input);
+}
+
+/* --- HelpBox Override --- */
+.step-body > HelpBox {
+    margin-top: 4px;
+    margin-bottom: 6px;
+}

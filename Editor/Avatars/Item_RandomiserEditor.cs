@@ -52,8 +52,10 @@ namespace Moruton.Gimmicks.Editor
                 {
                     bool isSelected = (selectedTab == i);
 
-                    GUIStyle tabStyle = new GUIStyle(EditorStyles.toolbarButton);
-                    tabStyle.fixedHeight = 25;
+                    GUIStyle tabStyle = new GUIStyle(EditorStyles.toolbarButton)
+                    {
+                        fixedHeight = 25
+                    };
 
                     if (isSelected)
                     {
@@ -87,59 +89,19 @@ namespace Moruton.Gimmicks.Editor
             EditorGUILayout.HelpBox("設定されたターゲットを選択して調整できます。", MessageType.Info);
             EditorGUILayout.Space();
 
+            var randomiser = (Item_Randomiser)target;
+
             if (targetsProp.arraySize == 0)
             {
                 EditorGUILayout.HelpBox("ターゲットが設定されていません。下の 'Developer Mode' から追加してください。", MessageType.Warning);
             }
             else
             {
-                DrawTargetsList();
+                TargetListDrawer.DrawTargetsListFromSerialized(targetsProp, randomiser.targets);
             }
 
             EditorGUILayout.Space(10);
-            GimmickSetupHelperEditor.DrawDeveloperMode(targetsProp, ref showDevMode);
-        }
-
-        private void DrawTargetsList()
-        {
-            for (int i = 0; i < targetsProp.arraySize; i++)
-            {
-                DrawTargetItem(i);
-                EditorGUILayout.Space(4);
-            }
-        }
-
-        private void DrawTargetItem(int index)
-        {
-            SerializedProperty item = targetsProp.GetArrayElementAtIndex(index);
-            string descText = item.FindPropertyRelative("description").stringValue;
-            Transform targetTrans = item.FindPropertyRelative("targetObject").objectReferenceValue as Transform;
-
-            GUILayout.BeginVertical("box");
-            {
-                if (!string.IsNullOrEmpty(descText))
-                {
-                    GUIStyle style = new GUIStyle(EditorStyles.label);
-                    style.wordWrap = true;
-                    style.fontSize = 12;
-                    EditorGUILayout.LabelField(descText, style);
-                }
-
-                EditorGUILayout.Space(4);
-                GUI.enabled = targetTrans != null;
-                string btnLabel = targetTrans != null ? $"Select: {targetTrans.name}" : "Target Not Assigned";
-                if (GUILayout.Button(new GUIContent(btnLabel, "クリックしてこのオブジェクトを選択状態にします"), GUILayout.Height(30)))
-                {
-                    if (targetTrans != null)
-                    {
-                        Selection.activeGameObject = targetTrans.gameObject;
-                        EditorGUIUtility.PingObject(targetTrans.gameObject);
-                        SceneView.FrameLastActiveSceneView();
-                    }
-                }
-                GUI.enabled = true;
-            }
-            GUILayout.EndVertical();
+            TargetListDrawer.DrawDeveloperMode(targetsProp, ref showDevMode);
         }
 
         private void DrawItemSetupContent()
@@ -148,7 +110,7 @@ namespace Moruton.Gimmicks.Editor
             EditorGUILayout.HelpBox("設定したいアイテムを登録してください", MessageType.Info);
             EditorGUILayout.Space();
 
-            ItemSetupScriptEditor.DrawItemsList(itemsProp);
+            ItemListDrawer.DrawItemsList(itemsProp);
 
             EditorGUILayout.Space();
 
