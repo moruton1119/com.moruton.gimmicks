@@ -61,7 +61,7 @@ namespace Moruton.Gimmicks.Editor
 
         private static readonly string[][] PageFieldPaths =
         {
-            new[] { "avatar", "model", "animator", "offTargets", "gimmickColor" },
+            new[] { "avatar", "animator", "offTargets", "gimmickColor" },
             new[] { "headItems", "bodyItems", "handItems", "legItems" },
             new[] { "fadeHeadItems", "fadeBodyItems", "fadeArmItems", "fadeLegItems" },
         };
@@ -693,7 +693,6 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("page0-desc").text = L("step1_description");
             root.Q<Label>("fg0-avatar").text = L("step1_avatar_label");
             SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
-            SetPropLabel(root, "page0-slot-model", L("step1_model"));
             SetPropLabel(root, "page0-slot-animator", L("step1_animator"));
             root.Q<Label>("fg0-off").text = L("step1_before_clothes_label");
             root.Q<Label>("fg0-color").text = L("step3_color_label");

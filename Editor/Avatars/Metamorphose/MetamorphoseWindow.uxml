@@ -46,7 +46,6 @@
               <ui:VisualElement name="page0-section-avatar" class="field-group">
                 <ui:Label name="fg0-avatar" class="field-group-title" />
                 <ui:VisualElement name="page0-slot-avatar" class="field-slot" />
-                <ui:VisualElement name="page0-slot-model" class="field-slot" />
                 <ui:VisualElement name="page0-slot-animator" class="field-slot" />
               </ui:VisualElement>
               <ui:VisualElement name="page0-section-off" class="field-group">
