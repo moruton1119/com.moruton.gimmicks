@@ -104,6 +104,7 @@ namespace Moruton.Gimmicks.Editor
             _uiBuilt = false;
             _currentPage = 0;
             ClearPreviewCache();
+            RebuildUI();
             Repaint();
         }
 
@@ -126,12 +127,18 @@ namespace Moruton.Gimmicks.Editor
 
         public void CreateGUI()
         {
+            RebuildUI();
+        }
+
+        private void RebuildUI()
+        {
             if (_target == null || _so == null)
             {
                 rootVisualElement.Clear();
                 var label = new Label("No target assigned.");
                 label.style.unityTextAlign = TextAnchor.MiddleCenter;
                 rootVisualElement.Add(label);
+                _uiBuilt = false;
                 return;
             }
 
