@@ -27,7 +27,7 @@ namespace Moruton.Gimmicks.Editor
         };
 
         private const int PreviewTexSize = 128;
-        private const int TotalPages = 5;
+        private const int TotalPages = 4;
 
         private readonly string[] _languageCodes = { "ja", "en", "ko", "it", "es" };
 
@@ -56,9 +56,8 @@ namespace Moruton.Gimmicks.Editor
 
         private static readonly string[][] PageFieldPaths =
         {
-            new[] { "avatar", "model", "animator", "offTargets" },
+            new[] { "avatar", "model", "animator", "offTargets", "gimmickColor" },
             new[] { "headItems", "bodyItems", "handItems", "legItems" },
-            new[] { "gimmickColor" },
             new[] { "fadeHeadItems", "fadeBodyItems", "fadeArmItems", "fadeLegItems" },
         };
 
@@ -72,29 +71,29 @@ namespace Moruton.Gimmicks.Editor
 
         private static readonly (string path, string slotName)[] DevFieldBindings =
         {
-            ("dummyImage", "page4-slot-dummyImage"),
-            ("colaboShopTex", "page4-slot-colaboShopTex"),
-            ("colaboShopInfo", "page4-slot-colaboShopInfo"),
-            ("model", "page4-slot-model"),
-            ("animator", "page4-slot-animator"),
-            ("headTarget", "page4-slot-devHeadTarget"),
-            ("bodyTarget", "page4-slot-devBodyTarget"),
-            ("handTarget", "page4-slot-devHandTarget"),
-            ("legTarget", "page4-slot-devLegTarget"),
-            ("onePiece", "page4-slot-devOnePiece"),
-            ("colaboItemTarget", "page4-slot-devColaboItemTarget"),
-            ("colaboItem", "page4-slot-devColaboItem"),
-            ("colaboFBX", "page4-slot-devColaboFBX"),
-            ("fadeHead", "page4-slot-devFadeHead"),
-            ("fadeBody", "page4-slot-devFadeBody"),
-            ("fadeArm", "page4-slot-devFadeArm"),
-            ("fadeLeg", "page4-slot-devFadeLeg"),
-            ("fadeHeadMaterial", "page4-slot-devFadeHeadMaterial"),
-            ("fadeBodyMaterial", "page4-slot-devFadeBodyMaterial"),
-            ("fadeArmMaterial", "page4-slot-devFadeArmMaterial"),
-            ("fadeLegMaterial", "page4-slot-devFadeLegMaterial"),
-            ("gimmickCollar", "page4-slot-gimmickCollar"),
-            ("bannerAdUrls", "page4-slot-bannerAdUrls"),
+            ("dummyImage", "page3-slot-dummyImage"),
+            ("colaboShopTex", "page3-slot-colaboShopTex"),
+            ("colaboShopInfo", "page3-slot-colaboShopInfo"),
+            ("model", "page3-slot-model"),
+            ("animator", "page3-slot-animator"),
+            ("headTarget", "page3-slot-devHeadTarget"),
+            ("bodyTarget", "page3-slot-devBodyTarget"),
+            ("handTarget", "page3-slot-devHandTarget"),
+            ("legTarget", "page3-slot-devLegTarget"),
+            ("onePiece", "page3-slot-devOnePiece"),
+            ("colaboItemTarget", "page3-slot-devColaboItemTarget"),
+            ("colaboItem", "page3-slot-devColaboItem"),
+            ("colaboFBX", "page3-slot-devColaboFBX"),
+            ("fadeHead", "page3-slot-devFadeHead"),
+            ("fadeBody", "page3-slot-devFadeBody"),
+            ("fadeArm", "page3-slot-devFadeArm"),
+            ("fadeLeg", "page3-slot-devFadeLeg"),
+            ("fadeHeadMaterial", "page3-slot-devFadeHeadMaterial"),
+            ("fadeBodyMaterial", "page3-slot-devFadeBodyMaterial"),
+            ("fadeArmMaterial", "page3-slot-devFadeArmMaterial"),
+            ("fadeLegMaterial", "page3-slot-devFadeLegMaterial"),
+            ("gimmickCollar", "page3-slot-gimmickCollar"),
+            ("bannerAdUrls", "page3-slot-bannerAdUrls"),
         };
 
         private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
@@ -692,6 +691,7 @@ namespace Moruton.Gimmicks.Editor
             SetPropLabel(root, "page0-slot-model", L("step1_model"));
             SetPropLabel(root, "page0-slot-animator", L("step1_animator"));
             root.Q<Label>("fg0-off").text = L("step1_before_clothes_label");
+            root.Q<Label>("fg0-color").text = L("step3_color_label");
 
             root.Q<Label>("page1-desc").text = L("step2_description");
             root.Q<Label>("fg1-parts").text = L("step2_parts_title");
@@ -701,20 +701,17 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("label-hand").text = L("step2_hand_items");
             root.Q<Label>("label-leg").text = L("step2_leg_items");
 
-            root.Q<Label>("page2-desc").text = L("step3_description");
-            root.Q<Label>("fg2-color").text = L("step3_color_label");
-
-            root.Q<Label>("page3-desc").text = L("step4_description");
+            root.Q<Label>("page2-desc").text = L("step4_description");
             root.Q<Button>("btn-colabo-shop").text = LC("colabo_shop_button");
             root.Q<HelpBox>("step4-colabo-help").text = LC("colabo_info");
-            root.Q<Label>("fg3-fade").text = L("step4_fade_fx_title");
+            root.Q<Label>("fg2-fade").text = L("step4_fade_fx_title");
 
-            root.Q<Label>("fg4-basic").text = LC("dev_basic_label");
-            root.Q<Label>("fg4-targets").text = LC("dev_target_label");
-            root.Q<Label>("fg4-fade-transforms").text = LC("dev_fade_transform_label");
-            root.Q<Label>("fg4-materials").text = LC("dev_material_label");
-            root.Q<Label>("fg4-gimmick-color").text = LC("dev_gimmick_color_targets");
-            root.Q<Label>("fg4-banner").text = "Banner Ad URLs";
+            root.Q<Label>("fg3-basic").text = LC("dev_basic_label");
+            root.Q<Label>("fg3-targets").text = LC("dev_target_label");
+            root.Q<Label>("fg3-fade-transforms").text = LC("dev_fade_transform_label");
+            root.Q<Label>("fg3-materials").text = LC("dev_material_label");
+            root.Q<Label>("fg3-gimmick-color").text = LC("dev_gimmick_color_targets");
+            root.Q<Label>("fg3-banner").text = "Banner Ad URLs";
         }
 
         private void SetPropLabel(VisualElement root, string slotName, string label)
