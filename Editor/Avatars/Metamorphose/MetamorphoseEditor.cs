@@ -25,14 +25,19 @@ namespace Moruton.Gimmicks.Editor
         // Step フィールド (ユーザー向け)
         private static readonly (string path, string label)[] FieldBindings = new (string, string)[]
         {
-            ("headItems", null),
-            ("bodyItems", null),
-            ("handItems", null),
-            ("legItems", null),
-            ("gimmickColor", null),
-            ("fadeBodyItems", null),
-            ("fadeArmItems", null),
-            ("fadeLegItems", null),
+            ("avatar", "Avatar Root"),
+            ("model", "Model"),
+            ("animator", "Animator"),
+            ("offTargets", "Off Targets"),
+            ("headItems", "Head Items"),
+            ("bodyItems", "Body Items"),
+            ("handItems", "Hand Items"),
+            ("legItems", "Leg Items"),
+            ("gimmickColor", "Gimmick Color"),
+            ("fadeHeadItems", "Fade Head Items"),
+            ("fadeBodyItems", "Fade Body Items"),
+            ("fadeArmItems", "Fade Arm Items"),
+            ("fadeLegItems", "Fade Leg Items"),
         };
 
         // Developer Mode フィールド (開発者向け)

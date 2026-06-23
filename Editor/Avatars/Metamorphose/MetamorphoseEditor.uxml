@@ -211,8 +211,5 @@
 
     <ui:VisualElement class="spacer-md" />
 
-    <!-- ===== Setup Button ===== -->
-    <ui:Button name="btn-setup" class="setup-btn" text="Setup Transformation" />
-
   </ui:VisualElement>
 </ui:UXML>

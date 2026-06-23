@@ -1,6 +1,6 @@
 {
     "name": "com.moruton.gimmicks",
-    "version": "0.3.0-beta.32",
+    "version": "0.3.0-beta.33",
     "displayName": "Moruton Gimmicks Package",
     "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
     "unity": "2022.3",
