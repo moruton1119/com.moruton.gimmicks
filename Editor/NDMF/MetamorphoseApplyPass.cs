@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using nadena.dev.ndmf;
-using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
-using Moruton.Gimmicks.Editor; // ItemPlacer
+using Moruton.Gimmicks.Editor;
 
 namespace Moruton.Gimmicks.Editor.NDMF
 {
@@ -42,92 +38,6 @@ namespace Moruton.Gimmicks.Editor.NDMF
             {
                 ItemPlacer.PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
             }
-
-            // ─── アニメーション生成 ───
-            CreateAnimations(ctx, mirror);
         }
-
-        #region Animation Creation
-
-        /// <summary>
-        /// Enable/Disable アニメーションを生成し、AnimatorController に設定する。
-        /// </summary>
-        private static void CreateAnimations(BuildContext ctx, PrettyCureMirror mirror)
-        {
-            if (mirror.Animator == null) return;
-
-            var controller = mirror.Animator.runtimeAnimatorController as AnimatorController;
-            if (controller == null) return;
-
-            // コントローラをクローン（元のアセットを変更しないため）
-            var cloned = Object.Instantiate(controller);
-            cloned.name = controller.name + "_Metamorphose";
-            mirror.Animator.runtimeAnimatorController = cloned;
-
-            // Enable クリップ: 旧衣装OFF、新モデルON
-            var enableClip = new AnimationClip { name = "Enable" };
-            // Disable クリップ: 旧衣装ON、新モデルOFF
-            var disableClip = new AnimationClip { name = "Disable" };
-
-            if (mirror.OffTargets != null)
-            {
-                foreach (var obj in mirror.OffTargets)
-                {
-                    if (obj == null) continue;
-                    string path = GetRelativePath(ctx.AvatarRootObject, obj);
-                    enableClip.SetCurve(path, typeof(GameObject), "m_IsActive",
-                        AnimationCurve.Constant(0f, 1f / 60f, 0f));
-                    disableClip.SetCurve(path, typeof(GameObject), "m_IsActive",
-                        AnimationCurve.Constant(0f, 1f / 60f, 1f));
-                }
-            }
-
-            if (mirror.Model != null)
-            {
-                string modelPath = GetRelativePath(ctx.AvatarRootObject, mirror.Model);
-                enableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive",
-                    AnimationCurve.Constant(0f, 1f / 60f, 1f));
-                disableClip.SetCurve(modelPath, typeof(GameObject), "m_IsActive",
-                    AnimationCurve.Constant(0f, 1f / 60f, 0f));
-            }
-
-            SetClipToState(cloned, "Enable", enableClip);
-            SetClipToState(cloned, "Disable", disableClip);
-        }
-
-        private static string GetRelativePath(GameObject root, GameObject child)
-        {
-            var parts = new List<string>();
-            var current = child.transform;
-            while (current != null && current != root.transform)
-            {
-                parts.Add(current.name);
-                current = current.parent;
-            }
-            parts.Reverse();
-            return string.Join("/", parts);
-        }
-
-        private static void SetClipToState(AnimatorController controller, string stateName, AnimationClip clip)
-        {
-            // 既存のステートを探す
-            foreach (var layer in controller.layers)
-            {
-                foreach (var state in layer.stateMachine.states)
-                {
-                    if (state.state.name == stateName)
-                    {
-                        state.state.motion = clip;
-                        return;
-                    }
-                }
-            }
-
-            // なければ作成
-            var newState = controller.layers[0].stateMachine.AddState(stateName);
-            newState.motion = clip;
-        }
-
-        #endregion
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -7,9 +6,8 @@ using UnityEngine.UIElements;
 namespace Moruton.Gimmicks.Editor
 {
     /// <summary>
-    /// 変身ギミック (PrettyCureMirror) の Inspector。
-    /// UI Toolkit (UXML/USS) で構築。ロジックは MetamorphoseSetupService に委譲。
-    /// 見た目を変えるなら USS、レイアウトを変えるなら UXML、処理を変えるなら SetupService。
+    /// 変身ギミック (Metamorphose) の Inspector。
+    /// UI Toolkit (UXML/USS) で構築。
     /// </summary>
     [CustomEditor(typeof(PrettyCureMirror))]
     public class MetamorphoseEditor : UnityEditor.Editor
@@ -22,26 +20,35 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private Color _lastGimmickColor;
 
-        // Step フィールド (ユーザー向け)
-        private static readonly (string path, string label)[] FieldBindings = new (string, string)[]
+        // Step フィールド (ユーザー向け) — slot-{path} にPropertyFieldを生成
+        private static readonly string[] FieldPaths =
         {
-            ("avatar", "Avatar Root"),
-            ("model", "Model"),
-            ("animator", "Animator"),
-            ("offTargets", "Off Targets"),
-            ("headItems", "Head Items"),
-            ("bodyItems", "Body Items"),
-            ("handItems", "Hand Items"),
-            ("legItems", "Leg Items"),
-            ("gimmickColor", "Gimmick Color"),
-            ("fadeHeadItems", "Fade Head Items"),
-            ("fadeBodyItems", "Fade Body Items"),
-            ("fadeArmItems", "Fade Arm Items"),
-            ("fadeLegItems", "Fade Leg Items"),
+            "avatar",
+            "model",
+            "animator",
+            "offTargets",
+            "headItems",
+            "bodyItems",
+            "handItems",
+            "legItems",
+            "gimmickColor",
+            "fadeHeadItems",
+            "fadeBodyItems",
+            "fadeArmItems",
+            "fadeLegItems",
+        };
+
+        // プレビュー対象のマッピング (propertyPath → preview要素名)
+        private static readonly (string path, string preview)[] PreviewBindings =
+        {
+            ("headItems", "head-preview"),
+            ("bodyItems", "body-preview"),
+            ("handItems", "hand-preview"),
+            ("legItems", "leg-preview"),
         };
 
         // Developer Mode フィールド (開発者向け)
-        private static readonly (string path, string label, string slot)[] DevFieldBindings = new (string, string, string)[]
+        private static readonly (string path, string label, string slot)[] DevFieldBindings =
         {
             ("dummyImage", "Dummy Image", "slot-dummyImage"),
             ("colaboShopTex", "Colabo Shop Tex", "slot-colaboShopTex"),
@@ -70,13 +77,19 @@ namespace Moruton.Gimmicks.Editor
         private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
         private string LC(string key) => LocalizationManager.GetCommon(key);
 
+        #region Lifecycle
+
         private void OnEnable()
         {
             _selectedLanguage = EditorPrefs.GetInt("MetamorphoseEditor_Language", 0);
             LocalizationManager.Load("PrettyCureMirror", languageCodes[_selectedLanguage]);
 
             if (target != null)
-                _lastGimmickColor = ((PrettyCureMirror)target).gimmickColor;
+            {
+                var script = (PrettyCureMirror)target;
+                script.AutoAssignAvatarAndAnimatorIfEmpty();
+                _lastGimmickColor = script.gimmickColor;
+            }
 
             EditorApplication.update += OnEditorUpdate;
         }
@@ -107,7 +120,6 @@ namespace Moruton.Gimmicks.Editor
             catch (System.Exception e)
             {
                 Debug.LogError($"[MetamorphoseEditor] CreateInspectorGUI failed: {e}");
-                // フォールバック: デフォルトInspectorを返す
                 var fallback = new VisualElement();
                 var label = new Label("MetamorphoseEditor error - check Console");
                 label.style.color = Color.red;
@@ -120,87 +132,143 @@ namespace Moruton.Gimmicks.Editor
         {
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath);
             if (visualTree == null)
-            {
                 return new Label($"Error: Could not load {UxmlPath}");
-            }
 
             _root = visualTree.CloneTree();
 
-            // PropertyField をスロットに手動生成
             CreatePropertyFields();
+            RegisterPreviewCallbacks();
 
             // Header (IMGUI wrapped)
             var headerContainer = _root.Q<VisualElement>("header-container");
             headerContainer.Add(new IMGUIContainer(() => MorutonAvatarPackageEditorHelper.DrawHeader()));
 
-            // ローカライゼーション
             ApplyLocalization(_root);
-
-            // ステップトグル
             SetupStepToggles(_root);
-
-            // ボタン コールバック
             SetupPartToggles(_root);
             SetupButtonCallbacks(_root);
 
-            // Bind
             _root.Bind(serializedObject);
-
-            // 初期プレビュー
-            UpdateAllPreviews(_root);
+            UpdateAllPreviews();
 
             return _root;
         }
+
+        #endregion
 
         #region PropertyField Generation
 
         private void CreatePropertyFields()
         {
-            foreach (var (path, label) in FieldBindings)
+            // ユーザー向けフィールド
+            foreach (var path in FieldPaths)
             {
                 var slot = _root.Q<VisualElement>($"slot-{path}");
                 if (slot == null) continue;
 
                 var pf = new PropertyField { bindingPath = path };
-                if (label != null) pf.label = label;
                 slot.Add(pf);
             }
 
-            // PropertyFieldの値が変わったときにプレビューを更新
-            var fieldBindings = new[]
-            {
-                ("headItems", "head-preview"),
-                ("bodyItems", "body-preview"),
-                ("handItems", "hand-preview"),
-                ("legItems", "leg-preview"),
-            };
-
-            var propertyFields = _root.Query<PropertyField>().Build();
-            for (int i = 0; i < fieldBindings.Length && i < propertyFields.Count; i++)
-            {
-                var (path, previewName) = fieldBindings[i];
-                propertyFields[i].RegisterValueChangeCallback(evt =>
-                {
-                    var arr = serializedObject.FindProperty(path).arraySize;
-                    var list = new System.Collections.Generic.List<GameObject>();
-                    var prop = serializedObject.FindProperty(path);
-                    for (int j = 0; j < prop.arraySize; j++)
-                    {
-                        var go = prop.GetArrayElementAtIndex(j).objectReferenceValue as GameObject;
-                        if (go != null) list.Add(go);
-                    }
-                    UpdatePreview(previewName, list.ToArray());
-                });
-            }
-
             // Developer Mode フィールド
-            foreach (var (path, label, slot) in DevFieldBindings)
+            foreach (var (path, label, slotName) in DevFieldBindings)
             {
-                var slotEl = _root.Q<VisualElement>(slot);
+                var slotEl = _root.Q<VisualElement>(slotName);
                 if (slotEl == null) continue;
 
                 var pf = new PropertyField { bindingPath = path, label = label };
                 slotEl.Add(pf);
+            }
+        }
+
+        #endregion
+
+        #region Preview
+
+        /// <summary>
+        /// プレビュー対象のPropertyFieldに変更コールバックを登録。
+        /// slot名から直接PropertyFieldを取得する（インデックス不使用）。
+        /// </summary>
+        private void RegisterPreviewCallbacks()
+        {
+            foreach (var (path, previewName) in PreviewBindings)
+            {
+                var slot = _root.Q<VisualElement>($"slot-{path}");
+                if (slot == null) continue;
+
+                var pf = slot.Q<PropertyField>();
+                if (pf == null) continue;
+
+                var capturedPath = path;
+                var capturedPreview = previewName;
+
+                pf.RegisterValueChangeCallback(evt =>
+                {
+                    UpdatePartPreview(capturedPreview, capturedPath);
+                });
+            }
+        }
+
+        /// <summary>
+        /// 全プレビューを初期化。
+        /// </summary>
+        private void UpdateAllPreviews()
+        {
+            foreach (var (path, previewName) in PreviewBindings)
+            {
+                UpdatePartPreview(previewName, path);
+            }
+
+            // コラボ画像
+            var script = (PrettyCureMirror)target;
+            var colaboContainer = _root.Q<VisualElement>("colabo-image-container");
+            if (colaboContainer != null)
+            {
+                colaboContainer.Clear();
+                if (script.colaboShopTex != null)
+                {
+                    var img = new Image { image = script.colaboShopTex };
+                    img.AddToClassList("colabo-shop-image");
+                    colaboContainer.Add(img);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 指定プロパティ配列からプレビューを生成。
+        /// </summary>
+        private void UpdatePartPreview(string previewElementName, string propertyPath)
+        {
+            var container = _root.Q<VisualElement>(previewElementName);
+            if (container == null) return;
+
+            container.Clear();
+
+            var prop = serializedObject.FindProperty(propertyPath);
+            if (prop == null || !prop.isArray) return;
+
+            int count = Mathf.Min(prop.arraySize, 4);
+            for (int i = 0; i < count; i++)
+            {
+                var go = prop.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
+                if (go == null) continue;
+
+                var previewTex = AssetPreview.GetAssetPreview(go);
+                if (previewTex == null)
+                    previewTex = AssetPreview.GetMiniThumbnail(go);
+
+                var img = new Image();
+                if (previewTex != null)
+                    img.image = previewTex;
+                img.AddToClassList("preview-thumb");
+                container.Add(img);
+            }
+
+            if (prop.arraySize > count)
+            {
+                var more = new Label($"+{prop.arraySize - count} more...");
+                more.AddToClassList("preview-more");
+                container.Add(more);
             }
         }
 
@@ -253,9 +321,6 @@ namespace Moruton.Gimmicks.Editor
 
             root.Q<Label>("step4-fade-label").text = L("step4_fade_fx_title");
 
-            // Setup Button
-            root.Q<Button>("btn-setup").text = LC("setup_button");
-
             // Developer Mode labels
             root.Q<Label>("dev-basic-label").text = LC("dev_basic_label");
             root.Q<Label>("dev-target-label").text = LC("dev_target_label");
@@ -266,60 +331,16 @@ namespace Moruton.Gimmicks.Editor
         private void SetPropLabel(VisualElement root, string slotName, string label)
         {
             var slot = root.Q<VisualElement>(slotName);
-            if (slot != null)
-            {
-                var pf = slot.Query<PropertyField>().First();
-                if (pf != null) pf.label = label;
-            }
+            if (slot == null) return;
+
+            var pf = slot.Q<PropertyField>();
+            if (pf != null) pf.label = label;
         }
 
         private void ReloadAndApplyLocalization()
         {
             LocalizationManager.Load("PrettyCureMirror", languageCodes[_selectedLanguage]);
             if (_root != null) ApplyLocalization(_root);
-        }
-
-        #endregion
-
-        #region Preview Update
-
-        private void UpdatePreview(string previewName, GameObject[] items)
-        {
-            var preview = _root.Q<VisualElement>(previewName);
-            if (preview == null) return;
-
-            // 既存のサムネイルをクリア
-            var thumbnails = preview.Query<VisualElement>(null, "preview-thumb").ToList();
-            foreach (var thumb in thumbnails)
-            {
-                preview.Remove(thumb);
-            }
-
-            // アイテムをサムネイルとして追加
-            if (items != null)
-            {
-                foreach (var item in items)
-                {
-                    if (item == null) continue;
-
-                    var thumb = new VisualElement();
-                    thumb.AddToClassList("preview-thumb");
-
-                    // GameObjectのサムネイルを取得
-                    var previewTex = AssetPreview.GetAssetPreview(item);
-                    if (previewTex == null)
-                        previewTex = AssetPreview.GetMiniThumbnail(item);
-                    if (previewTex != null)
-                        thumb.style.backgroundImage = previewTex;
-
-                    // 名前を表示
-                    var nameLabel = new Label(item.name);
-                    nameLabel.style.flexGrow = 1f;
-                    thumb.Add(nameLabel);
-
-                    preview.Add(thumb);
-                }
-            }
         }
 
         #endregion
@@ -339,23 +360,19 @@ namespace Moruton.Gimmicks.Editor
         {
             var toggle = root.Q<Button>(toggleName);
             var body = root.Q<VisualElement>(bodyName);
-
             if (toggle == null || body == null) return;
 
             toggle.clicked += () =>
             {
                 bool isExpanded = !body.ClassListContains("collapsed");
-
                 if (isExpanded)
                 {
                     body.AddToClassList("collapsed");
-                    toggle.RemoveFromClassList("expanded");
                     toggle.text = toggle.text.Replace("▼", "▶");
                 }
                 else
                 {
                     body.RemoveFromClassList("collapsed");
-                    toggle.AddToClassList("expanded");
                     toggle.text = toggle.text.Replace("▶", "▼");
                 }
             };
@@ -363,11 +380,10 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-        #region Part Toggles (Step 2 & 3)
+        #region Part Toggles (Developer Mode)
 
         private void SetupPartToggles(VisualElement root)
         {
-            // Developer Mode のトグルで Step 2/4 のセクション全体を表示/非表示
             SetupPartToggle(root, "devmode-toggle-headItems", "section-headItems", "Head");
             SetupPartToggle(root, "devmode-toggle-bodyItems", "section-bodyItems", "Body");
             SetupPartToggle(root, "devmode-toggle-handItems", "section-handItems", "Hand");
@@ -382,24 +398,16 @@ namespace Moruton.Gimmicks.Editor
         {
             var toggle = root.Q<Button>(toggleName);
             var row = root.Q<VisualElement>(rowName);
-            if (toggle == null || row == null)
-            {
-                Debug.LogWarning($"[MetamorphoseEditor] Toggle not found: {toggleName} -> {rowName}");
-                return;
-            }
+            if (toggle == null || row == null) return;
 
             string prefsKey = $"MetamorphoseEditor_Show_{rowName}";
             bool isVisible = EditorPrefs.GetBool(prefsKey, true);
-
-            Debug.Log($"[MetamorphoseEditor] Toggle setup: {toggleName} -> {rowName} ({displayName}) initial: {isVisible}");
-
             ApplyPartToggleVisual(toggle, row, displayName, isVisible);
 
             toggle.clicked += () =>
             {
                 isVisible = !isVisible;
                 EditorPrefs.SetBool(prefsKey, isVisible);
-                Debug.Log($"[MetamorphoseEditor] Toggle clicked: {toggleName} -> {rowName} now: {isVisible}");
                 ApplyPartToggleVisual(toggle, row, displayName, isVisible);
             };
         }
@@ -413,7 +421,7 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-#region Button Callbacks
+        #region Button Callbacks
 
         private void SetupButtonCallbacks(VisualElement root)
         {
@@ -423,9 +431,7 @@ namespace Moruton.Gimmicks.Editor
                 int index = i;
                 var btn = root.Q<Button>($"lang-btn-{i}");
                 if (btn != null)
-                {
                     btn.clicked += () => SwitchLanguage(index);
-                }
             }
 
             // Colabo Shop
@@ -435,8 +441,6 @@ namespace Moruton.Gimmicks.Editor
                 if (!string.IsNullOrEmpty(script.colaboShopInfo))
                     Application.OpenURL(script.colaboShopInfo);
             };
-
-            // Developer buttons removed (no longer needed)
         }
 
         private void SwitchLanguage(int index)
@@ -452,60 +456,6 @@ namespace Moruton.Gimmicks.Editor
             }
 
             ReloadAndApplyLocalization();
-        }
-
-        #endregion
-
-        #region Previews
-
-        private void UpdateAllPreviews(VisualElement root)
-        {
-            var script = (PrettyCureMirror)target;
-
-            UpdatePartPreview(root, "head-preview", script.headItems);
-            UpdatePartPreview(root, "body-preview", script.bodyItems);
-            UpdatePartPreview(root, "hand-preview", script.handItems);
-            UpdatePartPreview(root, "leg-preview", script.legItems);
-
-            // コラボ画像
-            var colaboContainer = root.Q<VisualElement>("colabo-image-container");
-            colaboContainer.Clear();
-            if (script.colaboShopTex != null)
-            {
-                var img = new Image { image = script.colaboShopTex };
-                img.AddToClassList("colabo-shop-image");
-                colaboContainer.Add(img);
-            }
-        }
-
-        private void UpdatePartPreview(VisualElement root, string containerName, GameObject[] items)
-        {
-            var container = root.Q<VisualElement>(containerName);
-            if (container == null) return;
-
-            container.Clear();
-
-            if (items == null || items.Length == 0) return;
-
-            int maxShow = Mathf.Min(items.Length, 4);
-            for (int i = 0; i < maxShow; i++)
-            {
-                if (items[i] == null) continue;
-                var preview = AssetPreview.GetAssetPreview(items[i]);
-                if (preview != null)
-                {
-                    var img = new Image { image = preview };
-                    img.AddToClassList("preview-thumb");
-                    container.Add(img);
-                }
-            }
-
-            if (items.Length > maxShow)
-            {
-                var label = new Label($"+{items.Length - maxShow} more...");
-                label.AddToClassList("preview-more");
-                container.Add(label);
-            }
         }
 
         #endregion

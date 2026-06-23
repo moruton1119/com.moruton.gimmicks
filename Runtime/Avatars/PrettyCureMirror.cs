@@ -75,5 +75,35 @@ namespace Moruton.Gimmicks
         public GameObject OnePiece => onePiece;
         public GameObject ColaboFBX => colaboFBX;
         public GameObject[] GimmickCollar => gimmickCollar;
+
+        /// <summary>
+        /// コンポーネント追加時・Reset時に呼ばれる。
+        /// アバターとAnimatorを自動アサイン。
+        /// </summary>
+        private void Reset()
+        {
+            AutoAssignAvatarAndAnimator();
+        }
+
+        /// <summary>
+        /// 親階層を辿ってVRCアバターディスクリプターを探し、
+        /// avatar / animator が未設定なら自動でアサインする。
+        /// </summary>
+        public void AutoAssignAvatarAndAnimatorIfEmpty()
+        {
+            // avatar が未設定なら親階層を探索
+            if (avatar == null)
+            {
+                var desc = GetComponentInParent<VRC.SDKBase.VRC_AvatarDescriptor>();
+                if (desc != null)
+                    avatar = desc.gameObject;
+            }
+
+            // animator が未設定なら avatar から取得
+            if (animator == null && avatar != null)
+            {
+                animator = avatar.GetComponent<Animator>();
+            }
+        }
     }
 }
