@@ -141,7 +141,8 @@ namespace Moruton.Gimmicks.Editor
 
             // Header (IMGUI wrapped)
             var headerContainer = _root.Q<VisualElement>("header-container");
-            headerContainer.Add(new IMGUIContainer(() => MorutonAvatarPackageEditorHelper.DrawHeader()));
+            if (headerContainer != null)
+                headerContainer.Add(new IMGUIContainer(() => MorutonAvatarPackageEditorHelper.DrawHeader()));
 
             ApplyLocalization(_root);
             SetupStepToggles(_root);
