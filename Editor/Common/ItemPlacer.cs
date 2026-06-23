@@ -48,27 +48,42 @@ namespace Moruton.Gimmicks.Editor
         }
 
         /// <summary>
-        /// アイテムを1つターゲットの子として配置する。
+        /// アイテムをターゲットの子として移動（reparent）する。
+        /// シーン内オブジェクトは移動、PrefabアセットはInstantiate。
         /// </summary>
         public static GameObject Place(Transform target, GameObject item)
         {
             if (target == null || item == null) return null;
 
-            var instance = Object.Instantiate(item, target);
-            instance.name = item.name;
-            instance.transform.localPosition = Vector3.zero;
-            instance.transform.localRotation = Quaternion.identity;
-            instance.transform.localScale = Vector3.one;
+            GameObject obj;
 
-            if (PrefabUtility.IsPartOfPrefabInstance(instance))
+            if (PrefabUtility.IsPartOfPrefabAsset(item))
+            {
+                obj = Object.Instantiate(item, target);
+                obj.name = item.name;
+            }
+            else
+            {
+                if (item.transform.parent == target)
+                    return item;
+
+                obj = item;
+                obj.transform.SetParent(target, false);
+            }
+
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.transform.localScale = Vector3.one;
+
+            if (PrefabUtility.IsPartOfPrefabInstance(obj))
             {
                 PrefabUtility.UnpackPrefabInstance(
-                    instance,
+                    obj,
                     PrefabUnpackMode.Completely,
                     InteractionMode.AutomatedAction);
             }
 
-            return instance;
+            return obj;
         }
 
         /// <summary>
