@@ -15,7 +15,7 @@ namespace Moruton.Gimmicks.Editor.NDMF
         {
             InPhase(BuildPhase.Transforming)
                 .AfterPlugin("nadena.dev.modular_avatar.core")
-                .Run<MetamorphoseApplyPass>();
+                .Run(new MetamorphoseApplyPass());
         }
     }
 }
