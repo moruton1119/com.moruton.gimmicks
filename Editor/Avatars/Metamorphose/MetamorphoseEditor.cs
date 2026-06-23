@@ -179,10 +179,17 @@ namespace Moruton.Gimmicks.Editor
             for (int i = 0; i < fieldBindings.Length && i < propertyFields.Count; i++)
             {
                 var (path, previewName) = fieldBindings[i];
-                propertyFields[i].RegisterValueChangedCallback(evt =>
+                propertyFields[i].RegisterValueChangeCallback(evt =>
                 {
-                    var value = evt.newValue as GameObject[];
-                    UpdatePreview(previewName, value);
+                    var arr = serializedObject.FindProperty(path).arraySize;
+                    var list = new System.Collections.Generic.List<GameObject>();
+                    var prop = serializedObject.FindProperty(path);
+                    for (int j = 0; j < prop.arraySize; j++)
+                    {
+                        var go = prop.GetArrayElementAtIndex(j).objectReferenceValue as GameObject;
+                        if (go != null) list.Add(go);
+                    }
+                    UpdatePreview(previewName, list.ToArray());
                 });
             }
 
@@ -295,17 +302,19 @@ namespace Moruton.Gimmicks.Editor
                 {
                     if (item == null) continue;
 
-                    var thumb = new VisualElement
-                    {
-                        classList = { "preview-thumb" },
-                        style =
-                        {
-                            backgroundImage = item.icon != null ? AssetPreview.GetAssetPreview(item.icon) as Texture2D : null,
-                        }
-                    };
+                    var thumb = new VisualElement();
+                    thumb.AddToClassList("preview-thumb");
+
+                    // GameObjectのサムネイルを取得
+                    var previewTex = AssetPreview.GetAssetPreview(item);
+                    if (previewTex == null)
+                        previewTex = AssetPreview.GetMiniThumbnail(item);
+                    if (previewTex != null)
+                        thumb.style.backgroundImage = previewTex;
 
                     // 名前を表示
-                    var nameLabel = new Label(item.name) { style = { flexGrow = 1f } };
+                    var nameLabel = new Label(item.name);
+                    nameLabel.style.flexGrow = 1f;
                     thumb.Add(nameLabel);
 
                     preview.Add(thumb);
