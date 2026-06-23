@@ -20,10 +20,11 @@
 
       <!-- Sidebar -->
       <ui:VisualElement name="sidebar" class="sidebar">
-        <ui:Button name="nav-0" class="nav-num active" text="1" />
-        <ui:Button name="nav-1" class="nav-num" text="2" />
-        <ui:Button name="nav-2" class="nav-num" text="3" />
-        <ui:Button name="nav-3" class="nav-num" text="4" />
+        <ui:Label class="sidebar-header" text="SETUP" />
+        <ui:Button name="nav-0" class="nav-num active" text="&#9312;" />
+        <ui:Button name="nav-1" class="nav-num" text="&#9313;" />
+        <ui:Button name="nav-2" class="nav-num" text="&#9314;" />
+        <ui:Button name="nav-3" class="nav-num" text="&#9315;" />
 
         <ui:VisualElement class="sidebar-divider" />
 

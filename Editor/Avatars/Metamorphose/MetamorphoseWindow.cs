@@ -203,6 +203,8 @@ namespace Moruton.Gimmicks.Editor
             LoadBannerCards();
 
             rootVisualElement.Clear();
+            rootVisualElement.style.flexDirection = FlexDirection.Column;
+            _root.style.flexGrow = 1;
             rootVisualElement.Add(_root);
         }
 
