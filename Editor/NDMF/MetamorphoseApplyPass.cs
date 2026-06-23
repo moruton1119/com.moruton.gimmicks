@@ -101,14 +101,41 @@ namespace Moruton.Gimmicks.Editor.NDMF
                 return;
             }
 
+            Debug.Log($"[MetamorphoseApplyPass] Controller: {controller.name}, Layers: {controller.layers.Length}");
+
+            for (int i = 0; i < controller.layers.Length; i++)
+            {
+                var states = controller.layers[i].stateMachine.states;
+                var stateNames = string.Join(", ", states.Select(s => s.state.name));
+                Debug.Log($"[MetamorphoseApplyPass] Layer {i} '{controller.layers[i].name}': [{stateNames}]");
+            }
+
             var offTargets = mirror.OffTargets.Where(t => t != null).ToArray();
+
+            foreach (var t in offTargets)
+            {
+                var path = AnimationBuilder.GetRelativePath(mirror.Avatar, t);
+                Debug.Log($"[MetamorphoseApplyPass] offTarget: '{t.name}' -> path='{path}' (parent={t.transform.parent?.name})");
+            }
+
+            var modelPath = AnimationBuilder.GetRelativePath(mirror.Avatar, mirror.Model);
+            Debug.Log($"[MetamorphoseApplyPass] model: '{mirror.Model.name}' -> path='{modelPath}' (parent={mirror.Model.transform.parent?.name})");
+
             var (enableClip, disableClip) = AnimationBuilder.CreateToggleClipsInMemory(
                 mirror.Avatar, offTargets, mirror.Model);
 
             if (enableClip != null)
+            {
+                Debug.Log($"[MetamorphoseApplyPass] Enable clip curves: {enableClip.length}");
                 AnimationBuilder.ApplyClipToState(controller, "Enable", enableClip);
+            }
             if (disableClip != null)
+            {
+                Debug.Log($"[MetamorphoseApplyPass] Disable clip curves: {disableClip.length}");
                 AnimationBuilder.ApplyClipToState(controller, "Disable", disableClip);
+            }
+
+            Debug.Log("[MetamorphoseApplyPass] Animation generation complete.");
         }
     }
 }
