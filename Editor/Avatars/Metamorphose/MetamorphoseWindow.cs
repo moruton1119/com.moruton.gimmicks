@@ -501,7 +501,7 @@ namespace Moruton.Gimmicks.Editor
                 if (string.IsNullOrWhiteSpace(url)) continue;
 
                 _bannerCardStates.Add(new BannerCardState { url = url });
-                RenderBannerCard(container, i);
+                RenderBannerCard(container, _bannerCardStates.Count - 1);
             }
 
             FetchBannerMetadata();

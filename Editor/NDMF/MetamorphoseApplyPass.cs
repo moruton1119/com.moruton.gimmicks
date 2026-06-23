@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using nadena.dev.ndmf;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using Moruton.Gimmicks.Editor;
@@ -8,7 +10,6 @@ namespace Moruton.Gimmicks.Editor.NDMF
 {
     /// <summary>
     /// NDMF Build Pass: ビルド時にアイテム配置＋アニメーション生成を行う。
-    /// 削除・Prefab解除は不要（NDMF がクローンに対して動くため）。
     /// </summary>
     public sealed class MetamorphoseApplyPass : Pass<MetamorphoseApplyPass>
     {
@@ -18,6 +19,8 @@ namespace Moruton.Gimmicks.Editor.NDMF
             if (mirror == null) return;
 
             if (!Validate(mirror)) return;
+
+            UnpackAllPrefabs(ctx.AvatarRootObject);
 
             GenerateAnimations(mirror);
 
@@ -61,6 +64,32 @@ namespace Moruton.Gimmicks.Editor.NDMF
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// クローン内の全Prefabインスタンスを完全にアンパックする。
+        /// Prefab接続が残っていると子オブジェクトの移動・変更が反映されない場合がある。
+        /// </summary>
+        private static void UnpackAllPrefabs(GameObject root)
+        {
+            var prefabRoots = new List<GameObject>();
+            var allTransforms = root.GetComponentsInChildren<Transform>(true);
+
+            foreach (var t in allTransforms)
+            {
+                if (t == null) continue;
+                if (PrefabUtility.IsAnyPrefabInstanceRoot(t.gameObject))
+                    prefabRoots.Add(t.gameObject);
+            }
+
+            foreach (var prefabRoot in prefabRoots)
+            {
+                if (prefabRoot == null) continue;
+                PrefabUtility.UnpackPrefabInstance(
+                    prefabRoot,
+                    PrefabUnpackMode.Completely,
+                    InteractionMode.AutomatedAction);
+            }
         }
 
         private static void GenerateAnimations(PrettyCureMirror mirror)

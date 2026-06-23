@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace Moruton.Gimmicks.Editor
@@ -58,6 +59,14 @@ namespace Moruton.Gimmicks.Editor
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
             instance.transform.localScale = Vector3.one;
+
+            if (PrefabUtility.IsPartOfPrefabInstance(instance))
+            {
+                PrefabUtility.UnpackPrefabInstance(
+                    instance,
+                    PrefabUnpackMode.Completely,
+                    InteractionMode.AutomatedAction);
+            }
 
             return instance;
         }
