@@ -194,6 +194,63 @@
     margin-left: 8px;
 }
 
+/* --- Part Toggle Button --- */
+.part-toggle {
+    height: 24px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: var(--accent-green);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 8px;
+    margin-bottom: 4px;
+    transition: background-color 0.15s;
+}
+
+.part-toggle:hover {
+    background-color: var(--accent-green-hover);
+}
+
+.part-toggle-off {
+    color: var(--text-dim);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.part-toggle-off:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* --- Items Row (wraps label + slot + preview) --- */
+.items-row {
+    flex-direction: column;
+}
+
+/* --- Item Toggle (Step 3) --- */
+.item-toggle {
+    height: 24px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: var(--accent-green);
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 8px;
+    margin-bottom: 4px;
+    transition: background-color 0.15s;
+}
+
+.item-toggle:hover {
+    background-color: var(--accent-green-hover);
+}
+
+.item-toggle.part-toggle-off {
+    color: var(--text-dim);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
 /* --- Fade Section --- */
 .fade-section {
     background-color: rgba(255, 255, 255, 0.03);

@@ -140,6 +140,9 @@ namespace Moruton.Gimmicks.Editor
             // ステップトグル
             SetupStepToggles(_root);
 
+            // 部位ごとの表示/非表示トグル
+            SetupPartToggles(_root);
+
             // ボタン コールバック
             SetupButtonCallbacks(_root);
 
@@ -296,7 +299,46 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-        #region Button Callbacks
+        #region Part Toggles (Step 2 & 3)
+
+        private void SetupPartToggles(VisualElement root)
+        {
+            SetupPartToggle(root, "toggle-headItems", "head-items-row", "Head");
+            SetupPartToggle(root, "toggle-bodyItems", "body-items-row", "Body");
+            SetupPartToggle(root, "toggle-handItems", "hand-items-row", "Hand");
+            SetupPartToggle(root, "toggle-legItems", "leg-items-row", "Leg");
+            SetupPartToggle(root, "toggle-gimmickColor", "slot-gimmickColor", "Color");
+        }
+
+        private void SetupPartToggle(VisualElement root, string toggleName, string rowName, string displayName)
+        {
+            var toggle = root.Q<Button>(toggleName);
+            var row = root.Q<VisualElement>(rowName);
+            if (toggle == null || row == null) return;
+
+            string prefsKey = $"MetamorphoseEditor_Show_{rowName}";
+            bool isVisible = EditorPrefs.GetBool(prefsKey, true);
+
+            ApplyPartToggleVisual(toggle, row, displayName, isVisible);
+
+            toggle.clicked += () =>
+            {
+                isVisible = !isVisible;
+                EditorPrefs.SetBool(prefsKey, isVisible);
+                ApplyPartToggleVisual(toggle, row, displayName, isVisible);
+            };
+        }
+
+        private void ApplyPartToggleVisual(Button toggle, VisualElement row, string displayName, bool isVisible)
+        {
+            toggle.text = $"{displayName}: {(isVisible ? "ON" : "OFF")}";
+            toggle.EnableInClassList("part-toggle-off", !isVisible);
+            row.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        #endregion
+
+#region Button Callbacks
 
         private void SetupButtonCallbacks(VisualElement root)
         {

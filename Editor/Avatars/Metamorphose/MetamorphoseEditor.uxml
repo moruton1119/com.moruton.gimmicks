@@ -57,30 +57,42 @@
 
         <!-- Head -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-head-items" class="part-label" />
-          <ui:VisualElement name="slot-headItems" />
-          <ui:VisualElement name="head-preview" class="preview-row" />
+          <ui:Button name="toggle-headItems" class="part-toggle" text="Head: ON" />
+          <ui:VisualElement name="head-items-row" class="items-row">
+            <ui:Label name="label-head-items" class="part-label" />
+            <ui:VisualElement name="slot-headItems" />
+            <ui:VisualElement name="head-preview" class="preview-row" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- Body -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-body-items" class="part-label" />
-          <ui:VisualElement name="slot-bodyItems" />
-          <ui:VisualElement name="body-preview" class="preview-row" />
+          <ui:Button name="toggle-bodyItems" class="part-toggle" text="Body: ON" />
+          <ui:VisualElement name="body-items-row" class="items-row">
+            <ui:Label name="label-body-items" class="part-label" />
+            <ui:VisualElement name="slot-bodyItems" />
+            <ui:VisualElement name="body-preview" class="preview-row" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- Hand -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-hand-items" class="part-label" />
-          <ui:VisualElement name="slot-handItems" />
-          <ui:VisualElement name="hand-preview" class="preview-row" />
+          <ui:Button name="toggle-handItems" class="part-toggle" text="Hand: ON" />
+          <ui:VisualElement name="hand-items-row" class="items-row">
+            <ui:Label name="label-hand-items" class="part-label" />
+            <ui:VisualElement name="slot-handItems" />
+            <ui:VisualElement name="hand-preview" class="preview-row" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- Leg -->
         <ui:VisualElement class="part-section">
-          <ui:Label name="label-leg-items" class="part-label" />
-          <ui:VisualElement name="slot-legItems" />
-          <ui:VisualElement name="leg-preview" class="preview-row" />
+          <ui:Button name="toggle-legItems" class="part-toggle" text="Leg: ON" />
+          <ui:VisualElement name="leg-items-row" class="items-row">
+            <ui:Label name="label-leg-items" class="part-label" />
+            <ui:VisualElement name="slot-legItems" />
+            <ui:VisualElement name="leg-preview" class="preview-row" />
+          </ui:VisualElement>
         </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>
@@ -93,7 +105,10 @@
       <ui:VisualElement name="step3-body" class="step-body collapsed">
         <ui:Label name="step3-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
-        <ui:VisualElement name="slot-gimmickColor" />
+        <ui:VisualElement name="gimmick-color-row">
+          <ui:Button name="toggle-gimmickColor" class="item-toggle" text="Color: ON" />
+          <ui:VisualElement name="slot-gimmickColor" />
+        </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>
 
