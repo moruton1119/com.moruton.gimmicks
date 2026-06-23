@@ -55,29 +55,29 @@
         <ui:HelpBox name="step2-parts-help" message-type="Info" />
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- Head -->
-        <ui:VisualElement class="part-section">
+        <!-- Head (section-headItems でトグル制御) -->
+        <ui:VisualElement name="section-headItems" class="part-section">
           <ui:Label name="label-head-items" class="part-label" />
           <ui:VisualElement name="slot-headItems" />
           <ui:VisualElement name="head-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Body -->
-        <ui:VisualElement class="part-section">
+        <ui:VisualElement name="section-bodyItems" class="part-section">
           <ui:Label name="label-body-items" class="part-label" />
           <ui:VisualElement name="slot-bodyItems" />
           <ui:VisualElement name="body-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Hand -->
-        <ui:VisualElement class="part-section">
+        <ui:VisualElement name="section-handItems" class="part-section">
           <ui:Label name="label-hand-items" class="part-label" />
           <ui:VisualElement name="slot-handItems" />
           <ui:VisualElement name="hand-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Leg -->
-        <ui:VisualElement class="part-section">
+        <ui:VisualElement name="section-legItems" class="part-section">
           <ui:Label name="label-leg-items" class="part-label" />
           <ui:VisualElement name="slot-legItems" />
           <ui:VisualElement name="leg-preview" class="preview-row" />
@@ -93,7 +93,7 @@
       <ui:VisualElement name="step3-body" class="step-body collapsed">
         <ui:Label name="step3-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
-        <ui:VisualElement name="gimmick-color-row">
+        <ui:VisualElement name="section-gimmickColor">
           <ui:Label name="label-gimmickColor" class="part-label" />
           <ui:VisualElement name="slot-gimmickColor" />
         </ui:VisualElement>
@@ -119,22 +119,22 @@
         <!-- Fade Items (Transforms are in Developer Mode) -->
         <ui:Label name="step4-fade-label" class="section-label" />
 
-        <ui:VisualElement class="fade-section">
+        <ui:VisualElement name="section-fadeHeadItems" class="fade-section">
           <ui:Label text="Head" class="fade-part-label" />
           <ui:VisualElement name="slot-fadeHeadItems" />
         </ui:VisualElement>
 
-        <ui:VisualElement class="fade-section">
+        <ui:VisualElement name="section-fadeBodyItems" class="fade-section">
           <ui:Label text="Body" class="fade-part-label" />
           <ui:VisualElement name="slot-fadeBodyItems" />
         </ui:VisualElement>
 
-        <ui:VisualElement class="fade-section">
+        <ui:VisualElement name="section-fadeArmItems" class="fade-section">
           <ui:Label text="Arm" class="fade-part-label" />
           <ui:VisualElement name="slot-fadeArmItems" />
         </ui:VisualElement>
 
-        <ui:VisualElement class="fade-section">
+        <ui:VisualElement name="section-fadeLegItems" class="fade-section">
           <ui:Label text="Leg" class="fade-part-label" />
           <ui:VisualElement name="slot-fadeLegItems" />
         </ui:VisualElement>
@@ -171,23 +171,13 @@
 
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- 部位設定のトグル (Step 2 items) -->
-        <ui:Label name="dev-items-toggle-label" class="section-label" />
-        <ui:VisualElement name="dev-items-row">
+        <!-- 部位表示切替トグル (Step 2 アイテム) -->
+        <ui:Label name="dev-items-toggle-label" class="section-label" text="部位表示切替" />
+        <ui:VisualElement class="dev-toggle-grid">
           <ui:Button name="devmode-toggle-headItems" class="part-toggle" text="Head: ON" />
-          <ui:VisualElement name="slot-headItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-items-row">
           <ui:Button name="devmode-toggle-bodyItems" class="part-toggle" text="Body: ON" />
-          <ui:VisualElement name="slot-bodyItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-items-row">
           <ui:Button name="devmode-toggle-handItems" class="part-toggle" text="Hand: ON" />
-          <ui:VisualElement name="slot-handItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-items-row">
           <ui:Button name="devmode-toggle-legItems" class="part-toggle" text="Leg: ON" />
-          <ui:VisualElement name="slot-legItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="spacer-sm" />
@@ -201,23 +191,13 @@
 
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- 部位設定のトグル (Step 4 fade items) -->
-        <ui:Label name="dev-fade-items-toggle-label" class="section-label" />
-        <ui:VisualElement name="dev-fade-items-row">
-          <ui:Button name="devmode-toggle-fadeHeadItems" class="part-toggle" text="Fade Head: ON" />
-          <ui:VisualElement name="slot-fadeHeadItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-fade-items-row">
-          <ui:Button name="devmode-toggle-fadeBodyItems" class="part-toggle" text="Fade Body: ON" />
-          <ui:VisualElement name="slot-fadeBodyItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-fade-items-row">
-          <ui:Button name="devmode-toggle-fadeArmItems" class="part-toggle" text="Fade Arm: ON" />
-          <ui:VisualElement name="slot-fadeArmItems" />
-        </ui:VisualElement>
-        <ui:VisualElement name="dev-fade-items-row">
-          <ui:Button name="devmode-toggle-fadeLegItems" class="part-toggle" text="Fade Leg: ON" />
-          <ui:VisualElement name="slot-fadeLegItems" />
+        <!-- フェード部位表示切替トグル (Step 4) -->
+        <ui:Label name="dev-fade-toggle-label" class="section-label" text="フェード部位表示切替" />
+        <ui:VisualElement class="dev-toggle-grid">
+          <ui:Button name="devmode-toggle-fadeHeadItems" class="part-toggle" text="F-Head: ON" />
+          <ui:Button name="devmode-toggle-fadeBodyItems" class="part-toggle" text="F-Body: ON" />
+          <ui:Button name="devmode-toggle-fadeArmItems" class="part-toggle" text="F-Arm: ON" />
+          <ui:Button name="devmode-toggle-fadeLegItems" class="part-toggle" text="F-Leg: ON" />
         </ui:VisualElement>
 
         <ui:VisualElement class="spacer-sm" />

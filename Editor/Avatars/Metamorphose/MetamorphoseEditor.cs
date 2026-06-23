@@ -301,17 +301,15 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupPartToggles(VisualElement root)
         {
-            // Developer Mode で各部位を制御
-            SetupPartToggle(root, "devmode-toggle-headItems", "slot-headItems", "Head Items");
-            SetupPartToggle(root, "devmode-toggle-bodyItems", "slot-bodyItems", "Body Items");
-            SetupPartToggle(root, "devmode-toggle-handItems", "slot-handItems", "Hand Items");
-            SetupPartToggle(root, "devmode-toggle-legItems", "slot-legItems", "Leg Items");
-            SetupPartToggle(root, "devmode-toggle-fadeHeadItems", "slot-fadeHeadItems", "Fade Head Items");
-            SetupPartToggle(root, "devmode-toggle-fadeBodyItems", "slot-fadeBodyItems", "Fade Body Items");
-            SetupPartToggle(root, "devmode-toggle-fadeArmItems", "slot-fadeArmItems", "Fade Arm Items");
-            SetupPartToggle(root, "devmode-toggle-fadeLegItems", "slot-fadeLegItems", "Fade Leg Items");
-
-            Debug.Log("[MetamorphoseEditor] Part toggles setup complete.");
+            // Developer Mode のトグルで Step 2/4 のセクション全体を表示/非表示
+            SetupPartToggle(root, "devmode-toggle-headItems", "section-headItems", "Head");
+            SetupPartToggle(root, "devmode-toggle-bodyItems", "section-bodyItems", "Body");
+            SetupPartToggle(root, "devmode-toggle-handItems", "section-handItems", "Hand");
+            SetupPartToggle(root, "devmode-toggle-legItems", "section-legItems", "Leg");
+            SetupPartToggle(root, "devmode-toggle-fadeHeadItems", "section-fadeHeadItems", "F-Head");
+            SetupPartToggle(root, "devmode-toggle-fadeBodyItems", "section-fadeBodyItems", "F-Body");
+            SetupPartToggle(root, "devmode-toggle-fadeArmItems", "section-fadeArmItems", "F-Arm");
+            SetupPartToggle(root, "devmode-toggle-fadeLegItems", "section-fadeLegItems", "F-Leg");
         }
 
         private void SetupPartToggle(VisualElement root, string toggleName, string rowName, string displayName)
