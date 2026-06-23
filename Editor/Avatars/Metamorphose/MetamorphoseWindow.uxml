@@ -1,0 +1,163 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
+  <Style src="MetamorphoseWindow.uss" />
+
+  <ui:VisualElement name="app" class="app-root">
+
+    <!-- ===== Top Bar ===== -->
+    <ui:VisualElement name="topbar" class="topbar">
+      <ui:Label name="topbar-title" class="topbar-title" text="Metamorphose Setup" />
+      <ui:VisualElement name="lang-bar" class="lang-bar">
+        <ui:Button name="lang-btn-0" class="lang-btn selected" />
+        <ui:Button name="lang-btn-1" class="lang-btn" />
+        <ui:Button name="lang-btn-2" class="lang-btn" />
+        <ui:Button name="lang-btn-3" class="lang-btn" />
+        <ui:Button name="lang-btn-4" class="lang-btn" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- ===== Main Area ===== -->
+    <ui:VisualElement name="main" class="main-area">
+
+      <!-- Sidebar -->
+      <ui:VisualElement name="sidebar" class="sidebar">
+        <ui:Button name="nav-0" class="nav-btn active" />
+        <ui:Button name="nav-1" class="nav-btn" />
+        <ui:Button name="nav-2" class="nav-btn" />
+        <ui:Button name="nav-3" class="nav-btn" />
+        <ui:VisualElement class="sidebar-spacer" />
+        <ui:Button name="nav-4" class="nav-btn dev-btn" text="Dev Mode" />
+      </ui:VisualElement>
+
+      <!-- Content -->
+      <ui:VisualElement name="content" class="content-panel">
+        <ui:ScrollView name="scroll-content">
+          <ui:VisualElement name="pages-container" class="pages-container">
+
+            <!-- ===== Page 0: 基本設定 ===== -->
+            <ui:VisualElement name="page-0" class="page">
+              <ui:Label name="page0-desc" class="page-desc" />
+              <ui:VisualElement name="page0-section-avatar" class="field-group">
+                <ui:Label name="fg0-avatar" class="field-group-title" />
+                <ui:VisualElement name="page0-slot-avatar" class="field-slot" />
+                <ui:VisualElement name="page0-slot-model" class="field-slot" />
+                <ui:VisualElement name="page0-slot-animator" class="field-slot" />
+              </ui:VisualElement>
+              <ui:VisualElement name="page0-section-off" class="field-group">
+                <ui:Label name="fg0-off" class="field-group-title" />
+                <ui:VisualElement name="page0-slot-offTargets" class="field-slot" />
+              </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ===== Page 1: 変身後の衣装 ===== -->
+            <ui:VisualElement name="page-1" class="page" style="display: none;">
+              <ui:Label name="page1-desc" class="page-desc" />
+              <ui:Label name="fg1-parts" class="field-group-title" />
+              <ui:HelpBox name="page1-help" message-type="Info" />
+
+              <ui:VisualElement name="section-head" class="part-section">
+                <ui:Label name="label-head" class="part-label" />
+                <ui:VisualElement name="page1-slot-headItems" class="field-slot" />
+                <ui:VisualElement name="head-preview" class="preview-row" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-body" class="part-section">
+                <ui:Label name="label-body" class="part-label" />
+                <ui:VisualElement name="page1-slot-bodyItems" class="field-slot" />
+                <ui:VisualElement name="body-preview" class="preview-row" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-hand" class="part-section">
+                <ui:Label name="label-hand" class="part-label" />
+                <ui:VisualElement name="page1-slot-handItems" class="field-slot" />
+                <ui:VisualElement name="hand-preview" class="preview-row" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-leg" class="part-section">
+                <ui:Label name="label-leg" class="part-label" />
+                <ui:VisualElement name="page1-slot-legItems" class="field-slot" />
+                <ui:VisualElement name="leg-preview" class="preview-row" />
+              </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ===== Page 2: ギミック色 ===== -->
+            <ui:VisualElement name="page-2" class="page" style="display: none;">
+              <ui:Label name="page2-desc" class="page-desc" />
+              <ui:VisualElement class="field-group">
+                <ui:Label name="fg2-color" class="field-group-title" />
+                <ui:VisualElement name="page2-slot-gimmickColor" class="field-slot" />
+              </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ===== Page 3: 特殊設定 ===== -->
+            <ui:VisualElement name="page-3" class="page" style="display: none;">
+              <ui:Label name="page3-desc" class="page-desc" />
+              <ui:VisualElement name="colabo-shop-section">
+                <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
+                <ui:Button name="btn-colabo-shop" class="link-btn" />
+                <ui:HelpBox name="step4-colabo-help" message-type="Info" />
+              </ui:VisualElement>
+              <ui:Label name="fg3-fade" class="field-group-title" />
+              <ui:VisualElement name="section-fadeHead" class="fade-section">
+                <ui:Label text="Head" class="fade-part-label" />
+                <ui:VisualElement name="page3-slot-fadeHeadItems" class="field-slot" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-fadeBody" class="fade-section">
+                <ui:Label text="Body" class="fade-part-label" />
+                <ui:VisualElement name="page3-slot-fadeBodyItems" class="field-slot" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-fadeArm" class="fade-section">
+                <ui:Label text="Arm" class="fade-part-label" />
+                <ui:VisualElement name="page3-slot-fadeArmItems" class="field-slot" />
+              </ui:VisualElement>
+              <ui:VisualElement name="section-fadeLeg" class="fade-section">
+                <ui:Label text="Leg" class="fade-part-label" />
+                <ui:VisualElement name="page3-slot-fadeLegItems" class="field-slot" />
+              </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ===== Page 4: Dev Mode ===== -->
+            <ui:VisualElement name="page-4" class="page dev-page" style="display: none;">
+              <ui:Label name="fg4-basic" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-dummyImage" class="field-slot" />
+              <ui:VisualElement name="page4-slot-colaboShopTex" class="field-slot" />
+              <ui:VisualElement name="page4-slot-colaboShopInfo" class="field-slot" />
+              <ui:VisualElement name="page4-slot-model" class="field-slot" />
+              <ui:VisualElement name="page4-slot-animator" class="field-slot" />
+
+              <ui:Label name="fg4-targets" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-devHeadTarget" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devBodyTarget" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devHandTarget" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devLegTarget" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devOnePiece" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devColaboItemTarget" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devColaboItem" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devColaboFBX" class="field-slot" />
+
+              <ui:Label name="fg4-fade-transforms" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-devFadeHead" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeBody" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeArm" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeLeg" class="field-slot" />
+
+              <ui:Label name="fg4-materials" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-devFadeHeadMaterial" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeBodyMaterial" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeArmMaterial" class="field-slot" />
+              <ui:VisualElement name="page4-slot-devFadeLegMaterial" class="field-slot" />
+
+              <ui:Label name="fg4-gimmick-color" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-gimmickCollar" class="field-slot" />
+            </ui:VisualElement>
+
+          </ui:VisualElement>
+        </ui:ScrollView>
+      </ui:VisualElement>
+
+    </ui:VisualElement>
+
+    <!-- ===== Bottom Banner ===== -->
+    <ui:VisualElement name="banner" class="banner">
+      <ui:Label class="banner-label" text="OTHER GIMMICKS" />
+      <ui:VisualElement name="banner-cards" class="banner-cards" />
+    </ui:VisualElement>
+
+  </ui:VisualElement>
+</ui:UXML>

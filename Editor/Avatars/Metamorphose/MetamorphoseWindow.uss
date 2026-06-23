@@ -1,0 +1,387 @@
+/* ============================================
+   MetamorphoseWindow — Web-Style Dark Theme
+   ============================================ */
+
+.app-root {
+    --sidebar-width: 170px;
+    --topbar-height: 38px;
+    --content-bg: #1e1e1e;
+    --sidebar-bg: #161616;
+    --topbar-bg: #1a1a1a;
+    --banner-bg: #141418;
+    --accent: #3f8aff;
+    --accent-hover: #5193ff;
+    --accent-bg: rgba(63, 138, 255, 0.12);
+    --accent-purple: #8B5CF6;
+    --accent-green: #4CAF50;
+    --accent-green-hover: #5BC960;
+    --accent-orange: #F59E0B;
+    --border: #2a2a2a;
+    --border-subtle: #222;
+    --text: #e0e0e0;
+    --text-secondary: #aaa;
+    --text-dim: #666;
+    --card-bg: #252525;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+
+    flex-direction: column;
+    background-color: var(--content-bg);
+    color: var(--text);
+    font-size: 13px;
+}
+
+/* --- Top Bar --- */
+.topbar {
+    height: var(--topbar-height);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 14px;
+    padding-right: 12px;
+    background-color: var(--topbar-bg);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--border);
+}
+
+.topbar-title {
+    -unity-font-style: bold;
+    font-size: 14px;
+    color: #fff;
+}
+
+/* --- Language Bar --- */
+.lang-bar {
+    flex-direction: row;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+}
+
+.lang-btn {
+    flex: 1;
+    height: 24px;
+    min-width: 36px;
+    font-size: 11px;
+    color: var(--text-dim);
+    background-color: transparent;
+    border-width: 0;
+    border-radius: var(--radius-sm);
+    -unity-font-style: normal;
+    margin-left: 1px;
+    margin-right: 1px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.lang-btn:hover {
+    color: var(--text);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lang-btn.selected {
+    color: #fff;
+    background-color: var(--accent);
+    -unity-font-style: bold;
+}
+
+/* --- Main Area --- */
+.main-area {
+    flex: 1;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right-width: 1px;
+    border-right-color: var(--border);
+    flex-direction: column;
+    padding-top: 4px;
+}
+
+.sidebar-spacer {
+    flex: 1;
+}
+
+.nav-btn {
+    height: 38px;
+    padding-left: 14px;
+    padding-right: 10px;
+    border-width: 0;
+    border-left-width: 3px;
+    border-left-color: transparent;
+    border-radius: 0;
+    background-color: transparent;
+    font-size: 13px;
+    color: var(--text-dim);
+    -unity-font-style: normal;
+    -unity-text-align: middle-left;
+    transition: background-color 0.12s, color 0.12s, border-left-color 0.12s;
+}
+
+.nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+}
+
+.nav-btn.active {
+    border-left-color: var(--accent);
+    background-color: var(--accent-bg);
+    color: #fff;
+    -unity-font-style: bold;
+}
+
+.dev-btn {
+    margin-top: 4px;
+    border-top-width: 1px;
+    border-top-color: var(--border-subtle);
+    padding-top: 6px;
+    color: var(--text-dim);
+    font-size: 11px;
+    height: 32px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.dev-btn.active {
+    color: var(--accent-orange);
+    border-left-color: var(--accent-orange);
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* --- Content Panel --- */
+.content-panel {
+    flex: 1;
+    background-color: var(--content-bg);
+}
+
+#scroll-content {
+    --unity-scroll-view-container-border-width: 0;
+}
+
+.pages-container {
+    padding: 20px 24px;
+    flex-direction: column;
+}
+
+/* --- Pages --- */
+.page {
+    flex-direction: column;
+}
+
+.page-desc {
+    color: var(--text-secondary);
+    font-size: 13px;
+    white-space: normal;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+/* --- Field Group --- */
+.field-group {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    margin-bottom: 10px;
+    flex-direction: column;
+    border-width: 1px;
+    border-color: var(--border-subtle);
+}
+
+.field-group-title {
+    font-size: 11px;
+    -unity-font-style: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-purple);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(139, 92, 246, 0.15);
+}
+
+/* --- Field Slot --- */
+.field-slot {
+    margin-bottom: 4px;
+}
+
+.field-slot > PropertyField > .unity-property-field__label {
+    color: var(--text-secondary);
+    min-width: 100px;
+}
+
+/* --- Part Section --- */
+.part-section {
+    background-color: rgba(255, 255, 255, 0.025);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 8px;
+    flex-direction: column;
+    border-width: 1px;
+    border-color: var(--border-subtle);
+}
+
+.part-label {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Preview Row --- */
+.preview-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-height: 44px;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.preview-thumb {
+    width: 64px;
+    height: 64px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    border-radius: var(--radius-sm);
+    border-width: 1px;
+    border-color: var(--border);
+    object-fit: scale-down;
+}
+
+.preview-more {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 8px;
+}
+
+/* --- Fade Section --- */
+.fade-section {
+    background-color: rgba(255, 255, 255, 0.025);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 8px;
+    flex-direction: column;
+    border-width: 1px;
+    border-color: var(--border-subtle);
+}
+
+.fade-part-label {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: var(--accent-orange);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+/* --- Colabo Shop --- */
+.colabo-preview {
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    margin-bottom: 8px;
+}
+
+.colabo-shop-image {
+    width: 128px;
+    height: 128px;
+    border-radius: var(--radius-md);
+    border-width: 1px;
+    border-color: var(--border);
+}
+
+.link-btn {
+    height: 30px;
+    font-size: 12px;
+    color: var(--accent);
+    background-color: rgba(63, 138, 255, 0.1);
+    border-width: 1px;
+    border-color: rgba(63, 138, 255, 0.3);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    transition: background-color 0.15s;
+}
+
+.link-btn:hover {
+    background-color: rgba(63, 138, 255, 0.2);
+}
+
+/* --- HelpBox Override --- */
+.page > HelpBox,
+.field-group > HelpBox {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+/* --- Dev Page --- */
+.dev-page {
+    opacity: 0.85;
+}
+
+.dev-page:hover {
+    opacity: 1;
+}
+
+.dev-page .field-slot {
+    margin-bottom: 3px;
+}
+
+.dev-page .field-slot > PropertyField > .unity-property-field__label {
+    color: var(--text-dim);
+    min-width: 120px;
+}
+
+/* --- Banner --- */
+.banner {
+    border-top-width: 1px;
+    border-top-color: var(--border);
+    background-color: var(--banner-bg);
+    flex-direction: column;
+    padding: 10px 20px 12px;
+}
+
+.banner-label {
+    font-size: 10px;
+    -unity-font-style: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+}
+
+.banner-cards {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.banner-card {
+    min-width: 130px;
+    height: 52px;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    flex-direction: row;
+    align-items: center;
+    cursor: default;
+    transition: opacity 0.15s;
+}
+
+.banner-card:hover {
+    opacity: 0.85;
+}
+
+.banner-card.blue { background-color: var(--accent); }
+.banner-card.purple { background-color: var(--accent-purple); }
+.banner-card.green { background-color: var(--accent-green); }
+.banner-card.orange { background-color: var(--accent-orange); }
+
+.banner-card > Label {
+    color: #fff;
+    -unity-font-style: bold;
+    font-size: 13px;
+}
