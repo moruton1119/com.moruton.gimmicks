@@ -99,7 +99,7 @@
 
     <ui:VisualElement class="spacer-xs" />
 
-    <!-- ===== Step 4: コラボ ===== -->
+    <!-- ===== Step 4: コラボ・フェード演出 ===== -->
     <ui:VisualElement name="step4" class="step-section">
       <ui:Button name="step4-toggle" class="step-toggle" />
       <ui:VisualElement name="step4-body" class="step-body collapsed">
@@ -113,32 +113,26 @@
         <ui:HelpBox name="step4-colabo-help" message-type="Info" />
         <ui:VisualElement class="spacer-sm" />
 
-        <!-- OnePiece, Colabo are developer-only -->
-
-        <!-- Fade Effects -->
+        <!-- Fade Items (Transforms are in Developer Mode) -->
         <ui:Label name="step4-fade-label" class="section-label" />
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Head" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeHead" />
           <ui:VisualElement name="slot-fadeHeadItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Body" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeBody" />
           <ui:VisualElement name="slot-fadeBodyItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Arm" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeArm" />
           <ui:VisualElement name="slot-fadeArmItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
           <ui:Label text="Leg" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeLeg" />
           <ui:VisualElement name="slot-fadeLegItems" />
         </ui:VisualElement>
       </ui:VisualElement>
@@ -171,6 +165,15 @@
         <ui:VisualElement name="slot-devColaboItemTarget" />
         <ui:VisualElement name="slot-devColaboItem" />
         <ui:VisualElement name="slot-devColaboFBX" />
+
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- dev_fade_transform_label -->
+        <ui:Label name="dev-fade-label" class="section-label" />
+        <ui:VisualElement name="slot-devFadeHead" />
+        <ui:VisualElement name="slot-devFadeBody" />
+        <ui:VisualElement name="slot-devFadeArm" />
+        <ui:VisualElement name="slot-devFadeLeg" />
 
         <ui:VisualElement class="spacer-sm" />
 
