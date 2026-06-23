@@ -366,14 +366,6 @@ namespace Moruton.Gimmicks.Editor
                     Application.OpenURL(script.colaboShopInfo);
             };
 
-            // Setup
-            root.Q<Button>("btn-setup").clicked += () =>
-            {
-                MetamorphoseSetupService.ExecuteFullSetup((PrettyCureMirror)target);
-                serializedObject.Update();
-                Repaint();
-            };
-
             // Developer buttons removed (no longer needed)
         }
 
