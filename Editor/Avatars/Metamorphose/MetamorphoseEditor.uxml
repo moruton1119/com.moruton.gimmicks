@@ -74,10 +74,6 @@
           <ui:VisualElement name="slot-legItems" />
           <ui:VisualElement name="leg-preview" class="preview-row" />
         </ui:VisualElement>
-      </ui:VisualElement>
-    </ui:VisualElement>
-
-    <ui:VisualElement class="spacer-xs" />
 
     <!-- ===== Step 3: ギミック色 ===== -->
     <ui:VisualElement name="step3" class="step-section">
