@@ -15,10 +15,24 @@ namespace Moruton.Gimmicks.Editor.NDMF
     {
         protected override void Execute(BuildContext ctx)
         {
-            var mirror = ctx.AvatarRootObject.GetComponentInChildren<PrettyCureMirror>();
-            if (mirror == null) return;
+            Debug.Log("[MetamorphoseApplyPass] === Execute started ===");
 
-            if (!Validate(mirror)) return;
+            var mirror = ctx.AvatarRootObject.GetComponentInChildren<PrettyCureMirror>();
+            if (mirror == null)
+            {
+                Debug.Log("[MetamorphoseApplyPass] No PrettyCureMirror found. Skipping.");
+                return;
+            }
+
+            Debug.Log($"[MetamorphoseApplyPass] Found PrettyCureMirror on '{mirror.gameObject.name}'");
+
+            if (!Validate(mirror))
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Validation failed. Skipping.");
+                return;
+            }
+
+            Debug.Log("[MetamorphoseApplyPass] Validation passed. Processing...");
 
             UnpackAllPrefabs(ctx.AvatarRootObject);
 
