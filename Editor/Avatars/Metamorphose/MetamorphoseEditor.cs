@@ -140,9 +140,6 @@ namespace Moruton.Gimmicks.Editor
             // ステップトグル
             SetupStepToggles(_root);
 
-            // 部位ごとの表示/非表示トグル
-            SetupPartToggles(_root);
-
             // ボタン コールバック
             SetupButtonCallbacks(_root);
 
@@ -303,15 +300,15 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupPartToggles(VisualElement root)
         {
-            SetupPartToggle(root, "toggle-headItems", "head-items-row", "Head");
-            SetupPartToggle(root, "toggle-bodyItems", "body-items-row", "Body");
-            SetupPartToggle(root, "toggle-handItems", "hand-items-row", "Hand");
-            SetupPartToggle(root, "toggle-legItems", "leg-items-row", "Leg");
-            SetupPartToggle(root, "toggle-gimmickColor", "slot-gimmickColor", "Color");
-            SetupPartToggle(root, "toggle-fadeHeadItems", "fade-head-items-row", "Fade Head");
-            SetupPartToggle(root, "toggle-fadeBodyItems", "fade-body-items-row", "Fade Body");
-            SetupPartToggle(root, "toggle-fadeArmItems", "fade-arm-items-row", "Fade Arm");
-            SetupPartToggle(root, "toggle-fadeLegItems", "fade-leg-items-row", "Fade Leg");
+            // Developer Mode で各部位を制御
+            SetupPartToggle(root, "devmode-toggle-headItems", "slot-headItems", "Head Items");
+            SetupPartToggle(root, "devmode-toggle-bodyItems", "slot-bodyItems", "Body Items");
+            SetupPartToggle(root, "devmode-toggle-handItems", "slot-handItems", "Hand Items");
+            SetupPartToggle(root, "devmode-toggle-legItems", "slot-legItems", "Leg Items");
+            SetupPartToggle(root, "devmode-toggle-fadeHeadItems", "slot-fadeHeadItems", "Fade Head Items");
+            SetupPartToggle(root, "devmode-toggle-fadeBodyItems", "slot-fadeBodyItems", "Fade Body Items");
+            SetupPartToggle(root, "devmode-toggle-fadeArmItems", "slot-fadeArmItems", "Fade Arm Items");
+            SetupPartToggle(root, "devmode-toggle-fadeLegItems", "slot-fadeLegItems", "Fade Leg Items");
         }
 
         private void SetupPartToggle(VisualElement root, string toggleName, string rowName, string displayName)

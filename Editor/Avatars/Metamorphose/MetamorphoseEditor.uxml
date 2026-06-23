@@ -57,42 +57,30 @@
 
         <!-- Head -->
         <ui:VisualElement class="part-section">
-          <ui:Button name="toggle-headItems" class="part-toggle" text="Head: ON" />
-          <ui:VisualElement name="head-items-row" class="items-row">
-            <ui:Label name="label-head-items" class="part-label" />
-            <ui:VisualElement name="slot-headItems" />
-            <ui:VisualElement name="head-preview" class="preview-row" />
-          </ui:VisualElement>
+          <ui:Label name="label-head-items" class="part-label" />
+          <ui:VisualElement name="slot-headItems" />
+          <ui:VisualElement name="head-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Body -->
         <ui:VisualElement class="part-section">
-          <ui:Button name="toggle-bodyItems" class="part-toggle" text="Body: ON" />
-          <ui:VisualElement name="body-items-row" class="items-row">
-            <ui:Label name="label-body-items" class="part-label" />
-            <ui:VisualElement name="slot-bodyItems" />
-            <ui:VisualElement name="body-preview" class="preview-row" />
-          </ui:VisualElement>
+          <ui:Label name="label-body-items" class="part-label" />
+          <ui:VisualElement name="slot-bodyItems" />
+          <ui:VisualElement name="body-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Hand -->
         <ui:VisualElement class="part-section">
-          <ui:Button name="toggle-handItems" class="part-toggle" text="Hand: ON" />
-          <ui:VisualElement name="hand-items-row" class="items-row">
-            <ui:Label name="label-hand-items" class="part-label" />
-            <ui:VisualElement name="slot-handItems" />
-            <ui:VisualElement name="hand-preview" class="preview-row" />
-          </ui:VisualElement>
+          <ui:Label name="label-hand-items" class="part-label" />
+          <ui:VisualElement name="slot-handItems" />
+          <ui:VisualElement name="hand-preview" class="preview-row" />
         </ui:VisualElement>
 
         <!-- Leg -->
         <ui:VisualElement class="part-section">
-          <ui:Button name="toggle-legItems" class="part-toggle" text="Leg: ON" />
-          <ui:VisualElement name="leg-items-row" class="items-row">
-            <ui:Label name="label-leg-items" class="part-label" />
-            <ui:VisualElement name="slot-legItems" />
-            <ui:VisualElement name="leg-preview" class="preview-row" />
-          </ui:VisualElement>
+          <ui:Label name="label-leg-items" class="part-label" />
+          <ui:VisualElement name="slot-legItems" />
+          <ui:VisualElement name="leg-preview" class="preview-row" />
         </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>
@@ -106,7 +94,7 @@
         <ui:Label name="step3-desc" class="step-desc" />
         <ui:VisualElement class="spacer-sm" />
         <ui:VisualElement name="gimmick-color-row">
-          <ui:Button name="toggle-gimmickColor" class="item-toggle" text="Color: ON" />
+          <ui:Label name="label-gimmickColor" class="part-label" />
           <ui:VisualElement name="slot-gimmickColor" />
         </ui:VisualElement>
       </ui:VisualElement>
@@ -132,35 +120,23 @@
         <ui:Label name="step4-fade-label" class="section-label" />
 
         <ui:VisualElement class="fade-section">
-          <ui:Button name="toggle-fadeHeadItems" class="part-toggle" text="Head: ON" />
-          <ui:VisualElement name="fade-head-items-row" class="items-row">
-            <ui:Label text="Head" class="fade-part-label" />
-            <ui:VisualElement name="slot-fadeHeadItems" />
-          </ui:VisualElement>
+          <ui:Label text="Head" class="fade-part-label" />
+          <ui:VisualElement name="slot-fadeHeadItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Button name="toggle-fadeBodyItems" class="part-toggle" text="Body: ON" />
-          <ui:VisualElement name="fade-body-items-row" class="items-row">
-            <ui:Label text="Body" class="fade-part-label" />
-            <ui:VisualElement name="slot-fadeBodyItems" />
-          </ui:VisualElement>
+          <ui:Label text="Body" class="fade-part-label" />
+          <ui:VisualElement name="slot-fadeBodyItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Button name="toggle-fadeArmItems" class="part-toggle" text="Arm: ON" />
-          <ui:VisualElement name="fade-arm-items-row" class="items-row">
-            <ui:Label text="Arm" class="fade-part-label" />
-            <ui:VisualElement name="slot-fadeArmItems" />
-          </ui:VisualElement>
+          <ui:Label text="Arm" class="fade-part-label" />
+          <ui:VisualElement name="slot-fadeArmItems" />
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Button name="toggle-fadeLegItems" class="part-toggle" text="Leg: ON" />
-          <ui:VisualElement name="fade-leg-items-row" class="items-row">
-            <ui:Label text="Leg" class="fade-part-label" />
-            <ui:VisualElement name="slot-fadeLegItems" />
-          </ui:VisualElement>
+          <ui:Label text="Leg" class="fade-part-label" />
+          <ui:VisualElement name="slot-fadeLegItems" />
         </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>
@@ -195,12 +171,54 @@
 
         <ui:VisualElement class="spacer-sm" />
 
+        <!-- 部位設定のトグル (Step 2 items) -->
+        <ui:Label name="dev-items-toggle-label" class="section-label" />
+        <ui:VisualElement name="dev-items-row">
+          <ui:Button name="devmode-toggle-headItems" class="part-toggle" text="Head: ON" />
+          <ui:VisualElement name="slot-headItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-items-row">
+          <ui:Button name="devmode-toggle-bodyItems" class="part-toggle" text="Body: ON" />
+          <ui:VisualElement name="slot-bodyItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-items-row">
+          <ui:Button name="devmode-toggle-handItems" class="part-toggle" text="Hand: ON" />
+          <ui:VisualElement name="slot-handItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-items-row">
+          <ui:Button name="devmode-toggle-legItems" class="part-toggle" text="Leg: ON" />
+          <ui:VisualElement name="slot-legItems" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="spacer-sm" />
+
         <!-- dev_fade_transform_label -->
         <ui:Label name="dev-fade-label" class="section-label" />
         <ui:VisualElement name="slot-devFadeHead" />
         <ui:VisualElement name="slot-devFadeBody" />
         <ui:VisualElement name="slot-devFadeArm" />
         <ui:VisualElement name="slot-devFadeLeg" />
+
+        <ui:VisualElement class="spacer-sm" />
+
+        <!-- 部位設定のトグル (Step 4 fade items) -->
+        <ui:Label name="dev-fade-items-toggle-label" class="section-label" />
+        <ui:VisualElement name="dev-fade-items-row">
+          <ui:Button name="devmode-toggle-fadeHeadItems" class="part-toggle" text="Fade Head: ON" />
+          <ui:VisualElement name="slot-fadeHeadItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-fade-items-row">
+          <ui:Button name="devmode-toggle-fadeBodyItems" class="part-toggle" text="Fade Body: ON" />
+          <ui:VisualElement name="slot-fadeBodyItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-fade-items-row">
+          <ui:Button name="devmode-toggle-fadeArmItems" class="part-toggle" text="Fade Arm: ON" />
+          <ui:VisualElement name="slot-fadeArmItems" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dev-fade-items-row">
+          <ui:Button name="devmode-toggle-fadeLegItems" class="part-toggle" text="Fade Leg: ON" />
+          <ui:VisualElement name="slot-fadeLegItems" />
+        </ui:VisualElement>
 
         <ui:VisualElement class="spacer-sm" />
 
