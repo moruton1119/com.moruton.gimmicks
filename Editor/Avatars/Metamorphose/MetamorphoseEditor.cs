@@ -166,6 +166,26 @@ namespace Moruton.Gimmicks.Editor
                 slot.Add(pf);
             }
 
+            // PropertyFieldの値が変わったときにプレビューを更新
+            var fieldBindings = new[]
+            {
+                ("headItems", "head-preview"),
+                ("bodyItems", "body-preview"),
+                ("handItems", "hand-preview"),
+                ("legItems", "leg-preview"),
+            };
+
+            var propertyFields = _root.Query<PropertyField>().Build();
+            for (int i = 0; i < fieldBindings.Length && i < propertyFields.Count; i++)
+            {
+                var (path, previewName) = fieldBindings[i];
+                propertyFields[i].RegisterValueChangedCallback(evt =>
+                {
+                    var value = evt.newValue as GameObject[];
+                    UpdatePreview(previewName, value);
+                });
+            }
+
             // Developer Mode フィールド
             foreach (var (path, label, slot) in DevFieldBindings)
             {
@@ -250,6 +270,47 @@ namespace Moruton.Gimmicks.Editor
         {
             LocalizationManager.Load("PrettyCureMirror", languageCodes[_selectedLanguage]);
             if (_root != null) ApplyLocalization(_root);
+        }
+
+        #endregion
+
+        #region Preview Update
+
+        private void UpdatePreview(string previewName, GameObject[] items)
+        {
+            var preview = _root.Q<VisualElement>(previewName);
+            if (preview == null) return;
+
+            // 既存のサムネイルをクリア
+            var thumbnails = preview.Query<VisualElement>(null, "preview-thumb").ToList();
+            foreach (var thumb in thumbnails)
+            {
+                preview.Remove(thumb);
+            }
+
+            // アイテムをサムネイルとして追加
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    if (item == null) continue;
+
+                    var thumb = new VisualElement
+                    {
+                        classList = { "preview-thumb" },
+                        style =
+                        {
+                            backgroundImage = item.icon != null ? AssetPreview.GetAssetPreview(item.icon) as Texture2D : null,
+                        }
+                    };
+
+                    // 名前を表示
+                    var nameLabel = new Label(item.name) { style = { flexGrow = 1f } };
+                    thumb.Add(nameLabel);
+
+                    preview.Add(thumb);
+                }
+            }
         }
 
         #endregion
