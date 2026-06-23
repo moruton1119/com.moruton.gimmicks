@@ -1,0 +1,25 @@
+{
+    "name": "com.moruton.gimmicks.NDMF",
+    "rootNamespace": "Moruton.Gimmicks.Editor.NDMF",
+    "references": [
+        "nadena.dev.ndmf",
+        "com.moruton.gimmicks"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "",
+            "define": "NDMF"
+        }
+    ],
+    "noEngineReferences": false
+}
