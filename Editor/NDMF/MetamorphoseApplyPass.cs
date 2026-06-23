@@ -4,6 +4,7 @@ using nadena.dev.ndmf;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using Moruton.Gimmicks.Editor; // ItemPlacer
 
 namespace Moruton.Gimmicks.Editor.NDMF
 {
@@ -19,87 +20,32 @@ namespace Moruton.Gimmicks.Editor.NDMF
             if (mirror == null) return;
 
             // ─── Step 2: 変身後の衣装配置 ───
-            PlaceItems(mirror.headTarget, mirror.headItems);
-            PlaceItems(mirror.bodyTarget, mirror.bodyItems);
-            PlaceItems(mirror.handTarget, mirror.handItems);
-            PlaceItems(mirror.legTarget, mirror.legItems);
+            ItemPlacer.PlaceItems(mirror.headTarget, mirror.headItems);
+            ItemPlacer.PlaceItems(mirror.bodyTarget, mirror.bodyItems);
+            ItemPlacer.PlaceItems(mirror.handTarget, mirror.handItems);
+            ItemPlacer.PlaceItems(mirror.legTarget, mirror.legItems);
 
             // ─── コラボアイテム ───
             if (mirror.colaboItemTarget != null && mirror.colaboItem != null)
             {
-                PlaceItems(mirror.colaboItemTarget, new[] { mirror.colaboItem });
+                ItemPlacer.PlaceItems(mirror.colaboItemTarget, new[] { mirror.colaboItem });
             }
 
             // ─── Step 4: フェード演出アイテム配置 ───
-            PlaceFadeItems(mirror.fadeHead, mirror.fadeHeadItems, mirror.fadeHeadMaterial);
-            PlaceFadeItems(mirror.fadeBody, mirror.fadeBodyItems, mirror.fadeBodyMaterial);
-            PlaceFadeItems(mirror.fadeArm, mirror.fadeArmItems, mirror.fadeArmMaterial);
-            PlaceFadeItems(mirror.fadeLeg, mirror.fadeLegItems, mirror.fadeLegMaterial);
+            ItemPlacer.PlaceItems(mirror.fadeHead, mirror.fadeHeadItems, mirror.fadeHeadMaterial);
+            ItemPlacer.PlaceItems(mirror.fadeBody, mirror.fadeBodyItems, mirror.fadeBodyMaterial);
+            ItemPlacer.PlaceItems(mirror.fadeArm, mirror.fadeArmItems, mirror.fadeArmMaterial);
+            ItemPlacer.PlaceItems(mirror.fadeLeg, mirror.fadeLegItems, mirror.fadeLegMaterial);
 
             // ─── ワンピース差し替え ───
             if (mirror.OnePiece != null && mirror.ColaboFBX != null)
             {
-                PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
+                ItemPlacer.PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
             }
 
             // ─── アニメーション生成 ───
             CreateAnimations(ctx, mirror);
         }
-
-        #region Item Placement
-
-        /// <summary>
-        /// アイテムをターゲットの子として配置する（削除なし・Prefab解除なし）。
-        /// </summary>
-        private static void PlaceItems(Transform target, GameObject[] items)
-        {
-            if (target == null || items == null) return;
-
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-
-                var instance = Object.Instantiate(item, target);
-                instance.name = item.name;
-                instance.transform.localPosition = Vector3.zero;
-                instance.transform.localRotation = Quaternion.identity;
-                instance.transform.localScale = Vector3.one;
-            }
-        }
-
-        /// <summary>
-        /// フェードアイテムを配置し、マテリアルを適用する。
-        /// </summary>
-        private static void PlaceFadeItems(Transform target, GameObject[] items, Material material)
-        {
-            if (target == null || items == null) return;
-
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-
-                var instance = Object.Instantiate(item, target);
-                instance.name = target.name;
-                instance.transform.localPosition = Vector3.zero;
-                instance.transform.localRotation = Quaternion.identity;
-                instance.transform.localScale = Vector3.one;
-
-                // マテリアル差し替え
-                if (material != null)
-                {
-                    var renderers = instance.GetComponentsInChildren<Renderer>(true);
-                    foreach (var r in renderers)
-                    {
-                        var mats = new Material[r.sharedMaterials.Length];
-                        for (int i = 0; i < mats.Length; i++)
-                            mats[i] = material;
-                        r.sharedMaterials = mats;
-                    }
-                }
-            }
-        }
-
-        #endregion
 
         #region Animation Creation
 

@@ -3,7 +3,8 @@
     "rootNamespace": "Moruton.Gimmicks.Editor.NDMF",
     "references": [
         "nadena.dev.ndmf",
-        "com.moruton.gimmicks"
+        "com.moruton.gimmicks",
+        "com.moruton.gimmicks.Editor"
     ],
     "includePlatforms": [
         "Editor"

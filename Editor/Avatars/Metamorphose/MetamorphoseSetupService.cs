@@ -30,17 +30,17 @@ namespace Moruton.Gimmicks.Editor
                 return;
             }
 
-            // アイテム配置（プレビュー用、削除なし）
-            PlaceItems(script.headTarget, script.headItems);
-            PlaceItems(script.bodyTarget, script.bodyItems);
-            PlaceItems(script.handTarget, script.handItems);
-            PlaceItems(script.legTarget, script.legItems);
+            // アイテム配置（プレビュー用）
+            ItemPlacer.PlaceItems(script.headTarget, script.headItems);
+            ItemPlacer.PlaceItems(script.bodyTarget, script.bodyItems);
+            ItemPlacer.PlaceItems(script.handTarget, script.handItems);
+            ItemPlacer.PlaceItems(script.legTarget, script.legItems);
 
-            // フェード配置（プレビュー用、削除なし）
-            PlaceFadeItems(script.fadeHead, script.fadeHeadItems, script.fadeHeadMaterial);
-            PlaceFadeItems(script.fadeBody, script.fadeBodyItems, script.fadeBodyMaterial);
-            PlaceFadeItems(script.fadeArm, script.fadeArmItems, script.fadeArmMaterial);
-            PlaceFadeItems(script.fadeLeg, script.fadeLegItems, script.fadeLegMaterial);
+            // フェード配置（プレビュー用）
+            ItemPlacer.PlaceItems(script.fadeHead, script.fadeHeadItems, script.fadeHeadMaterial);
+            ItemPlacer.PlaceItems(script.fadeBody, script.fadeBodyItems, script.fadeBodyMaterial);
+            ItemPlacer.PlaceItems(script.fadeArm, script.fadeArmItems, script.fadeArmMaterial);
+            ItemPlacer.PlaceItems(script.fadeLeg, script.fadeLegItems, script.fadeLegMaterial);
 
             // アニメーション生成（プレビュー用）
             CreateAnimations(script);
@@ -66,55 +66,6 @@ namespace Moruton.Gimmicks.Editor
                     {
                         if (mat == null || !mat.HasProperty("_Color")) continue;
                         mat.color = script.gimmickColor;
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region Simple Placement (No Deletion)
-
-        private static void PlaceItems(Transform target, GameObject[] items)
-        {
-            if (target == null || items == null) return;
-
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-
-                var instance = Object.Instantiate(item, target);
-                instance.name = item.name;
-                instance.transform.localPosition = Vector3.zero;
-                instance.transform.localRotation = Quaternion.identity;
-                instance.transform.localScale = Vector3.one;
-            }
-        }
-
-        private static void PlaceFadeItems(Transform target, GameObject[] items, Material material)
-        {
-            if (target == null || items == null) return;
-
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-
-                var instance = Object.Instantiate(item, target);
-                instance.name = target.name;
-                instance.transform.localPosition = Vector3.zero;
-                instance.transform.localRotation = Quaternion.identity;
-                instance.transform.localScale = Vector3.one;
-
-                // マテリアル差し替え
-                if (material != null)
-                {
-                    var renderers = instance.GetComponentsInChildren<Renderer>(true);
-                    foreach (var r in renderers)
-                    {
-                        var mats = new Material[r.sharedMaterials.Length];
-                        for (int i = 0; i < mats.Length; i++)
-                            mats[i] = material;
-                        r.sharedMaterials = mats;
                     }
                 }
             }
