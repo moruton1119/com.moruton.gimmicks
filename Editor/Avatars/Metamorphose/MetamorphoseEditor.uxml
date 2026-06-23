@@ -102,10 +102,11 @@
         <ui:VisualElement class="spacer-sm" />
 
         <!-- Colabo Shop Preview -->
-        <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
-        <ui:Button name="btn-colabo-shop" class="link-btn" text="Open Shop" />
-
-        <ui:HelpBox name="step4-colabo-help" message-type="Info" />
+        <ui:VisualElement name="colabo-shop-section">
+          <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
+          <ui:Button name="btn-colabo-shop" class="link-btn" text="Open Shop" />
+          <ui:HelpBox name="step4-colabo-help" message-type="Info" />
+        </ui:VisualElement>
         <ui:VisualElement class="spacer-sm" />
 
         <!-- Fade Items (Transforms are in Developer Mode) -->

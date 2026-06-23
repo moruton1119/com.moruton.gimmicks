@@ -20,6 +20,9 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private Color _lastGimmickColor;
         private float _previewRefreshTime = -1f;
+        private const int PreviewTexSize = 128;
+        private readonly Dictionary<Object, Texture2D> _previewTexCache = new();
+        private readonly HashSet<Texture2D> _ownedPreviewTextures = new();
 
         // Step フィールド (ユーザー向け) — slot-{path} にPropertyFieldを生成
         private static readonly string[] FieldPaths =
@@ -98,6 +101,13 @@ namespace Moruton.Gimmicks.Editor
         private void OnDestroy()
         {
             EditorApplication.update -= OnEditorUpdate;
+
+            foreach (var tex in _ownedPreviewTextures)
+            {
+                if (tex != null) UnityEngine.Object.DestroyImmediate(tex);
+            }
+            _previewTexCache.Clear();
+            _ownedPreviewTextures.Clear();
         }
 
         private void OnEditorUpdate()
@@ -164,6 +174,14 @@ namespace Moruton.Gimmicks.Editor
             UpdateAllPreviews();
             if (HasAnyMissingPreview())
                 _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
+
+            var shopSection = _root.Q<VisualElement>("colabo-shop-section");
+            if (shopSection != null)
+            {
+                var s = (PrettyCureMirror)target;
+                bool hasShop = s.colaboShopTex != null || !string.IsNullOrEmpty(s.colaboShopInfo);
+                shopSection.style.display = hasShop ? DisplayStyle.Flex : DisplayStyle.None;
+            }
 
             return _root;
         }
@@ -251,7 +269,7 @@ namespace Moruton.Gimmicks.Editor
         }
 
         /// <summary>
-        /// 指定プロパティ配列からプレビューを生成。
+        /// 指定プロパティ配列からプレビューを生成（全件表示）。
         /// </summary>
         private void UpdatePartPreview(string previewElementName, string propertyPath)
         {
@@ -263,15 +281,12 @@ namespace Moruton.Gimmicks.Editor
             var prop = serializedObject.FindProperty(propertyPath);
             if (prop == null || !prop.isArray) return;
 
-            int count = Mathf.Min(prop.arraySize, 4);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < prop.arraySize; i++)
             {
                 var go = prop.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
                 if (go == null) continue;
 
-                var previewTex = AssetPreview.GetAssetPreview(go);
-                if (previewTex == null)
-                    previewTex = AssetPreview.GetMiniThumbnail(go);
+                var previewTex = GetPreviewTexture(go);
 
                 var img = new Image();
                 if (previewTex != null)
@@ -279,12 +294,80 @@ namespace Moruton.Gimmicks.Editor
                 img.AddToClassList("preview-thumb");
                 container.Add(img);
             }
+        }
 
-            if (prop.arraySize > count)
+        private Texture2D GetPreviewTexture(GameObject go)
+        {
+            if (go == null) return null;
+
+            var tex = AssetPreview.GetAssetPreview(go);
+            if (tex != null)
             {
-                var more = new Label($"+{prop.arraySize - count} more...");
-                more.AddToClassList("preview-more");
-                container.Add(more);
+                _previewTexCache[go] = tex;
+                return tex;
+            }
+
+            if (_previewTexCache.TryGetValue(go, out var cached))
+                return cached;
+
+            tex = AssetPreview.GetMiniThumbnail(go);
+            if (tex != null)
+            {
+                _previewTexCache[go] = tex;
+                return tex;
+            }
+
+            tex = RenderCloseUpPreview(go);
+            if (tex != null)
+            {
+                _previewTexCache[go] = tex;
+                _ownedPreviewTextures.Add(tex);
+                return tex;
+            }
+
+            return null;
+        }
+
+        private static Texture2D RenderCloseUpPreview(GameObject prefabAsset)
+        {
+            if (prefabAsset == null) return null;
+
+            var renderers = prefabAsset.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0) return null;
+
+            var preview = new PreviewRenderUtility();
+            try
+            {
+                var instance = preview.AddSingleGO(prefabAsset);
+                if (instance == null) return null;
+
+                var bounds = renderers[0].bounds;
+                for (int i = 1; i < renderers.Length; i++)
+                    bounds.Encapsulate(renderers[i].bounds);
+
+                float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+                if (maxDim <= 0f) maxDim = 1f;
+
+                float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
+                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 1.05f;
+
+                Vector3 center = bounds.center;
+                preview.camera.transform.position = center - Vector3.forward * dist;
+                preview.camera.transform.LookAt(center);
+                preview.camera.nearClipPlane = 0.001f;
+                preview.camera.farClipPlane = dist + maxDim * 2f;
+
+                var rect = new Rect(0, 0, PreviewTexSize, PreviewTexSize);
+                preview.Render(rect, true, true);
+                return preview.EndPreview() as Texture2D;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                preview.Cleanup();
             }
         }
 
@@ -298,7 +381,8 @@ namespace Moruton.Gimmicks.Editor
                 for (int i = 0; i < prop.arraySize; i++)
                 {
                     var go = prop.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
-                    if (go != null && AssetPreview.GetAssetPreview(go) == null)
+                    if (go == null) continue;
+                    if (AssetPreview.GetAssetPreview(go) == null && !_previewTexCache.ContainsKey(go))
                         return true;
                 }
             }
