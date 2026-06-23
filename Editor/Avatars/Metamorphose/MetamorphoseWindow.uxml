@@ -20,12 +20,19 @@
 
       <!-- Sidebar -->
       <ui:VisualElement name="sidebar" class="sidebar">
-        <ui:Button name="nav-0" class="nav-btn active" />
-        <ui:Button name="nav-1" class="nav-btn" />
-        <ui:Button name="nav-2" class="nav-btn" />
-        <ui:Button name="nav-3" class="nav-btn" />
+        <ui:Button name="nav-0" class="nav-num active" text="1" />
+        <ui:Button name="nav-1" class="nav-num" text="2" />
+        <ui:Button name="nav-2" class="nav-num" text="3" />
+        <ui:Button name="nav-3" class="nav-num" text="4" />
+
+        <ui:VisualElement class="sidebar-divider" />
+
+        <ui:Button name="btn-booth" class="nav-link" text="Booth" />
+        <ui:Button name="btn-discord" class="nav-link" text="Discord" />
+
         <ui:VisualElement class="sidebar-spacer" />
-        <ui:Button name="nav-4" class="nav-btn dev-btn" text="Dev Mode" />
+
+        <ui:Button name="nav-4" class="nav-link dev-btn" text="Dev" />
       </ui:VisualElement>
 
       <!-- Content -->
@@ -131,6 +138,22 @@
               <ui:VisualElement name="page4-slot-devColaboItem" class="field-slot" />
               <ui:VisualElement name="page4-slot-devColaboFBX" class="field-slot" />
 
+              <ui:Label name="fg4-items-toggle" class="field-group-title" text="部位表示切替" />
+              <ui:VisualElement class="dev-toggle-grid">
+                <ui:Button name="toggle-head" class="part-toggle" text="Head: ON" />
+                <ui:Button name="toggle-body" class="part-toggle" text="Body: ON" />
+                <ui:Button name="toggle-hand" class="part-toggle" text="Hand: ON" />
+                <ui:Button name="toggle-leg" class="part-toggle" text="Leg: ON" />
+              </ui:VisualElement>
+
+              <ui:Label name="fg4-fade-toggle" class="field-group-title" text="フェード部位表示切替" />
+              <ui:VisualElement class="dev-toggle-grid">
+                <ui:Button name="toggle-fadeHead" class="part-toggle" text="F-Head: ON" />
+                <ui:Button name="toggle-fadeBody" class="part-toggle" text="F-Body: ON" />
+                <ui:Button name="toggle-fadeArm" class="part-toggle" text="F-Arm: ON" />
+                <ui:Button name="toggle-fadeLeg" class="part-toggle" text="F-Leg: ON" />
+              </ui:VisualElement>
+
               <ui:Label name="fg4-fade-transforms" class="field-group-title" />
               <ui:VisualElement name="page4-slot-devFadeHead" class="field-slot" />
               <ui:VisualElement name="page4-slot-devFadeBody" class="field-slot" />
@@ -145,6 +168,9 @@
 
               <ui:Label name="fg4-gimmick-color" class="field-group-title" />
               <ui:VisualElement name="page4-slot-gimmickCollar" class="field-slot" />
+
+              <ui:Label name="fg4-banner" class="field-group-title" />
+              <ui:VisualElement name="page4-slot-bannerAdUrls" class="field-slot" />
             </ui:VisualElement>
 
           </ui:VisualElement>
@@ -155,7 +181,6 @@
 
     <!-- ===== Bottom Banner ===== -->
     <ui:VisualElement name="banner" class="banner">
-      <ui:Label class="banner-label" text="OTHER GIMMICKS" />
       <ui:VisualElement name="banner-cards" class="banner-cards" />
     </ui:VisualElement>
 

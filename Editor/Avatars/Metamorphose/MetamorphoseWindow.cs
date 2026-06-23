@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,6 +13,18 @@ namespace Moruton.Gimmicks.Editor
     {
         internal const string UxmlPath =
             "Packages/com.moruton.gimmicks/Editor/Avatars/Metamorphose/MetamorphoseWindow.uxml";
+
+        private const string BoothUrl = "https://moruton.booth.pm/";
+        private const string DiscordUrl = "https://discord.gg/GHJwmyTcfX";
+
+        private static readonly string[] DefaultBannerUrls =
+        {
+            "https://moruton.booth.pm/items/6837270",
+            "https://moruton.booth.pm/items/7575133",
+            "https://moruton.booth.pm/items/7698424",
+            "https://moruton.booth.pm/items/7341440",
+            "https://moruton.booth.pm/items/6173517",
+        };
 
         private const int PreviewTexSize = 128;
         private const int TotalPages = 5;
@@ -26,6 +41,18 @@ namespace Moruton.Gimmicks.Editor
         private float _previewRefreshTime = -1f;
         private readonly Dictionary<Object, Texture2D> _previewTexCache = new();
         private readonly HashSet<Texture2D> _ownedPreviewTextures = new();
+
+        private readonly List<BannerCardState> _bannerCardStates = new();
+        private bool _bannerLoading;
+
+        private struct BannerCardState
+        {
+            public string url;
+            public string title;
+            public Texture2D image;
+            public bool loaded;
+            public bool failed;
+        }
 
         private static readonly string[][] PageFieldPaths =
         {
@@ -67,14 +94,7 @@ namespace Moruton.Gimmicks.Editor
             ("fadeArmMaterial", "page4-slot-devFadeArmMaterial"),
             ("fadeLegMaterial", "page4-slot-devFadeLegMaterial"),
             ("gimmickCollar", "page4-slot-gimmickCollar"),
-        };
-
-        private static readonly (string label, string url, string colorClass)[] BannerCards =
-        {
-            ("Booth Store", "https://moruton.booth.pm/", "blue"),
-            ("Discord", "https://discord.gg/GHJwmyTcfX", "purple"),
-            ("Item Randomizer", "", "green"),
-            ("Setup Helper", "", "orange"),
+            ("bannerAdUrls", "page4-slot-bannerAdUrls"),
         };
 
         private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
@@ -168,8 +188,8 @@ namespace Moruton.Gimmicks.Editor
             CreatePropertyFields();
             RegisterPreviewCallbacks();
             SetupNavigation();
+            SetupPartToggles();
             SetupButtonCallbacks();
-            CreateBannerCards();
             ApplyLocalization(_root);
 
             _root.Bind(_so);
@@ -178,15 +198,22 @@ namespace Moruton.Gimmicks.Editor
             if (HasAnyMissingPreview())
                 _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
 
+            UpdateShopVisibility();
+
+            LoadBannerCards();
+
+            rootVisualElement.Clear();
+            rootVisualElement.Add(_root);
+        }
+
+        private void UpdateShopVisibility()
+        {
             var shopSection = _root.Q<VisualElement>("colabo-shop-section");
             if (shopSection != null)
             {
                 bool hasShop = _target.colaboShopTex != null || !string.IsNullOrEmpty(_target.colaboShopInfo);
                 shopSection.style.display = hasShop ? DisplayStyle.Flex : DisplayStyle.None;
             }
-
-            rootVisualElement.Clear();
-            rootVisualElement.Add(_root);
         }
 
         #endregion
@@ -221,6 +248,47 @@ namespace Moruton.Gimmicks.Editor
             if (newPage != null) newPage.style.display = DisplayStyle.Flex;
 
             _currentPage = pageIndex;
+        }
+
+        #endregion
+
+        #region Part Toggles
+
+        private void SetupPartToggles()
+        {
+            SetupPartToggle("toggle-head", "section-head", "Head");
+            SetupPartToggle("toggle-body", "section-body", "Body");
+            SetupPartToggle("toggle-hand", "section-hand", "Hand");
+            SetupPartToggle("toggle-leg", "section-leg", "Leg");
+            SetupPartToggle("toggle-fadeHead", "section-fadeHead", "F-Head");
+            SetupPartToggle("toggle-fadeBody", "section-fadeBody", "F-Body");
+            SetupPartToggle("toggle-fadeArm", "section-fadeArm", "F-Arm");
+            SetupPartToggle("toggle-fadeLeg", "section-fadeLeg", "F-Leg");
+        }
+
+        private void SetupPartToggle(string toggleName, string sectionName, string displayName)
+        {
+            var toggle = _root.Q<Button>(toggleName);
+            var section = _root.Q<VisualElement>(sectionName);
+            if (toggle == null || section == null) return;
+
+            string prefsKey = $"MetamorphoseEditor_Show_{sectionName}";
+            bool isVisible = EditorPrefs.GetBool(prefsKey, true);
+            ApplyPartToggleVisual(toggle, section, displayName, isVisible);
+
+            toggle.clicked += () =>
+            {
+                isVisible = !isVisible;
+                EditorPrefs.SetBool(prefsKey, isVisible);
+                ApplyPartToggleVisual(toggle, section, displayName, isVisible);
+            };
+        }
+
+        private void ApplyPartToggleVisual(Button toggle, VisualElement section, string displayName, bool isVisible)
+        {
+            toggle.text = $"{displayName}: {(isVisible ? "ON" : "OFF")}";
+            toggle.EnableInClassList("part-toggle-off", !isVisible);
+            section.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         #endregion
@@ -376,7 +444,6 @@ namespace Moruton.Gimmicks.Editor
                 preview.camera.nearClipPlane = 0.001f;
                 preview.camera.farClipPlane = dist + maxDim * 2f;
 
-                var rect = new Rect(0, 0, PreviewTexSize, PreviewTexSize);
                 preview.camera.Render();
                 return preview.EndPreview() as Texture2D;
             }
@@ -410,31 +477,198 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-        #region Banner
+        #region Banner (OG Metadata)
 
-        private void CreateBannerCards()
+        private void LoadBannerCards()
         {
+            _bannerCardStates.Clear();
+            _bannerLoading = false;
+
             var container = _root.Q<VisualElement>("banner-cards");
             if (container == null) return;
             container.Clear();
 
-            foreach (var (label, url, colorClass) in BannerCards)
+            var urls = _target.bannerAdUrls;
+            if (urls == null || urls.Length == 0)
+                urls = DefaultBannerUrls;
+
+            container.style.display = DisplayStyle.Flex;
+
+            foreach (var url in urls)
             {
-                var card = new VisualElement();
-                card.AddToClassList("banner-card");
-                card.AddToClassList(colorClass);
+                if (string.IsNullOrWhiteSpace(url)) continue;
 
-                var lbl = new Label(label);
-                card.Add(lbl);
+                _bannerCardStates.Add(new BannerCardState { url = url });
+                RenderBannerCard(container, i);
+            }
 
-                if (!string.IsNullOrEmpty(url))
+            FetchBannerMetadata();
+        }
+
+        private void RenderBannerCard(VisualElement container, int index)
+        {
+            var state = _bannerCardStates[index];
+
+            var card = new VisualElement();
+            card.AddToClassList("banner-card");
+
+            var img = new Image();
+            img.AddToClassList("banner-card-image");
+            if (state.image != null)
+                img.image = state.image;
+            card.Add(img);
+
+            var lbl = new Label();
+            lbl.AddToClassList("banner-card-label");
+            if (state.loaded)
+                lbl.text = state.title;
+            else if (state.failed)
+                lbl.text = "Failed to load";
+            else
+                lbl.text = "Loading...";
+            card.Add(lbl);
+
+            var capturedUrl = state.url;
+            card.AddManipulator(new Clickable(() => Application.OpenURL(capturedUrl)));
+
+            container.Add(card);
+        }
+
+        private async void FetchBannerMetadata()
+        {
+            if (_bannerLoading) return;
+            _bannerLoading = true;
+
+            var container = _root.Q<VisualElement>("banner-cards");
+            if (container == null) { _bannerLoading = false; return; }
+
+            for (int i = 0; i < _bannerCardStates.Count; i++)
+            {
+                if (_bannerCardStates[i].loaded || _bannerCardStates[i].failed) continue;
+
+                var url = _bannerCardStates[i].url;
+                try
                 {
-                    var capturedUrl = url;
-                    card.AddManipulator(new Clickable(() => Application.OpenURL(capturedUrl)));
+                    var (title, imageUrl) = await FetchOgMetadataAsync(url);
+                    Texture2D tex = null;
+
+                    if (!string.IsNullOrEmpty(imageUrl))
+                        tex = await DownloadImageAsync(imageUrl);
+
+                    _bannerCardStates[i] = new BannerCardState
+                    {
+                        url = url,
+                        title = title ?? url,
+                        image = tex,
+                        loaded = true,
+                        failed = false,
+                    };
+                }
+                catch
+                {
+                    _bannerCardStates[i] = new BannerCardState
+                    {
+                        url = url,
+                        title = url,
+                        loaded = false,
+                        failed = true,
+                    };
                 }
 
-                container.Add(card);
+                RefreshBannerCard(container, i);
             }
+
+            _bannerLoading = false;
+        }
+
+        private void RefreshBannerCard(VisualElement container, int index)
+        {
+            if (index >= container.childCount) return;
+            var card = container[index];
+            if (card == null) return;
+
+            var state = _bannerCardStates[index];
+
+            var img = card.Q<Image>(className: "banner-card-image");
+            if (img == null)
+            {
+                img = card.Query<Image>().First();
+            }
+            if (img != null && state.image != null)
+                img.image = state.image;
+
+            var lbl = card.Q<Label>(className: "banner-card-label");
+            if (lbl == null)
+            {
+                lbl = card.Query<Label>().First();
+            }
+            if (lbl != null)
+            {
+                if (state.loaded)
+                    lbl.text = state.title;
+                else if (state.failed)
+                    lbl.text = "Failed";
+            }
+        }
+
+        private static async Task<(string title, string imageUrl)> FetchOgMetadataAsync(string url)
+        {
+            using var client = new HttpClient();
+            client.Timeout = System.TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+
+            var response = await client.GetStringAsync(url);
+            var html = response;
+
+            string title = ExtractMetaContent(html, "og:title")
+                        ?? ExtractMetaContent(html, "twitter:title")
+                        ?? ExtractTitleTag(html)
+                        ?? url;
+
+            string imageUrl = ExtractMetaContent(html, "og:image")
+                           ?? ExtractMetaContent(html, "twitter:image")
+                           ?? "";
+
+            if (!string.IsNullOrEmpty(imageUrl) && imageUrl.StartsWith("//"))
+                imageUrl = "https:" + imageUrl;
+            else if (!string.IsNullOrEmpty(imageUrl) && imageUrl.StartsWith("/"))
+                imageUrl = new System.Uri(url).GetLeftPart(System.UriPartial.Scheme) + imageUrl;
+
+            return (title, imageUrl);
+        }
+
+        private static async Task<Texture2D> DownloadImageAsync(string url)
+        {
+            using var client = new HttpClient();
+            client.Timeout = System.TimeSpan.FromSeconds(10);
+
+            var bytes = await client.GetByteArrayAsync(url);
+
+            var tex = new Texture2D(2, 2);
+            if (!tex.LoadImage(bytes))
+            {
+                Object.DestroyImmediate(tex);
+                return null;
+            }
+            return tex;
+        }
+
+        private static string ExtractMetaContent(string html, string property)
+        {
+            var pattern = $@"<meta[^>]+(?:property|name)=[""']{Regex.Escape(property)}[""'][^>]+content=[""']([^""']+)[""']";
+            var match = Regex.Match(html, pattern, RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                pattern = $@"<meta[^>]+content=[""']([^""']+)[""'][^>]+(?:property|name)=[""']{Regex.Escape(property)}[""']";
+                match = Regex.Match(html, pattern, RegexOptions.IgnoreCase);
+            }
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
+        private static string ExtractTitleTag(string html)
+        {
+            var match = Regex.Match(html, @"<title[^>]*>(.*?)</title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            return match.Success ? match.Groups[1].Value.Trim() : null;
         }
 
         #endregion
@@ -449,12 +683,6 @@ namespace Moruton.Gimmicks.Editor
                 var btn = root.Q<Button>($"lang-btn-{i}");
                 if (btn != null) btn.text = langNames[i];
             }
-
-            root.Q<Button>("nav-0").text = $"① {L("step1_title")}";
-            root.Q<Button>("nav-1").text = $"② {L("step2_title")}";
-            root.Q<Button>("nav-2").text = $"③ {L("step3_title")}";
-            root.Q<Button>("nav-3").text = $"④ {L("step4_title")}";
-            root.Q<Button>("nav-4").text = "Dev Mode";
 
             root.Q<Label>("page0-desc").text = L("step1_description");
             root.Q<Label>("fg0-avatar").text = L("step1_avatar_label");
@@ -484,6 +712,7 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("fg4-fade-transforms").text = LC("dev_fade_transform_label");
             root.Q<Label>("fg4-materials").text = LC("dev_material_label");
             root.Q<Label>("fg4-gimmick-color").text = LC("dev_gimmick_color_targets");
+            root.Q<Label>("fg4-banner").text = "Banner Ad URLs";
         }
 
         private void SetPropLabel(VisualElement root, string slotName, string label)
@@ -514,6 +743,9 @@ namespace Moruton.Gimmicks.Editor
                 if (btn != null)
                     btn.clicked += () => SwitchLanguage(index);
             }
+
+            _root.Q<Button>("btn-booth").clicked += () => Application.OpenURL(BoothUrl);
+            _root.Q<Button>("btn-discord").clicked += () => Application.OpenURL(DiscordUrl);
 
             _root.Q<Button>("btn-colabo-shop").clicked += () =>
             {

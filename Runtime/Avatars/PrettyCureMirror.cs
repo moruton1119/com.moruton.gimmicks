@@ -67,6 +67,9 @@ namespace Moruton.Gimmicks
         [Header("ギミック色設定")]
         public Color gimmickColor = Color.white;
         [SerializeField] private GameObject[] gimmickCollar;
+
+        [Header("バナー広告URL")]
+        [SerializeField] public string[] bannerAdUrls;
         
         public GameObject Avatar => avatar;
         public GameObject Model => model;
