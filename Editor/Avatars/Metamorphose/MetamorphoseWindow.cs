@@ -17,6 +17,10 @@ namespace Moruton.Gimmicks.Editor
         private const string BoothUrl = "https://moruton.booth.pm/";
         private const string DiscordUrl = "https://discord.gg/GHJwmyTcfX";
 
+        // ═══════════════════════════════════════════════════════════
+        //  バナー広告URL — 変更する場合はここを編集
+        //  詳細: Documentation/BannerAds.md
+        // ═══════════════════════════════════════════════════════════
         private static readonly string[] DefaultBannerUrls =
         {
             "https://moruton.booth.pm/items/6837270",
@@ -25,6 +29,7 @@ namespace Moruton.Gimmicks.Editor
             "https://moruton.booth.pm/items/7341440",
             "https://moruton.booth.pm/items/6173517",
         };
+        // ═══════════════════════════════════════════════════════════
 
         private const int PreviewTexSize = 128;
         private const int TotalPages = 4;

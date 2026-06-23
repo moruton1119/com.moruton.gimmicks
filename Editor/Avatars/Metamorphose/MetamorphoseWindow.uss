@@ -394,7 +394,7 @@
     background-color: var(--banner-bg);
     border-top-width: 1px;
     border-top-color: var(--border);
-    padding: 10px 16px 12px;
+    padding: 12px 16px 14px;
 }
 
 .banner-cards {
@@ -404,16 +404,17 @@
 }
 
 .banner-card {
-    width: 200px;
-    height: 72px;
-    margin-right: 8px;
+    width: 260px;
+    height: 88px;
+    margin-right: 10px;
     border-radius: var(--radius-md);
     background-color: var(--bg-elevated);
     border-width: 1px;
     border-color: var(--border);
     flex-direction: row;
     align-items: center;
-    padding: 6px;
+    padding: 8px;
+    overflow: hidden;
     transition: border-color 0.15s, background-color 0.15s;
 }
 
@@ -423,12 +424,13 @@
 }
 
 .banner-card-image {
-    width: 60px;
-    height: 60px;
-    margin-right: 8px;
+    width: 72px;
+    height: 72px;
+    margin-right: 10px;
     border-radius: var(--radius-sm);
     object-fit: scale-and-crop;
     background-color: var(--bg-input);
+    flex-shrink: 0;
 }
 
 .banner-card-label {
@@ -437,6 +439,7 @@
     -unity-font-style: bold;
     white-space: normal;
     flex: 1;
+    overflow: hidden;
 }
 
 .banner-card-loading {
