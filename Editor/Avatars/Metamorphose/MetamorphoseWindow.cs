@@ -128,10 +128,10 @@ namespace Moruton.Gimmicks.Editor
         {
             if (_target == null || _so == null)
             {
-                rootElement.Clear();
+                rootVisualElement.Clear();
                 var label = new Label("No target assigned.");
                 label.style.unityTextAlign = TextAnchor.MiddleCenter;
-                rootElement.Add(label);
+                rootVisualElement.Add(label);
                 return;
             }
 
@@ -151,8 +151,8 @@ namespace Moruton.Gimmicks.Editor
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UxmlPath);
             if (visualTree == null)
             {
-                rootElement.Clear();
-                rootElement.Add(new Label($"Error: Could not load {UxmlPath}"));
+                rootVisualElement.Clear();
+                rootVisualElement.Add(new Label($"Error: Could not load {UxmlPath}"));
                 return;
             }
 
@@ -178,8 +178,8 @@ namespace Moruton.Gimmicks.Editor
                 shopSection.style.display = hasShop ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
-            rootElement.Clear();
-            rootElement.Add(_root);
+            rootVisualElement.Clear();
+            rootVisualElement.Add(_root);
         }
 
         #endregion
@@ -351,8 +351,7 @@ namespace Moruton.Gimmicks.Editor
             var preview = new PreviewRenderUtility();
             try
             {
-                var instance = preview.AddSingleGO(prefabAsset);
-                if (instance == null) return null;
+                preview.AddSingleGO(prefabAsset);
 
                 var bounds = renderers[0].bounds;
                 for (int i = 1; i < renderers.Length; i++)
@@ -371,7 +370,7 @@ namespace Moruton.Gimmicks.Editor
                 preview.camera.farClipPlane = dist + maxDim * 2f;
 
                 var rect = new Rect(0, 0, PreviewTexSize, PreviewTexSize);
-                preview.Render(rect, true, true);
+                preview.camera.Render();
                 return preview.EndPreview() as Texture2D;
             }
             catch
@@ -425,7 +424,6 @@ namespace Moruton.Gimmicks.Editor
                 {
                     var capturedUrl = url;
                     card.AddManipulator(new Clickable(() => Application.OpenURL(capturedUrl)));
-                    card.style.cursorStyle = CursorStyle.Link;
                 }
 
                 container.Add(card);
