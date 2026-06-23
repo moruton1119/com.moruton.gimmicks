@@ -82,7 +82,7 @@ namespace Moruton.Gimmicks
         /// </summary>
         private void Reset()
         {
-            AutoAssignAvatarAndAnimator();
+            AutoAssignAvatarAndAnimatorIfEmpty();
         }
 
         /// <summary>
