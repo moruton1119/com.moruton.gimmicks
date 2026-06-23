@@ -1,6 +1,8 @@
 using nadena.dev.ndmf;
 using UnityEngine;
 
+[assembly: ExportsPlugin(typeof(MetamorphosePlugin))]
+
 namespace Moruton.Gimmicks.Editor
 {
     public sealed class MetamorphosePlugin : Plugin<MetamorphosePlugin>
