@@ -113,6 +113,7 @@ namespace Moruton.Gimmicks.Editor
 
             if (_previewRefreshTime > 0f && Time.realtimeSinceStartup >= _previewRefreshTime)
             {
+                serializedObject.Update();
                 UpdateAllPreviews();
                 if (!HasAnyMissingPreview())
                     _previewRefreshTime = -1f;
@@ -217,6 +218,7 @@ namespace Moruton.Gimmicks.Editor
 
                 pf.RegisterValueChangeCallback(evt =>
                 {
+                    serializedObject.Update();
                     UpdatePartPreview(capturedPreview, capturedPath);
                     _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
                 });
