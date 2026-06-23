@@ -132,23 +132,35 @@
         <ui:Label name="step4-fade-label" class="section-label" />
 
         <ui:VisualElement class="fade-section">
-          <ui:Label text="Head" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeHeadItems" />
+          <ui:Button name="toggle-fadeHeadItems" class="part-toggle" text="Head: ON" />
+          <ui:VisualElement name="fade-head-items-row" class="items-row">
+            <ui:Label text="Head" class="fade-part-label" />
+            <ui:VisualElement name="slot-fadeHeadItems" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Label text="Body" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeBodyItems" />
+          <ui:Button name="toggle-fadeBodyItems" class="part-toggle" text="Body: ON" />
+          <ui:VisualElement name="fade-body-items-row" class="items-row">
+            <ui:Label text="Body" class="fade-part-label" />
+            <ui:VisualElement name="slot-fadeBodyItems" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Label text="Arm" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeArmItems" />
+          <ui:Button name="toggle-fadeArmItems" class="part-toggle" text="Arm: ON" />
+          <ui:VisualElement name="fade-arm-items-row" class="items-row">
+            <ui:Label text="Arm" class="fade-part-label" />
+            <ui:VisualElement name="slot-fadeArmItems" />
+          </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement class="fade-section">
-          <ui:Label text="Leg" class="fade-part-label" />
-          <ui:VisualElement name="slot-fadeLegItems" />
+          <ui:Button name="toggle-fadeLegItems" class="part-toggle" text="Leg: ON" />
+          <ui:VisualElement name="fade-leg-items-row" class="items-row">
+            <ui:Label text="Leg" class="fade-part-label" />
+            <ui:VisualElement name="slot-fadeLegItems" />
+          </ui:VisualElement>
         </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>

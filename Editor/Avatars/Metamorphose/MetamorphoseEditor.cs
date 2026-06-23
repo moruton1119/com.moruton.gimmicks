@@ -308,6 +308,10 @@ namespace Moruton.Gimmicks.Editor
             SetupPartToggle(root, "toggle-handItems", "hand-items-row", "Hand");
             SetupPartToggle(root, "toggle-legItems", "leg-items-row", "Leg");
             SetupPartToggle(root, "toggle-gimmickColor", "slot-gimmickColor", "Color");
+            SetupPartToggle(root, "toggle-fadeHeadItems", "fade-head-items-row", "Fade Head");
+            SetupPartToggle(root, "toggle-fadeBodyItems", "fade-body-items-row", "Fade Body");
+            SetupPartToggle(root, "toggle-fadeArmItems", "fade-arm-items-row", "Fade Arm");
+            SetupPartToggle(root, "toggle-fadeLegItems", "fade-leg-items-row", "Fade Leg");
         }
 
         private void SetupPartToggle(VisualElement root, string toggleName, string rowName, string displayName)
