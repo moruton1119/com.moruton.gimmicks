@@ -141,6 +141,7 @@ namespace Moruton.Gimmicks.Editor
             SetupStepToggles(_root);
 
             // ボタン コールバック
+            SetupPartToggles(_root);
             SetupButtonCallbacks(_root);
 
             // Bind
@@ -309,16 +310,24 @@ namespace Moruton.Gimmicks.Editor
             SetupPartToggle(root, "devmode-toggle-fadeBodyItems", "slot-fadeBodyItems", "Fade Body Items");
             SetupPartToggle(root, "devmode-toggle-fadeArmItems", "slot-fadeArmItems", "Fade Arm Items");
             SetupPartToggle(root, "devmode-toggle-fadeLegItems", "slot-fadeLegItems", "Fade Leg Items");
+
+            Debug.Log("[MetamorphoseEditor] Part toggles setup complete.");
         }
 
         private void SetupPartToggle(VisualElement root, string toggleName, string rowName, string displayName)
         {
             var toggle = root.Q<Button>(toggleName);
             var row = root.Q<VisualElement>(rowName);
-            if (toggle == null || row == null) return;
+            if (toggle == null || row == null)
+            {
+                Debug.LogWarning($"[MetamorphoseEditor] Toggle not found: {toggleName} -> {rowName}");
+                return;
+            }
 
             string prefsKey = $"MetamorphoseEditor_Show_{rowName}";
             bool isVisible = EditorPrefs.GetBool(prefsKey, true);
+
+            Debug.Log($"[MetamorphoseEditor] Toggle setup: {toggleName} -> {rowName} ({displayName}) initial: {isVisible}");
 
             ApplyPartToggleVisual(toggle, row, displayName, isVisible);
 
@@ -326,6 +335,7 @@ namespace Moruton.Gimmicks.Editor
             {
                 isVisible = !isVisible;
                 EditorPrefs.SetBool(prefsKey, isVisible);
+                Debug.Log($"[MetamorphoseEditor] Toggle clicked: {toggleName} -> {rowName} now: {isVisible}");
                 ApplyPartToggleVisual(toggle, row, displayName, isVisible);
             };
         }
