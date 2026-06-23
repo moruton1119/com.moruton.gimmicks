@@ -1,4 +1,6 @@
+using System.Linq;
 using nadena.dev.ndmf;
+using UnityEditor.Animations;
 using UnityEngine;
 using Moruton.Gimmicks.Editor;
 
@@ -14,6 +16,10 @@ namespace Moruton.Gimmicks.Editor.NDMF
         {
             var mirror = ctx.AvatarRootObject.GetComponentInChildren<PrettyCureMirror>();
             if (mirror == null) return;
+
+            if (!Validate(mirror)) return;
+
+            GenerateAnimations(mirror);
 
             // ─── Step 2: 変身後の衣装配置 ───
             ItemPlacer.PlaceItems(mirror.headTarget, mirror.headItems);
@@ -38,6 +44,42 @@ namespace Moruton.Gimmicks.Editor.NDMF
             {
                 ItemPlacer.PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
             }
+        }
+
+        private static bool Validate(PrettyCureMirror mirror)
+        {
+            if (mirror.Model == null || mirror.Animator == null)
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] model or animator is not set.");
+                return false;
+            }
+
+            if (mirror.OffTargets == null || mirror.OffTargets.All(t => t == null))
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] offTargets is not set.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void GenerateAnimations(PrettyCureMirror mirror)
+        {
+            var controller = mirror.Animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null)
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Animator has no AnimatorController assigned.");
+                return;
+            }
+
+            var offTargets = mirror.OffTargets.Where(t => t != null).ToArray();
+            var (enableClip, disableClip) = AnimationBuilder.CreateToggleClipsInMemory(
+                mirror.Avatar, offTargets, mirror.Model);
+
+            if (enableClip != null)
+                AnimationBuilder.ApplyClipToState(controller, "Enable", enableClip);
+            if (disableClip != null)
+                AnimationBuilder.ApplyClipToState(controller, "Disable", disableClip);
         }
     }
 }

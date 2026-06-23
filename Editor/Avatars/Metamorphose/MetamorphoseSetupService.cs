@@ -19,14 +19,11 @@ namespace Moruton.Gimmicks.Editor
             {
                 if (collar == null) continue;
 
-                var renderers = collar.GetComponentsInChildren<Renderer>(true);
-                foreach (var renderer in renderers)
+                var particleSystems = collar.GetComponentsInChildren<ParticleSystem>(true);
+                foreach (var ps in particleSystems)
                 {
-                    foreach (var mat in renderer.sharedMaterials)
-                    {
-                        if (mat == null || !mat.HasProperty("_Color")) continue;
-                        mat.color = script.gimmickColor;
-                    }
+                    var main = ps.main;
+                    main.startColor = script.gimmickColor;
                 }
             }
         }

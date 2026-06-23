@@ -41,6 +41,8 @@ namespace Moruton.Gimmicks.Editor
 
                 var instance = Place(target, item);
                 ApplyMaterial(instance, material);
+                if (instance != null)
+                    instance.name = target.name;
             }
         }
 

@@ -19,6 +19,7 @@ namespace Moruton.Gimmicks.Editor
         private VisualElement _root;
         private int _selectedLanguage;
         private Color _lastGimmickColor;
+        private float _previewRefreshTime = -1f;
 
         // Step フィールド (ユーザー向け) — slot-{path} にPropertyFieldを生成
         private static readonly string[] FieldPaths =
@@ -109,6 +110,15 @@ namespace Moruton.Gimmicks.Editor
                 _lastGimmickColor = script.gimmickColor;
                 MetamorphoseSetupService.ApplyGimmickColor(script);
             }
+
+            if (_previewRefreshTime > 0f && Time.realtimeSinceStartup >= _previewRefreshTime)
+            {
+                UpdateAllPreviews();
+                if (!HasAnyMissingPreview())
+                    _previewRefreshTime = -1f;
+                else
+                    _previewRefreshTime = Time.realtimeSinceStartup + 0.2f;
+            }
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -151,6 +161,8 @@ namespace Moruton.Gimmicks.Editor
 
             _root.Bind(serializedObject);
             UpdateAllPreviews();
+            if (HasAnyMissingPreview())
+                _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
 
             return _root;
         }
@@ -206,6 +218,7 @@ namespace Moruton.Gimmicks.Editor
                 pf.RegisterValueChangeCallback(evt =>
                 {
                     UpdatePartPreview(capturedPreview, capturedPath);
+                    _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
                 });
             }
         }
@@ -271,6 +284,23 @@ namespace Moruton.Gimmicks.Editor
                 more.AddToClassList("preview-more");
                 container.Add(more);
             }
+        }
+
+        private bool HasAnyMissingPreview()
+        {
+            foreach (var (path, _) in PreviewBindings)
+            {
+                var prop = serializedObject.FindProperty(path);
+                if (prop == null || !prop.isArray) continue;
+
+                for (int i = 0; i < prop.arraySize; i++)
+                {
+                    var go = prop.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
+                    if (go != null && AssetPreview.GetAssetPreview(go) == null)
+                        return true;
+                }
+            }
+            return false;
         }
 
         #endregion
