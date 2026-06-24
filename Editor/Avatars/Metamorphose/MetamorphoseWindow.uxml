@@ -50,6 +50,7 @@
               <ui:VisualElement name="page0-section-off" class="field-group">
                 <ui:Label name="fg0-off" class="field-group-title" />
                 <ui:VisualElement name="page0-slot-offTargets" class="field-slot" />
+                <ui:Button name="btn-generate-anim" class="link-btn" text="Generate Animation" />
               </ui:VisualElement>
               <ui:VisualElement name="page0-section-color" class="field-group">
                 <ui:Label name="fg0-color" class="field-group-title" />
