@@ -23,7 +23,7 @@ jobs:
 
       - name: Pack Package
         run: |
-          zip -r "com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip" . -x ".git/*" ".github/*" ".vscode/*" "Tests/*" "obj/*"
+          zip -r "com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip" . -x ".git/*" ".github/*" ".vscode/*" "Tests/*" "obj/*" "docs/*" "Documentation/*"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
