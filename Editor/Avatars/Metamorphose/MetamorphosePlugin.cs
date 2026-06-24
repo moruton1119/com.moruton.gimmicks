@@ -1,10 +1,10 @@
 using nadena.dev.ndmf;
 using UnityEngine;
 
-[assembly: ExportsPlugin(typeof(MetamorphosePlugin))]
-
 namespace Moruton.Gimmicks.Editor
 {
+    [assembly: ExportsPlugin(typeof(MetamorphosePlugin))]
+
     public sealed class MetamorphosePlugin : Plugin<MetamorphosePlugin>
     {
         public override string QualifiedName => "com.moruton.gimmicks.metamorphose";
