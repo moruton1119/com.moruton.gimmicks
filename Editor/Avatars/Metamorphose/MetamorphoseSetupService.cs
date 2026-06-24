@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace Moruton.Gimmicks.Editor
@@ -22,8 +23,10 @@ namespace Moruton.Gimmicks.Editor
                 var particleSystems = collar.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in particleSystems)
                 {
+                    Undo.RecordObject(ps, "Change Gimmick Color");
                     var main = ps.main;
                     main.startColor = script.gimmickColor;
+                    EditorUtility.SetDirty(ps);
                 }
             }
         }

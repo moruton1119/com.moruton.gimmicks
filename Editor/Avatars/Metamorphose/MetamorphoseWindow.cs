@@ -344,6 +344,20 @@ namespace Moruton.Gimmicks.Editor
                     _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
                 });
             }
+
+            var colorSlot = _root.Q<VisualElement>("page0-slot-gimmickColor");
+            if (colorSlot != null)
+            {
+                var pf = colorSlot.Q<PropertyField>();
+                if (pf != null)
+                {
+                    pf.RegisterValueChangeCallback(evt =>
+                    {
+                        _so.ApplyModifiedProperties();
+                        MetamorphoseSetupService.ApplyGimmickColor(_target);
+                    });
+                }
+            }
         }
 
         private void UpdateAllPreviews()
