@@ -22,21 +22,21 @@
 
 - `PrettyCureMirror` → `Metamorphose` にリネーム
 - 対象: クラス名・ファイル名・フォルダ名・AddComponentMenu・UI表示名
-- **状態: 未実施**
+- **状態: 未実施**（`PrettyCureMirror.cs` および `MetamorphoseEditor.cs` がまだ旧クラス名 `PrettyCureMirror` のアサインや参照を保持しています。リネームは未実施です）
 
 ### 2-2: avatar / animator 自動アサイン
 
 - `avatar` が未設定 → 親階層を辿って `VRC_AvatarDescriptor` を検索し、自動でアサイン
 - `animator` が未設定 → 見つけたアバターから `Animator` を取得して自動アサイン
 - タイミング: コンポーネント追加時（Reset）+ Inspector表示時（OnEnable）
-- **状態: 実装済み**（PrettyCureMirror.cs `AutoAssignAvatarAndAnimatorIfEmpty()`）
+- **状態: 実装済み**（`PrettyCureMirror.cs` 内の `AutoAssignAvatarAndAnimatorIfEmpty()` にて実装済み。ただしクラス名リネーム時に合わせて改修が必要）
 
 ### 2-3: NDMFビルド時配置
 
 - Step 2（衣装アイテム）とStep 4（フェード演出アイテム）をビルド時に自動配置
 - 配置のみ（削除なし・Prefab解除なし）
 - NDMFがアバターのクローンに対して動くため、元のシーンは汚さない
-- **状態: 実装済み**（MetamorphoseApplyPass.cs + ItemPlacer.cs）
+- **状態: 実装済み**（`MetamorphoseApplyPass.cs` + `ItemPlacer.cs`）
 
 ### 2-4: 削除機能の排除
 
@@ -70,7 +70,7 @@
 - 選択したアイテムの横並びプレビュー表示
 - 各部位（Head/Body/Hand/Leg）のPropertyField下部にサムネイル表示
 - 最大4件まで表示、超過分は「+N more...」と表示
-- **状態: 実装済み**（要デザイン調整）
+- **状態: 実装済み**（`MetamorphoseWindow.cs` 等でプレビュー機能が実装されています）
 
 ---
 
@@ -90,6 +90,9 @@ Editor/
       MetamorphoseEditor.uxml    — UXMLレイアウト
       MetamorphoseEditor.uss     — USSスタイル
       MetamorphoseSetupService.cs — ApplyGimmickColorのみ
+      MetamorphoseWindow.cs      — 変身ギミック用のメインセットアップウィンドウ
+      MetamorphoseWindow.uxml    — ウィンドウレイアウト
+      MetamorphoseWindow.uss     — ウィンドウスタイル
   NDMF/
     MetamorphosePlugin.cs        — NDMFプラグイン登録
     MetamorphoseApplyPass.cs     — ビルド時配置処理
@@ -116,4 +119,4 @@ Editor/
 
 ---
 
-*最終更新: 2026-06-24 beta.40時点*
+*最終更新: 2026-06-24 package.json 0.3.0-beta.62時点*
