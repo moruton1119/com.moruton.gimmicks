@@ -122,6 +122,11 @@ namespace Moruton.Gimmicks.Editor
             {
                 target.AutoAssignAvatarAndAnimatorIfEmpty();
                 _lastGimmickColor = target.gimmickColor;
+                titleContent = new GUIContent($"Setup - {target.gameObject.name}");
+            }
+            else
+            {
+                titleContent = new GUIContent("Metamorphose Setup");
             }
 
             _uiBuilt = false;
@@ -261,30 +266,53 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupPartToggles()
         {
-            SetupPartToggle("toggle-head", "section-head", "Head");
-            SetupPartToggle("toggle-body", "section-body", "Body");
-            SetupPartToggle("toggle-hand", "section-hand", "Hand");
-            SetupPartToggle("toggle-leg", "section-leg", "Leg");
-            SetupPartToggle("toggle-fadeHead", "section-fadeHead", "F-Head");
-            SetupPartToggle("toggle-fadeBody", "section-fadeBody", "F-Body");
-            SetupPartToggle("toggle-fadeArm", "section-fadeArm", "F-Arm");
-            SetupPartToggle("toggle-fadeLeg", "section-fadeLeg", "F-Leg");
+            SetupPartToggle("toggle-head", "section-head", "Head", () => _target.showHead, "showHead");
+            SetupPartToggle("toggle-body", "section-body", "Body", () => _target.showBody, "showBody");
+            SetupPartToggle("toggle-hand", "section-hand", "Hand", () => _target.showHand, "showHand");
+            SetupPartToggle("toggle-leg", "section-leg", "Leg", () => _target.showLeg, "showLeg");
+            SetupPartToggle("toggle-fadeHead", "section-fadeHead", "F-Head", () => _target.showFadeHead, "showFadeHead");
+            SetupPartToggle("toggle-fadeBody", "section-fadeBody", "F-Body", () => _target.showFadeBody, "showFadeBody");
+            SetupPartToggle("toggle-fadeArm", "section-fadeArm", "F-Arm", () => _target.showFadeArm, "showFadeArm");
+            SetupPartToggle("toggle-fadeLeg", "section-fadeLeg", "F-Leg", () => _target.showFadeLeg, "showFadeLeg");
         }
 
-        private void SetupPartToggle(string toggleName, string sectionName, string displayName)
+        private void SetupPartToggle(string toggleName, string sectionName, string displayName, System.Func<bool> getter, string propertyPath)
         {
             var toggle = _root.Q<Button>(toggleName);
             var section = _root.Q<VisualElement>(sectionName);
             if (toggle == null || section == null) return;
 
-            string prefsKey = $"MetamorphoseEditor_Show_{sectionName}";
-            bool isVisible = EditorPrefs.GetBool(prefsKey, true);
+            bool isVisible = getter();
             ApplyPartToggleVisual(toggle, section, displayName, isVisible);
 
             toggle.clicked += () =>
             {
                 isVisible = !isVisible;
-                EditorPrefs.SetBool(prefsKey, isVisible);
+
+                _so.Update();
+                var prop = _so.FindProperty(propertyPath);
+                if (prop != null)
+                {
+                    prop.boolValue = isVisible;
+                    _so.ApplyModifiedProperties();
+                }
+                else
+                {
+                    Undo.RecordObject(_target, "Toggle Part Visibility");
+                    switch (propertyPath)
+                    {
+                        case "showHead": _target.showHead = isVisible; break;
+                        case "showBody": _target.showBody = isVisible; break;
+                        case "showHand": _target.showHand = isVisible; break;
+                        case "showLeg": _target.showLeg = isVisible; break;
+                        case "showFadeHead": _target.showFadeHead = isVisible; break;
+                        case "showFadeBody": _target.showFadeBody = isVisible; break;
+                        case "showFadeArm": _target.showFadeArm = isVisible; break;
+                        case "showFadeLeg": _target.showFadeLeg = isVisible; break;
+                    }
+                    EditorUtility.SetDirty(_target);
+                }
+
                 ApplyPartToggleVisual(toggle, section, displayName, isVisible);
             };
         }
@@ -855,6 +883,19 @@ namespace Moruton.Gimmicks.Editor
         #endregion
 
         #region Editor Update
+
+        private void OnSelectionChange()
+        {
+            var activeGo = Selection.activeGameObject;
+            if (activeGo != null)
+            {
+                var mirror = activeGo.GetComponent<PrettyCureMirror>();
+                if (mirror != null && mirror != _target)
+                {
+                    SetTarget(mirror);
+                }
+            }
+        }
 
         private void OnEditorUpdate()
         {

@@ -70,6 +70,16 @@ namespace Moruton.Gimmicks
 
         [Header("バナー広告URL")]
         [SerializeField] public string[] bannerAdUrls;
+
+        [Header("エディター表示設定")]
+        [SerializeField] public bool showHead = true;
+        [SerializeField] public bool showBody = true;
+        [SerializeField] public bool showHand = true;
+        [SerializeField] public bool showLeg = true;
+        [SerializeField] public bool showFadeHead = true;
+        [SerializeField] public bool showFadeBody = true;
+        [SerializeField] public bool showFadeArm = true;
+        [SerializeField] public bool showFadeLeg = true;
         
         public GameObject Avatar => avatar;
         public GameObject Model => model;
