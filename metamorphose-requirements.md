@@ -22,14 +22,14 @@
 
 - `PrettyCureMirror` → `Metamorphose` にリネーム
 - 対象: クラス名・ファイル名・フォルダ名・AddComponentMenu・UI表示名
-- **状態: 未実施**（`PrettyCureMirror.cs` および `MetamorphoseEditor.cs` がまだ旧クラス名 `PrettyCureMirror` のアサインや参照を保持しています。リネームは未実施です）
+- **状態: 見送り（キャンセル）**（既存プロジェクトとの後方互換性を維持するため、クラス名 `PrettyCureMirror` のまま維持することが決定しました）
 
 ### 2-2: avatar / animator 自動アサイン
 
 - `avatar` が未設定 → 親階層を辿って `VRC_AvatarDescriptor` を検索し、自動でアサイン
 - `animator` が未設定 → 見つけたアバターから `Animator` を取得して自動アサイン
 - タイミング: コンポーネント追加時（Reset）+ Inspector表示時（OnEnable）
-- **状態: 実装済み**（`PrettyCureMirror.cs` 内の `AutoAssignAvatarAndAnimatorIfEmpty()` にて実装済み。ただしクラス名リネーム時に合わせて改修が必要）
+- **状態: 実装済み**（`PrettyCureMirror.cs` 内の `AutoAssignAvatarAndAnimatorIfEmpty()` にて実装済み）
 
 ### 2-3: NDMFビルド時配置
 
@@ -72,6 +72,23 @@
 - 最大4件まで表示、超過分は「+N more...」と表示
 - **状態: 実装済み**（`MetamorphoseWindow.cs` 等でプレビュー機能が実装されています）
 
+### 2-8: NDMFビルド時アニメーション自動生成とマージ
+
+- `offTargets`（変身前の衣装）および `model` のON/OFFを切り替えるアニメーションクリップをメモリ上に自動生成
+- 生成されたクリップをマージ用のAnimatorControllerへ適用し、Modular Avatarの `ModularAvatarMergeAnimator` に自動割り当てしてマージを完了する
+- **状態: 実装済み**（`MetamorphoseApplyPass.cs` の `GenerateAnimations()` で実装）
+
+### 2-9: ギミック色変更のUndoと即時プレビュー
+
+- カラーピッカーによる `gimmickColor` 変更時、エディター上でUndoに対応し、リアルタイムで全パーティクルの `startColor` がプレビュー変更されるようにコールバックを紐付け
+- **状態: 実装済み**（`MetamorphoseWindow.cs` のカラー変更コールバックおよび `MetamorphoseSetupService.ApplyGimmickColor()` のUndo対応）
+
+### 2-10: 部位非表示トグルのプレハブ保存化とウィンドウ自動追従
+
+- Devモードの「部位表示切替」ボタンの状態（フラグ値）が、グローバルな `EditorPrefs` ではなくプレハブ（またはシーン上の個別インスタンス）ごとに独立してシリアライズ保存されるよう、`PrettyCureMirror` クラス内に `showHead` などの変数を定義して移行
+- エディタウィンドウが開いている際、Unityヒエラルキーの選択変更に自動追従して編集ターゲットを切り替える `OnSelectionChange()` を実装
+- **状態: 実装済み**（`PrettyCureMirror.cs`、`MetamorphoseWindow.cs` でのプロパティ保存化および `OnSelectionChange` 実装）
+
 ---
 
 ## 🏗️ 現在のファイル構成
@@ -79,7 +96,7 @@
 ```
 Runtime/
   Avatars/
-    PrettyCureMirror.cs          — データモデル + 自動アサイン（→ Metamorphose.csにリネーム予定）
+    PrettyCureMirror.cs          — データモデル + 自動アサイン（PrettyCureMirror のまま名前維持）
 
 Editor/
   Common/
@@ -113,10 +130,10 @@ Editor/
 
 ## 📝 メモ
 
-- アニメーション生成ロジック（CreateAnimations等）は一旦削除済み。MA MergeAnimator等で対応予定。
-- MetamorphoseSetupService.cs は ApplyGimmickColor のみ残存。今後不要なら削除可能。
+- アニメーション生成ロジックはビルド時にNDMFパスを通じてメモリ上で非破壊的にクローン・マージされるため、元のAnimatorControllerアセット自体は汚れません。
+- MetamorphoseSetupService.cs は ApplyGimmickColor のみ残存。
 - NDMF asmdef は `com.moruton.gimmicks.Editor` を参照している（ItemPlacerを使用するため）。
 
 ---
 
-*最終更新: 2026-06-24 package.json 0.3.0-beta.62時点*
+*最終更新: 2026-06-24 package.json 0.3.0-beta.67時点*
