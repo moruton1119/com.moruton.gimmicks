@@ -19,7 +19,7 @@ namespace Moruton.Gimmicks.Editor
         {
             Debug.Log("[MetamorphosePlugin] Configure() - registering pass");
 
-            InPhase(BuildPhase.Transforming)
+            InPhase(BuildPhase.Generating)
                 .Run(new MetamorphoseApplyPass());
         }
     }

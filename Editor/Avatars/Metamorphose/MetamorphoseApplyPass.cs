@@ -35,7 +35,7 @@ namespace Moruton.Gimmicks.Editor
 
             UnpackAllPrefabs(ctx.AvatarRootObject);
 
-            GenerateAnimations(mirror);
+            GenerateAnimations(ctx, mirror);
 
             // ─── Step 2: 変身後の衣装配置 ───
             ItemPlacer.PlaceItems(mirror.headTarget, mirror.headItems);
@@ -60,6 +60,57 @@ namespace Moruton.Gimmicks.Editor
             {
                 ItemPlacer.PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
             }
+        }
+
+        private static void GenerateAnimations(BuildContext ctx, PrettyCureMirror mirror)
+        {
+            var originalController = mirror.Animator.runtimeAnimatorController as AnimatorController;
+            if (originalController == null)
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Animator has no AnimatorController assigned.");
+                return;
+            }
+
+            // Clone the AnimatorController to prevent modifying the original asset
+            var clonedController = Object.Instantiate(originalController);
+            clonedController.name = originalController.name + "_Cloned";
+
+            // Register the cloned controller to NDMF's AssetContainer
+            if (ctx.AssetContainer != null)
+            {
+                AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
+            }
+
+            var offTargets = mirror.OffTargets.Where(t => t != null).ToArray();
+
+            // Create toggle clips in memory
+            var (enableClip, disableClip) = AnimationBuilder.CreateToggleClipsInMemory(
+                mirror.Avatar, offTargets, mirror.Model);
+
+            if (enableClip != null)
+            {
+                enableClip.name = "Metamorphose_Enable";
+                if (ctx.AssetContainer != null)
+                {
+                    AssetDatabase.AddObjectToAsset(enableClip, ctx.AssetContainer);
+                }
+                AnimationBuilder.ApplyClipToState(clonedController, "Enable", enableClip);
+            }
+
+            if (disableClip != null)
+            {
+                disableClip.name = "Metamorphose_Disable";
+                if (ctx.AssetContainer != null)
+                {
+                    AssetDatabase.AddObjectToAsset(disableClip, ctx.AssetContainer);
+                }
+                AnimationBuilder.ApplyClipToState(clonedController, "Disable", disableClip);
+            }
+
+            // Assign the cloned controller back to the Animator
+            mirror.Animator.runtimeAnimatorController = clonedController;
+
+            Debug.Log("[MetamorphoseApplyPass] Animation generation and controller cloning complete.");
         }
 
         private static bool Validate(PrettyCureMirror mirror)
@@ -103,52 +154,6 @@ namespace Moruton.Gimmicks.Editor
                     PrefabUnpackMode.Completely,
                     InteractionMode.AutomatedAction);
             }
-        }
-
-        private static void GenerateAnimations(PrettyCureMirror mirror)
-        {
-            var controller = mirror.Animator.runtimeAnimatorController as AnimatorController;
-            if (controller == null)
-            {
-                Debug.LogWarning("[MetamorphoseApplyPass] Animator has no AnimatorController assigned.");
-                return;
-            }
-
-            Debug.Log($"[MetamorphoseApplyPass] Controller: {controller.name}, Layers: {controller.layers.Length}");
-
-            for (int i = 0; i < controller.layers.Length; i++)
-            {
-                var states = controller.layers[i].stateMachine.states;
-                var stateNames = string.Join(", ", states.Select(s => s.state.name));
-                Debug.Log($"[MetamorphoseApplyPass] Layer {i} '{controller.layers[i].name}': [{stateNames}]");
-            }
-
-            var offTargets = mirror.OffTargets.Where(t => t != null).ToArray();
-
-            foreach (var t in offTargets)
-            {
-                var path = AnimationBuilder.GetRelativePath(mirror.Avatar, t);
-                Debug.Log($"[MetamorphoseApplyPass] offTarget: '{t.name}' -> path='{path}' (parent={t.transform.parent?.name})");
-            }
-
-            var modelPath = AnimationBuilder.GetRelativePath(mirror.Avatar, mirror.Model);
-            Debug.Log($"[MetamorphoseApplyPass] model: '{mirror.Model.name}' -> path='{modelPath}' (parent={mirror.Model.transform.parent?.name})");
-
-            var (enableClip, disableClip) = AnimationBuilder.CreateToggleClipsInMemory(
-                mirror.Avatar, offTargets, mirror.Model);
-
-            if (enableClip != null)
-            {
-                Debug.Log($"[MetamorphoseApplyPass] Enable clip curves: {enableClip.length}");
-                AnimationBuilder.ApplyClipToState(controller, "Enable", enableClip);
-            }
-            if (disableClip != null)
-            {
-                Debug.Log($"[MetamorphoseApplyPass] Disable clip curves: {disableClip.length}");
-                AnimationBuilder.ApplyClipToState(controller, "Disable", disableClip);
-            }
-
-            Debug.Log("[MetamorphoseApplyPass] Animation generation complete.");
         }
     }
 }
