@@ -35,7 +35,7 @@ namespace Moruton.Gimmicks.Editor
 
         private readonly string[] _languageCodes = { "ja", "en", "ko", "it", "es" };
 
-        private PrettyCureMirror _target;
+        private Metamorphose _target;
         private SerializedObject _so;
         private VisualElement _root;
         private bool _uiBuilt;
@@ -100,12 +100,12 @@ namespace Moruton.Gimmicks.Editor
             ("bannerAdUrls", "page3-slot-bannerAdUrls"),
         };
 
-        private string L(string key) => LocalizationManager.Get("PrettyCureMirror", key);
+        private string L(string key) => LocalizationManager.Get("Metamorphose", key);
         private string LC(string key) => LocalizationManager.GetCommon(key);
 
         #region Public
 
-        public static void Show(PrettyCureMirror target)
+        public static void Show(Metamorphose target)
         {
             if (target == null) return;
             var window = GetWindow<MetamorphoseWindow>("Metamorphose Setup");
@@ -113,7 +113,7 @@ namespace Moruton.Gimmicks.Editor
             window.SetTarget(target);
         }
 
-        public void SetTarget(PrettyCureMirror target)
+        public void SetTarget(Metamorphose target)
         {
             _target = target;
             _so = target != null ? new SerializedObject(target) : null;
@@ -143,7 +143,7 @@ namespace Moruton.Gimmicks.Editor
         private void OnEnable()
         {
             _selectedLanguage = EditorPrefs.GetInt("MetamorphoseEditor_Language", 0);
-            LocalizationManager.Load("PrettyCureMirror", _languageCodes[_selectedLanguage]);
+            LocalizationManager.Load("Metamorphose", _languageCodes[_selectedLanguage]);
             EditorApplication.update += OnEditorUpdate;
         }
 
@@ -769,7 +769,7 @@ namespace Moruton.Gimmicks.Editor
 
         private void ReloadAndApplyLocalization()
         {
-            LocalizationManager.Load("PrettyCureMirror", _languageCodes[_selectedLanguage]);
+            LocalizationManager.Load("Metamorphose", _languageCodes[_selectedLanguage]);
             if (_root != null) ApplyLocalization(_root);
         }
 
@@ -889,7 +889,7 @@ namespace Moruton.Gimmicks.Editor
             var activeGo = Selection.activeGameObject;
             if (activeGo != null)
             {
-                var mirror = activeGo.GetComponent<PrettyCureMirror>();
+                var mirror = activeGo.GetComponent<Metamorphose>();
                 if (mirror != null && mirror != _target)
                 {
                     SetTarget(mirror);

@@ -12,7 +12,7 @@ namespace Moruton.Gimmicks.Editor
         /// <summary>
         /// ギミック色を全コラーオブジェクトに適用（エディタープレビュー用）。
         /// </summary>
-        public static void ApplyGimmickColor(PrettyCureMirror script)
+        public static void ApplyGimmickColor(Metamorphose script)
         {
             if (script.GimmickCollar == null) return;
 

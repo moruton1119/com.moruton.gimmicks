@@ -13,7 +13,7 @@ graph TB
             
             subgraph AvatarComponents["Avatar Components"]
                 GimmickSetupHelper["GimmickSetupHelper<br/>セットアップ補助"]
-                PrettyCureMirror["PrettyCureMirror<br/>プリキュア変身ギミック"]
+                Metamorphose["Metamorphose<br/>変身ギミック"]
                 Item_Randomiser["Item_Randomiser<br/>アイテムランダマイザー"]
                 ItemSetupScript["ItemSetupScript<br/>アイテムセットアップ"]
             end
@@ -23,7 +23,7 @@ graph TB
             LocalizationManager["LocalizationManager<br/>多言語管理"]
             MorutonAvatarPackageEditorHelper["MorutonAvatarPackageEditorHelper<br/>共通UI・更新管理"]
             GimmickSetupHelperEditor["GimmickSetupHelperEditor"]
-            PrettyCureMirrorEditor["PrettyCureMirrorEditor"]
+            MetamorphoseEditor["MetamorphoseEditor"]
             Item_RandomiserEditor["Item_RandomiserEditor"]
             ItemSetupScriptEditor["ItemSetupScriptEditor"]
         end
@@ -35,8 +35,8 @@ graph TB
     
     MorutonAvatarPackageEditorHelper -->|使用| LocalizationManager
     GimmickSetupHelperEditor -->|使用| MorutonAvatarPackageEditorHelper
-    PrettyCureMirrorEditor -->|使用| MorutonAvatarPackageEditorHelper
-    PrettyCureMirrorEditor -->|使用| LocalizationManager
+    MetamorphoseEditor -->|使用| MorutonAvatarPackageEditorHelper
+    MetamorphoseEditor -->|使用| LocalizationManager
     Item_RandomiserEditor -->|使用| MorutonAvatarPackageEditorHelper
     ItemSetupScriptEditor -->|使用| MorutonAvatarPackageEditorHelper
 ```
@@ -71,7 +71,7 @@ classDiagram
         +List~SetupTarget~ targets
     }
     
-    class PrettyCureMirror {
+    class Metamorphose {
         +GameObject avatar
         +GameObject model
         +GameObject[] offTargets
@@ -98,7 +98,7 @@ classDiagram
     AvatarTagComponent <.. MorutonAvatarPackage : MA有効時
     
     MorutonAvatarPackage <|-- GimmickSetupHelper
-    AvatarTagComponent <|-- PrettyCureMirror : 直接継承
+    AvatarTagComponent <|-- Metamorphose : 直接継承
     MorutonAvatarPackage <|-- Item_Randomiser
     MonoBehaviour <|-- ItemSetupScript : 直接継承
 ```
@@ -208,7 +208,7 @@ classDiagram
 flowchart TD
     subgraph Editors["CustomEditor Classes"]
         GimmickSetupHelperEditor
-        PrettyCureMirrorEditor
+        MetamorphoseEditor
         Item_RandomiserEditor
         ItemSetupScriptEditor
     end
@@ -222,8 +222,8 @@ flowchart TD
     end
     
     GimmickSetupHelperEditor --> MorutonAvatarPackageEditorHelper
-    PrettyCureMirrorEditor --> MorutonAvatarPackageEditorHelper
-    PrettyCureMirrorEditor --> LocalizationManager
+    MetamorphoseEditor --> MorutonAvatarPackageEditorHelper
+    MetamorphoseEditor --> LocalizationManager
     Item_RandomiserEditor --> MorutonAvatarPackageEditorHelper
     Item_RandomiserEditor --> GimmickSetupHelperEditor.DrawDeveloperMode
     Item_RandomiserEditor --> ItemSetupScriptEditor.DrawItemsList
@@ -239,7 +239,7 @@ com.moruton.gimmicks/
 │   └── Avatars/
 │       ├── MorutonAvatarPackage.cs
 │       ├── GimmickSetupHelper.cs
-│       ├── PrettyCureMirror.cs
+│       ├── Metamorphose.cs
 │       ├── Item_Randomiser.cs
 │       └── ItemSetupScript.cs
 ├── Editor/
@@ -247,7 +247,7 @@ com.moruton.gimmicks/
 │       ├── LocalizationManager.cs
 │       ├── MorutonAvatarPackageEditorHelper.cs
 │       ├── GimmickSetupHelperEditor.cs
-│       ├── PrettyCureMirrorEditor.cs
+│       ├── MetamorphoseEditor.cs
 │       ├── Item_RandomiserEditor.cs
 │       ├── ItemSetupScriptEditor.cs
 │       └── Localization/
@@ -257,7 +257,7 @@ com.moruton.gimmicks/
 │           │   ├── ko.json
 │           │   ├── it.json
 │           │   └── es.json
-│           └── PrettyCureMirror/
+│           └── Metamorphose/
 │               ├── ja.json
 │               ├── en.json
 │               ├── ko.json
@@ -274,12 +274,12 @@ com.moruton.gimmicks/
 | **MorutonGimmickPackage** | ギミックの基底クラス（Modular Avatar自動切替）※現状未使用 |
 | **MorutonAvatarPackage** | アバター専用ギミックの基底クラス（Modular Avatar自動切替） |
 | **GimmickSetupHelper** | アバターセットアップ補助コンポーネント（説明文・対象管理） |
-| **PrettyCureMirror** | プリキュア変身ギミック（衣装切替・アニメーション生成） |
+| **Metamorphose** | 変身ギミック（衣装切替・アニメーション生成） |
 | **Item_Randomiser** | アイテムランダマイザー（ターゲット調整・アイテム入れ替え） |
 | **ItemSetupScript** | アイテムセットアップ（ソース→ターゲットコピー） |
 | **LocalizationManager** | JSON多言語対応管理（5言語対応） |
 | **MorutonAvatarPackageEditorHelper** | 共通ヘッダーUI・バージョンチェック・自動更新 |
 | **GimmickSetupHelperEditor** | GimmickSetupHelper用Inspector UI |
-| **PrettyCureMirrorEditor** | PrettyCureMirror用Inspector UI（多言語対応） |
+| **MetamorphoseEditor** | Metamorphose用Inspector UI（多言語対応） |
 | **Item_RandomiserEditor** | Item_Randomiser用Inspector UI（タブ切替） |
 | **ItemSetupScriptEditor** | ItemSetupScript用Inspector UI |

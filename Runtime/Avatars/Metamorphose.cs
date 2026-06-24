@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Moruton.Gimmicks
 {
-    [AddComponentMenu("Morulab/Avatars/Pretty Cure Mirror")]
+    [AddComponentMenu("Morulab/Avatars/Metamorphose")]
     [ExecuteInEditMode]
-    public class PrettyCureMirror : AvatarTagComponent
+    public class Metamorphose : AvatarTagComponent
     {
         [Header("基本設定")]
         [SerializeField] private Texture2D dummyImage;

@@ -49,7 +49,7 @@ private static readonly string[] DefaultBannerUrls =
 
 ## 方法2: DevModeで個別に上書き（ユーザー個別）
 
-各アバターの PrettyCureMirror コンポーネントで個別にURLを設定可能。
+各アバターの Metamorphose コンポーネントで個別にURLを設定可能。
 
 ### 手順
 

@@ -26,7 +26,7 @@ com.moruton.gimmicks/
 │   ├── Avatars/                       # 🎭 アバター用コンポーネント
 │   │   ├── MorutonAvatarPackage.cs    # アバター基底クラス
 │   │   ├── GimmickSetupHelper.cs      # セットアップ補助
-│   │   ├── PrettyCureMirror.cs        # プリキュア変身ギミック（データ保持）
+│   │   ├── Metamorphose.cs            # 変身ギミック（データ保持）
 │   │   ├── Item_Randomiser.cs         # アイテムランダマイザー
 │   │   └── ItemSetupScript.cs         # アイテムセットアップ
 │   ├── Shaders/
@@ -47,14 +47,14 @@ com.moruton.gimmicks/
 │   │   └── ItemListDrawer.cs           # アイテムリストUI描画
 │   ├── Avatars/                        # 🎭 アバター用Editor
 │   │   ├── MorutonAvatarPackageEditorHelper.cs  # 共通ヘッダー・アップデートUI
-│   │   ├── MetamorphoseEditor.cs       # 変身ギミックEditor（PrettyCureMirror用）
+│   │   ├── MetamorphoseEditor.cs       # 変身ギミックEditor（Metamorphose用）
 │   │   ├── GimmickSetupHelperEditor.cs # GimmickSetupHelper用Inspector
 │   │   ├── Item_RandomiserEditor.cs    # Item_Randomiser用Inspector
 │   │   ├── ItemSetupScriptEditor.cs   # ItemSetupScript用Inspector
 │   │   ├── LocalizationManager.cs      # 多言語管理（5言語対応）
 │   │   └── Localization/
 │   │       ├── Common/{ja,en,ko,it,es}.json
-│   │       └── PrettyCureMirror/{ja,en,ko,it,es}.json
+│   │       └── Metamorphose/{ja,en,ko,it,es}.json
 │   └── Worlds/                         # 🌍 ワールド用Editor（今後拡張）
 └── Documentation/
     ├── Architecture.md
@@ -96,7 +96,7 @@ com.moruton.gimmicks/
 
 ### 🎭 Runtime/Avatars（アバター用コンポーネント）
 
-#### `PrettyCureMirror.cs`
+#### `Metamorphose.cs`
 | 項目 | 詳細 |
 |---|---|
 | 役割 | プリキュア変身ギミックの**データ保持専用クラス**。Inspector上の設定値を格納。 |
@@ -224,8 +224,8 @@ com.moruton.gimmicks/
 #### `MetamorphoseEditor.cs`
 | 項目 | 詳細 |
 |---|---|
-| 役割 | 変身ギミック（PrettyCureMirror）の専用Inspector。4ステップ構成。 |
-| 継承 | `UnityEditor.Editor` → `[CustomEditor(typeof(PrettyCureMirror))]` |
+| 役割 | 変身ギミック（Metamorphose）の専用Inspector。4ステップ構成。 |
+| 継承 | `UnityEditor.Editor` → `[CustomEditor(typeof(Metamorphose))]` |
 | UI構成 | Step1: 基本設定 / Step2: 変身後衣装（Prefab展開＋部位別装着） / Step3: ギミック色 / Step4: コラボ情報＋ワンピース＋フェード演出 |
 | セットアップ処理 | `SetupTransformation()` — アイテム装着 → ワンピース差し替え → コラボアイテム → フェード装着 → アニメーション生成 → MA Merge Animator生成 |
 | DeveloperMode | Generate Animations / Full Re-process |
@@ -272,7 +272,7 @@ Localization/
 │   ├── ko.json    # 共通テキスト（韓国語）
 │   ├── it.json    # 共通テキスト（イタリア語）
 │   └── es.json    # 共通テキスト（スペイン語）
-└── PrettyCureMirror/
+└── Metamorphose/
     ├── ja.json    # 変身ギミック固有テキスト
     ├── en.json
     ├── ko.json
@@ -281,7 +281,7 @@ Localization/
 ```
 
 ### 検索順序
-1. スクリプト固有テキスト (`PrettyCureMirror/ja.json`)
+1. スクリプト固有テキスト (`Metamorphose/ja.json`)
 2. 共通テキスト (`Common/ja.json`)
 3. フォールバック（キー文字列そのまま）
 
@@ -297,7 +297,7 @@ MorutonGimmickPackage (基底・未使用)
 
 ItemSetupScript (MonoBehaviour直継承)  → ItemData, ItemCopyUtility
 
-PrettyCureMirror (AvatarTagComponent直継承)
+Metamorphose (AvatarTagComponent直継承)
     └── MetamorphoseEditor → AnimationBuilder, GimmickPrefabUtility, EditorStyleFactory
 
 全Editor → MorutonAvatarPackageEditorHelper → GimmicksUpdateChecker → SemVer

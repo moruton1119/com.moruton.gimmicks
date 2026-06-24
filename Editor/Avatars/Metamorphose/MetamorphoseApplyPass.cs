@@ -16,14 +16,14 @@ namespace Moruton.Gimmicks.Editor
         {
             Debug.Log("[MetamorphoseApplyPass] === Execute started ===");
 
-            var mirror = ctx.AvatarRootObject.GetComponentInChildren<PrettyCureMirror>();
+            var mirror = ctx.AvatarRootObject.GetComponentInChildren<Metamorphose>();
             if (mirror == null)
             {
-                Debug.Log("[MetamorphoseApplyPass] No PrettyCureMirror found. Skipping.");
+                Debug.Log("[MetamorphoseApplyPass] No Metamorphose found. Skipping.");
                 return;
             }
 
-            Debug.Log($"[MetamorphoseApplyPass] Found PrettyCureMirror on '{mirror.gameObject.name}'");
+            Debug.Log($"[MetamorphoseApplyPass] Found Metamorphose on '{mirror.gameObject.name}'");
 
             if (!Validate(mirror))
             {
@@ -62,7 +62,7 @@ namespace Moruton.Gimmicks.Editor
             }
         }
 
-        private static void GenerateAnimations(BuildContext ctx, PrettyCureMirror mirror)
+        private static void GenerateAnimations(BuildContext ctx, Metamorphose mirror)
         {
             var originalController = mirror.Animator.runtimeAnimatorController as AnimatorController;
             if (originalController == null)
@@ -136,7 +136,7 @@ namespace Moruton.Gimmicks.Editor
             Debug.Log("[MetamorphoseApplyPass] Animation generation and controller cloning complete.");
         }
 
-        private static bool Validate(PrettyCureMirror mirror)
+        private static bool Validate(Metamorphose mirror)
         {
             if (mirror.Model == null || mirror.Animator == null)
             {

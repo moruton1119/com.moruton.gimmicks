@@ -22,14 +22,14 @@
 
 - `PrettyCureMirror` → `Metamorphose` にリネーム
 - 対象: クラス名・ファイル名・フォルダ名・AddComponentMenu・UI表示名
-- **状態: 見送り（キャンセル）**（既存プロジェクトとの後方互換性を維持するため、クラス名 `PrettyCureMirror` のまま維持することが決定しました）
+- **状態: 実装済み**（クラス名・ファイル名・ローカリゼーションフォルダ名などすべて `Metamorphose` へリネーム完了しました）
 
 ### 2-2: avatar / animator 自動アサイン
 
 - `avatar` が未設定 → 親階層を辿って `VRC_AvatarDescriptor` を検索し、自動でアサイン
 - `animator` が未設定 → 見つけたアバターから `Animator` を取得して自動アサイン
 - タイミング: コンポーネント追加時（Reset）+ Inspector表示時（OnEnable）
-- **状態: 実装済み**（`PrettyCureMirror.cs` 内の `AutoAssignAvatarAndAnimatorIfEmpty()` にて実装済み）
+- **状態: 実装済み**（`Metamorphose.cs` 内の `AutoAssignAvatarAndAnimatorIfEmpty()` にて実装済み）
 
 ### 2-3: NDMFビルド時配置
 
@@ -85,9 +85,9 @@
 
 ### 2-10: 部位非表示トグルのプレハブ保存化とウィンドウ自動追従
 
-- Devモードの「部位表示切替」ボタンの状態（フラグ値）が、グローバルな `EditorPrefs` ではなくプレハブ（またはシーン上の個別インスタンス）ごとに独立してシリアライズ保存されるよう、`PrettyCureMirror` クラス内に `showHead` などの変数を定義して移行
+- Devモードの「部位表示切替」ボタンの状態（フラグ値）が、グローバルな `EditorPrefs` ではなくプレハブ（またはシーン上の個別インスタンス）ごとに独立してシリアライズ保存されるよう、`Metamorphose` クラス内に `showHead` などの変数を定義して移行
 - エディタウィンドウが開いている際、Unityヒエラルキーの選択変更に自動追従して編集ターゲットを切り替える `OnSelectionChange()` を実装
-- **状態: 実装済み**（`PrettyCureMirror.cs`、`MetamorphoseWindow.cs` でのプロパティ保存化および `OnSelectionChange` 実装）
+- **状態: 実装済み**（`Metamorphose.cs`、`MetamorphoseWindow.cs` でのプロパティ保存化および `OnSelectionChange` 実装）
 
 ---
 
@@ -96,7 +96,7 @@
 ```
 Runtime/
   Avatars/
-    PrettyCureMirror.cs          — データモデル + 自動アサイン（PrettyCureMirror のまま名前維持）
+    Metamorphose.cs              — データモデル + 自動アサイン（PrettyCureMirror からリネーム）
 
 Editor/
   Common/

@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Moruton.Gimmicks.Editor
 {
-    [CustomEditor(typeof(PrettyCureMirror))]
+    [CustomEditor(typeof(Metamorphose))]
     public class MetamorphoseEditor : UnityEditor.Editor
     {
         private void OnEnable()
         {
             if (target != null)
             {
-                var script = (PrettyCureMirror)target;
+                var script = (Metamorphose)target;
                 script.AutoAssignAvatarAndAnimatorIfEmpty();
             }
         }
@@ -24,7 +24,7 @@ namespace Moruton.Gimmicks.Editor
 
             if (GUILayout.Button("Open Metamorphose Setup", GUILayout.Height(38)))
             {
-                MetamorphoseWindow.Show((PrettyCureMirror)target);
+                MetamorphoseWindow.Show((Metamorphose)target);
             }
 
             EditorGUILayout.Space(4);
