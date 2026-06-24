@@ -23,7 +23,6 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════════════════════
         private static readonly string[] DefaultBannerUrls =
         {
-            "https://moruton.booth.pm/items/6837270",
             "https://moruton.booth.pm/items/7575133",
             "https://moruton.booth.pm/items/7698424",
             "https://moruton.booth.pm/items/7341440",
