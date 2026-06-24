@@ -85,7 +85,7 @@ namespace Moruton.Gimmicks.Editor
 
             // Create toggle clips in memory
             var (enableClip, disableClip) = AnimationBuilder.CreateToggleClipsInMemory(
-                mirror.Avatar, offTargets, mirror.Model);
+                ctx.AvatarRootObject, offTargets, mirror.Model);
 
             if (enableClip != null)
             {
@@ -109,6 +109,29 @@ namespace Moruton.Gimmicks.Editor
 
             // Assign the cloned controller back to the Animator
             mirror.Animator.runtimeAnimatorController = clonedController;
+
+            // Find and update any ModularAvatarMergeAnimator components on the avatar to point to the cloned controller
+            var components = ctx.AvatarRootObject.GetComponentsInChildren<Component>(true);
+            foreach (var comp in components)
+            {
+                if (comp != null && comp.GetType().FullName == "nadena.dev.modular_avatar.core.ModularAvatarMergeAnimator")
+                {
+                    var type = comp.GetType();
+                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    foreach (var f in fields)
+                    {
+                        if (f.FieldType == typeof(RuntimeAnimatorController))
+                        {
+                            var val = f.GetValue(comp) as RuntimeAnimatorController;
+                            if (val == originalController)
+                            {
+                                f.SetValue(comp, clonedController);
+                                Debug.Log($"[MetamorphoseApplyPass] Updated ModularAvatarMergeAnimator '{comp.gameObject.name}' field '{f.Name}' from original controller to cloned controller.");
+                            }
+                        }
+                    }
+                }
+            }
 
             Debug.Log("[MetamorphoseApplyPass] Animation generation and controller cloning complete.");
         }
