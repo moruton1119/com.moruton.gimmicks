@@ -30,7 +30,7 @@ com.moruton.gimmicks/
 │   │   ├── Item_Randomiser.cs         # アイテムランダマイザー
 │   │   └── ItemSetupScript.cs         # アイテムセットアップ
 │   ├── Shaders/
-│   │   └── ComonParticleShader.shader # パーティクル用シェーダー
+│   │   └── CommonParticle.shader      # パーティクル用シェーダー（CommonParticle.shader にリネーム予定）
 │   └── Common/
 │       └── Morulabw.png               # ロゴ画像
 ├── Editor/
@@ -137,11 +137,11 @@ com.moruton.gimmicks/
 
 ### 🎨 Shaders
 
-#### `ComonParticleShader.shader`
+#### `CommonParticle.shader`
 | 項目 | 詳細 |
 |---|---|
 | 役割 | パーティクル用汎用シェーダー。3テクスチャ対応、スクロールUV、Emission切替、Visible/Hide Mask機能。 |
-| Shader名 | `moruton/Package/Particle/ComonParticleShader` |
+| Shader名 | `moruton/Package/Particle/ComonParticleShader` (※ファイル名は `CommonParticle.shader` にリネームしましたが、既存マテリアルとの互換性維持のため定義名は旧名を維持しています) |
 | 主な機能 | 3レイヤーテクスチャ、UVスクロール、Emission切替、Visible Mask (Tiling/Scale)、Hide Mask、BlendMode/Cull/ZWrite切替 |
 
 ---
