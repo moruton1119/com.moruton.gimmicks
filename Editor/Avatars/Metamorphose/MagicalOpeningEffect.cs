@@ -7,8 +7,7 @@ namespace Moruton.Gimmicks.Editor
 {
     /// <summary>
     /// 魔法少女風オープニング演出エレメント。
-    /// グラデーション背景 + 浮遊粒子 + グロータイトル + バイネット。
-    /// generateVisualContent で直接メッシュ描画する。
+    /// グラデーション背景 + 中央の丸 + 放射状キラキラ + 浮遊粒子 + グロータイトル + バイネット。
     /// </summary>
     public class MagicalOpeningEffect : VisualElement
     {
@@ -21,8 +20,11 @@ namespace Moruton.Gimmicks.Editor
             public Color bgEdge;
             public Color particleColor;
             public Color glowColor;
+            public Color circleColor;
+            public Color circleBorderColor;
             public Color titleColor;
             public Color titleGlow;
+            public Color sparkleColor;
             public string titleText;
 
             public static ThemePalette Moonlight => new ThemePalette
@@ -31,25 +33,31 @@ namespace Moruton.Gimmicks.Editor
                 bgEdge = new Color(0.03f, 0.01f, 0.06f, 1f),
                 particleColor = new Color(1f, 0.42f, 0.62f, 1f),
                 glowColor = new Color(0.77f, 0.40f, 1f, 0.6f),
+                circleColor = new Color(0.14f, 0.08f, 0.24f, 0.9f),
+                circleBorderColor = new Color(1f, 0.42f, 0.62f, 0.8f),
                 titleColor = new Color(1f, 0.85f, 1f, 1f),
                 titleGlow = new Color(1f, 0.42f, 0.62f, 0.8f),
+                sparkleColor = new Color(1f, 0.85f, 1f, 1f),
                 titleText = "✦ Metamorphose ✦",
             };
 
             public static ThemePalette Daylight => new ThemePalette
             {
-                bgCenter = new Color(1f, 0.94f, 0.97f, 1f),
-                bgEdge = new Color(0.95f, 0.82f, 0.90f, 1f),
-                particleColor = new Color(0.91f, 0.12f, 0.39f, 1f),
-                glowColor = new Color(1f, 0.66f, 0.15f, 0.5f),
-                titleColor = new Color(0.29f, 0.10f, 0.26f, 1f),
-                titleGlow = new Color(0.91f, 0.12f, 0.39f, 0.7f),
+                bgCenter = new Color(1f, 0.88f, 0.92f, 1f),   // 薄いピンク
+                bgEdge = new Color(0.98f, 0.78f, 0.86f, 1f),    // 少し濃いピンク
+                particleColor = new Color(0.91f, 0.69f, 0.20f, 1f), // ゴールド粒子
+                glowColor = new Color(1f, 0.85f, 0.30f, 0.5f),  // 金のグロー
+                circleColor = new Color(1f, 0.94f, 0.96f, 0.95f),
+                circleBorderColor = new Color(0.85f, 0.65f, 0.13f, 0.9f), // ゴールド枠
+                titleColor = new Color(0.55f, 0.41f, 0.08f, 1f), // ダークゴールド
+                titleGlow = new Color(0.91f, 0.69f, 0.20f, 0.7f),
+                sparkleColor = new Color(1f, 0.85f, 0.30f, 1f), // 金色キラキラ
                 titleText = "✦ Metamorphose ✦",
             };
         }
 
         // ═══════════════════════════════════════════
-        //  パーティクル
+        //  パーティクル（浮遊用）
         // ═══════════════════════════════════════════
         private struct Particle
         {
@@ -62,21 +70,33 @@ namespace Moruton.Gimmicks.Editor
         }
 
         // ═══════════════════════════════════════════
+        //  放射状キラキラ（丸から外へ飛ぶ）
+        // ═══════════════════════════════════════════
+        private struct Sparkle
+        {
+            public float angle;        // 飛ぶ方向（ラジアン）
+            public float distance;     // 中心からの距離（0〜1、1=画面端）
+            public float speed;        // 飛ぶ速度
+            public float size;         // 大きさ
+            public float opacity;      // 透明度
+            public float life;         // 0〜1（1で消える）
+        }
+
+        // ═══════════════════════════════════════════
         //  状態
         // ═══════════════════════════════════════════
         private ThemePalette _palette;
         private readonly List<Particle> _particles = new List<Particle>();
+        private readonly List<Sparkle> _sparkles = new List<Sparkle>();
         private float _elapsed;
         private float _lastTime;
-        private float _totalDuration = 2.5f;
+        private float _totalDuration = 2.8f;
         private bool _isPlaying;
         private System.Action _onComplete;
-
         private Label _titleLabel;
 
-        // アニメーションフェーズ
         private const float PhaseFadeIn = 0.4f;
-        private const float PhaseHold = 1.2f;
+        private const float PhaseHold = 1.4f;
 
         // ═══════════════════════════════════════════
         //  初期化
@@ -93,35 +113,47 @@ namespace Moruton.Gimmicks.Editor
             style.bottom = 0;
             style.flexGrow = 1;
             pickingMode = PickingMode.Ignore;
-            // Overflow.Hidden is not available in Unity 2022.3 UIToolkit
-            // style.overflowHidden is the equivalent but let's just not set it
 
             generateVisualContent += OnGenerateVisualContent;
 
-            GenerateParticles(40);
+            GenerateParticles(30);
+            GenerateSparkles(24);
         }
 
         private void GenerateParticles(int count)
         {
             _particles.Clear();
-            var rng = new System.Random();
-
             for (int i = 0; i < count; i++)
             {
                 _particles.Add(new Particle
                 {
-                    position = new Vector2(
-                        (float)rng.NextDouble(),
-                        (float)rng.NextDouble()
-                    ),
+                    position = new Vector2(Random.value, Random.value),
                     velocity = new Vector2(
-                        ((float)rng.NextDouble() - 0.5f) * 0.02f,
-                        ((float)rng.NextDouble() * 0.5f + 0.3f) * 0.015f
+                        (Random.value - 0.5f) * 0.02f,
+                        (Random.value * 0.5f + 0.3f) * 0.015f
                     ),
-                    size = (float)rng.NextDouble() * 3f + 1.5f,
-                    baseOpacity = (float)rng.NextDouble() * 0.5f + 0.3f,
-                    phase = (float)rng.NextDouble() * Mathf.PI * 2f,
-                    twinkleSpeed = (float)rng.NextDouble() * 3f + 1.5f,
+                    size = Random.value * 3f + 1.5f,
+                    baseOpacity = Random.value * 0.5f + 0.3f,
+                    phase = Random.value * Mathf.PI * 2f,
+                    twinkleSpeed = Random.value * 3f + 1.5f,
+                });
+            }
+        }
+
+        private void GenerateSparkles(int count)
+        {
+            _sparkles.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                float angle = (float)i / count * Mathf.PI * 2f + Random.Range(-0.1f, 0.1f);
+                _sparkles.Add(new Sparkle
+                {
+                    angle = angle,
+                    distance = 0f,
+                    speed = Random.Range(0.15f, 0.3f),
+                    size = Random.Range(3f, 6f),
+                    opacity = Random.Range(0.5f, 1f),
+                    life = 0f,
                 });
             }
         }
@@ -152,8 +184,6 @@ namespace Moruton.Gimmicks.Editor
         {
             if (!_isPlaying) return;
 
-            // EditorApplication.timeDelta doesn't exist in Unity 2022.3
-            // Use Time.realtimeSinceStartup for delta calculation
             float dt = Time.realtimeSinceStartup - _lastTime;
             _lastTime = Time.realtimeSinceStartup;
             _elapsed += dt;
@@ -176,7 +206,19 @@ namespace Moruton.Gimmicks.Editor
                 _particles[i] = p;
             }
 
-            // タイトルラベルの opacity を更新（generateVisualContent 内ではなくここで）
+            // 放射状キラキラ更新（フェードイン完了後から飛び始める）
+            if (_elapsed > PhaseFadeIn * 0.5f)
+            {
+                for (int i = 0; i < _sparkles.Count; i++)
+                {
+                    var s = _sparkles[i];
+                    s.distance += s.speed * dt;
+                    s.life = Mathf.Clamp01(s.distance / 1.2f);
+                    _sparkles[i] = s;
+                }
+            }
+
+            // タイトルラベルの opacity 更新
             if (_titleLabel != null)
             {
                 var (_, _, titleAlpha) = GetPhaseValues();
@@ -221,18 +263,30 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════
         private void OnGenerateVisualContent(MeshGenerationContext ctx)
         {
-            var (globalAlpha, _, _) = GetPhaseValues();
+            var (globalAlpha, titleScale, _) = GetPhaseValues();
 
             float width = contentRect.width;
             float height = contentRect.height;
 
             if (width <= 0 || height <= 0) return;
 
+            // ── 1. グラデーション背景 ──
             DrawGradientBackground(ctx, width, height, globalAlpha);
+
+            // ── 2. 中心のグロー ──
             DrawCenterGlow(ctx, width, height, globalAlpha);
+
+            // ── 3. 放射状キラキラ（丸の外側に飛ぶ） ──
+            DrawRadialSparkles(ctx, width, height, globalAlpha);
+
+            // ── 4. 浮遊粒子 ──
             DrawParticles(ctx, width, height, globalAlpha);
+
+            // ── 5. 中央の丸（タイトルの背景） ──
+            DrawTitleCircle(ctx, width, height, titleScale, globalAlpha);
+
+            // ── 6. バイネット ──
             DrawVignette(ctx, width, height, globalAlpha);
-            DrawTitleGlow(ctx, width, height);
         }
 
         // ── グラデーション背景 ──
@@ -259,7 +313,7 @@ namespace Moruton.Gimmicks.Editor
         {
             float cx = w * 0.5f;
             float cy = h * 0.5f;
-            float radius = Mathf.Min(w, h) * 0.6f;
+            float radius = Mathf.Min(w, h) * 0.5f;
 
             int layers = 5;
             var mesh = ctx.Allocate(4 * layers, 6 * layers);
@@ -267,10 +321,10 @@ namespace Moruton.Gimmicks.Editor
             for (int i = layers - 1; i >= 0; i--)
             {
                 float t = (float)i / layers;
-                float r = radius * (1f - t * 0.7f);
+                float r = radius * (1f - t * 0.6f);
 
                 Color c = _palette.glowColor;
-                c.a = c.a * alpha * (1f - t) * 0.3f;
+                c.a = c.a * alpha * (1f - t) * 0.25f;
 
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx - r, cy - r, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx + r, cy - r, 0), tint = c });
@@ -287,7 +341,121 @@ namespace Moruton.Gimmicks.Editor
             }
         }
 
-        // ── パーティクル ──
+        // ── 放射状キラキラ（丸から外側に飛ぶ） ──
+        private void DrawRadialSparkles(MeshGenerationContext ctx, float w, float h, float alpha)
+        {
+            float cx = w * 0.5f;
+            float cy = h * 0.5f;
+            float minDim = Mathf.Min(w, h);
+            float circleRadius = minDim * 0.12f; // 丸の半径
+            float maxRadius = minDim * 0.5f;     // 飛んでいく最大距離
+
+            int count = _sparkles.Count;
+            // 透明なものはスキップ
+            int visibleCount = 0;
+            for (int i = 0; i < count; i++)
+            {
+                if (_sparkles[i].life < 1f && _sparkles[i].distance > 0.01f)
+                    visibleCount++;
+            }
+
+            if (visibleCount == 0) return;
+
+            var mesh = ctx.Allocate(4 * visibleCount, 6 * visibleCount);
+            int meshIdx = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                var s = _sparkles[i];
+                if (s.life >= 1f || s.distance <= 0.01f) continue;
+
+                // 中心からの距離
+                float dist = circleRadius + s.distance * (maxRadius - circleRadius);
+                float px = cx + Mathf.Cos(s.angle) * dist;
+                float py = cy + Mathf.Sin(s.angle) * dist;
+
+                // フェードアウト（遠ざかるほど薄くなる）
+                float fadeOpacity = s.opacity * (1f - s.life) * alpha;
+                if (fadeOpacity <= 0.01f) continue;
+
+                // ダイヤ型のキラキラ
+                float sz = s.size * (1f - s.life * 0.3f);
+                Color c = _palette.sparkleColor;
+                c.a = fadeOpacity;
+
+                mesh.SetNextVertex(new Vertex { position = new Vector3(px, py - sz, 0), tint = c });
+                mesh.SetNextVertex(new Vertex { position = new Vector3(px + sz, py, 0), tint = c });
+                mesh.SetNextVertex(new Vertex { position = new Vector3(px, py + sz, 0), tint = c });
+                mesh.SetNextVertex(new Vertex { position = new Vector3(px - sz, py, 0), tint = c });
+
+                ushort bi = (ushort)(meshIdx * 4);
+                mesh.SetNextIndex(bi);
+                mesh.SetNextIndex((ushort)(bi + 1));
+                mesh.SetNextIndex((ushort)(bi + 2));
+                mesh.SetNextIndex(bi);
+                mesh.SetNextIndex((ushort)(bi + 2));
+                mesh.SetNextIndex((ushort)(bi + 3));
+                meshIdx++;
+            }
+        }
+
+        // ── 中央の丸（タイトル背景） ──
+        private void DrawTitleCircle(MeshGenerationContext ctx, float w, float h, float scale, float alpha)
+        {
+            float cx = w * 0.5f;
+            float cy = h * 0.5f;
+            float minDim = Mathf.Min(w, h);
+            float radius = minDim * 0.12f * scale;
+
+            // 丸の背景（円形に近づけるため多角形で描画）
+            int segments = 24;
+            // 外側のボーダー用に少し大きめの円も描く
+            float borderRadius = radius * 1.08f;
+
+            // ボーダー（外側の円）
+            var borderMesh = ctx.Allocate(segments, (segments - 2) * 3);
+            Color borderColor = _palette.circleBorderColor;
+            borderColor.a *= alpha;
+
+            for (int i = 0; i < segments; i++)
+            {
+                float a = (float)i / segments * Mathf.PI * 2f;
+                borderMesh.SetNextVertex(new Vertex
+                {
+                    position = new Vector3(cx + Mathf.Cos(a) * borderRadius, cy + Mathf.Sin(a) * borderRadius, 0),
+                    tint = borderColor
+                });
+            }
+            for (int i = 0; i < segments - 2; i++)
+            {
+                borderMesh.SetNextIndex((ushort)0);
+                borderMesh.SetNextIndex((ushort)(i + 1));
+                borderMesh.SetNextIndex((ushort)(i + 2));
+            }
+
+            // 内側の円（背景）
+            var innerMesh = ctx.Allocate(segments, (segments - 2) * 3);
+            Color innerColor = _palette.circleColor;
+            innerColor.a *= alpha;
+
+            for (int i = 0; i < segments; i++)
+            {
+                float a = (float)i / segments * Mathf.PI * 2f;
+                innerMesh.SetNextVertex(new Vertex
+                {
+                    position = new Vector3(cx + Mathf.Cos(a) * radius, cy + Mathf.Sin(a) * radius, 0),
+                    tint = innerColor
+                });
+            }
+            for (int i = 0; i < segments - 2; i++)
+            {
+                innerMesh.SetNextIndex((ushort)0);
+                innerMesh.SetNextIndex((ushort)(i + 1));
+                innerMesh.SetNextIndex((ushort)(i + 2));
+            }
+        }
+
+        // ── 浮遊粒子 ──
         private void DrawParticles(MeshGenerationContext ctx, float w, float h, float alpha)
         {
             int count = _particles.Count;
@@ -298,7 +466,7 @@ namespace Moruton.Gimmicks.Editor
                 var p = _particles[i];
 
                 float twinkle = Mathf.Sin(p.phase) * 0.5f + 0.5f;
-                float opacity = p.baseOpacity * twinkle * alpha;
+                float opacity = p.baseOpacity * twinkle * alpha * 0.6f;
                 float s = p.size;
 
                 float px = p.position.x * w;
@@ -327,35 +495,12 @@ namespace Moruton.Gimmicks.Editor
         {
             var mesh = ctx.Allocate(4, 6);
 
-            Color dark = new Color(0, 0, 0, 0.5f * alpha);
+            Color dark = new Color(0, 0, 0, 0.4f * alpha);
 
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, 0, 0), tint = dark });
             mesh.SetNextVertex(new Vertex { position = new Vector3(w, 0, 0), tint = dark });
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, h, 0), tint = dark });
             mesh.SetNextVertex(new Vertex { position = new Vector3(w, h, 0), tint = dark });
-
-            mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
-            mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
-        }
-
-        // ── タイトルグロー背景 ──
-        private void DrawTitleGlow(MeshGenerationContext ctx, float w, float h)
-        {
-            var (_, titleScale, titleAlpha) = GetPhaseValues();
-
-            float cx = w * 0.5f;
-            float cy = h * 0.5f;
-            float glowSize = Mathf.Min(w, h) * 0.15f * titleScale;
-
-            var mesh = ctx.Allocate(4, 6);
-
-            Color glow = _palette.titleGlow;
-            glow.a *= titleAlpha * 0.4f;
-
-            mesh.SetNextVertex(new Vertex { position = new Vector3(cx - glowSize, cy - glowSize * 0.4f, 0), tint = glow });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(cx + glowSize, cy - glowSize * 0.4f, 0), tint = glow });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(cx - glowSize, cy + glowSize * 0.4f, 0), tint = glow });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(cx + glowSize, cy + glowSize * 0.4f, 0), tint = glow });
 
             mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
             mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
@@ -373,7 +518,7 @@ namespace Moruton.Gimmicks.Editor
             _titleLabel.style.top = 0;
             _titleLabel.style.bottom = 0;
             _titleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
-            _titleLabel.style.fontSize = 26;
+            _titleLabel.style.fontSize = 18;
             _titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
             _titleLabel.style.color = _palette.titleColor;
             _titleLabel.pickingMode = PickingMode.Ignore;

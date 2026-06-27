@@ -267,14 +267,61 @@ namespace Moruton.Gimmicks.Editor
         {
             if (_root == null) return;
 
+            // _root と rootVisualElement 両方にクラスを付与
             _root.EnableInClassList("light-theme", _isLightTheme);
             rootVisualElement.EnableInClassList("light-theme", _isLightTheme);
+
+            // 背景色と文字色をインラインで強制上書き（USS変数が反映されない環境用）
+            if (_isLightTheme)
+            {
+                _root.style.backgroundColor = new Color(1f, 0.94f, 0.96f, 1f); // #fff0f5
+                _root.style.color = new Color(0.545f, 0.412f, 0.078f, 1f);    // #8b6914
+            }
+            else
+            {
+                _root.style.backgroundColor = new Color(0.102f, 0.055f, 0.180f, 1f); // #1a0e2e
+                _root.style.color = new Color(0.941f, 0.902f, 1f, 1f);              // #f0e6ff
+            }
+
+            // 各セクションの背景も更新
+            UpdateThemeColors();
 
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
             {
                 toggle.text = _isLightTheme ? "☀️" : "🌙";
             }
+        }
+
+        private void UpdateThemeColors()
+        {
+            // Topbar
+            var topbar = _root.Q<VisualElement>("topbar");
+            if (topbar != null)
+                topbar.style.backgroundColor = _isLightTheme
+                    ? new Color(1f, 1f, 1f, 1f)
+                    : new Color(0.141f, 0.086f, 0.220f, 1f);
+
+            // Sidebar
+            var sidebar = _root.Q<VisualElement>("sidebar");
+            if (sidebar != null)
+                sidebar.style.backgroundColor = _isLightTheme
+                    ? new Color(0.988f, 0.894f, 0.925f, 1f)
+                    : new Color(0.075f, 0.035f, 0.122f, 1f);
+
+            // Content panel
+            var content = _root.Q<VisualElement>("content-panel");
+            if (content != null)
+                content.style.backgroundColor = _isLightTheme
+                    ? new Color(1f, 0.94f, 0.96f, 1f)
+                    : new Color(0.102f, 0.055f, 0.180f, 1f);
+
+            // Banner
+            var banner = _root.Q<VisualElement>("banner");
+            if (banner != null)
+                banner.style.backgroundColor = _isLightTheme
+                    ? new Color(0.973f, 0.843f, 0.910f, 1f)
+                    : new Color(0.059f, 0.027f, 0.098f, 1f);
         }
 
         private void ToggleTheme()

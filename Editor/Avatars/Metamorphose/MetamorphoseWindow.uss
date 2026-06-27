@@ -51,7 +51,7 @@
    LIGHT THEME (Daylight) — Add .light-theme class
    ═══════════════════════════════════════════════ */
 .app-root.light-theme {
-    --bg-night: #fff5f8;
+    --bg-night: #fff0f5;
     --bg-deep: #fce4ec;
     --bg-elevated: #ffffff;
     --bg-hover: #f3d4e6;
@@ -60,24 +60,27 @@
     --sidebar-bg: #fce4ec;
     --banner-bg: #f8d7e8;
 
-    --accent: #e91e63;           /* Strong pink */
-    --accent-hover: #f06292;      /* Soft pink */
-    --accent-bg: rgba(233, 30, 99, 0.08);
-    --accent-border: rgba(233, 30, 99, 0.25);
+    --accent: #d4a017;           /* Gold */
+    --accent-hover: #e6b800;      /* Brighter gold */
+    --accent-bg: rgba(212, 160, 23, 0.08);
+    --accent-border: rgba(212, 160, 23, 0.3);
     --accent-purple: #9c27b0;     /* Royal purple */
     --accent-green: #66bb6a;      /* Fresh green */
-    --accent-orange: #ffa726;     /* Warm gold */
+    --accent-orange: #ff8f00;     /* Deep gold */
     --accent-red: #ef5350;
     --accent-cyan: #26c6da;       /* Bright cyan */
 
     --border: #e8c4d8;
     --border-subtle: #f0d4e2;
-    --text: #4a1942;
-    --text-secondary: #7b4a6e;
-    --text-dim: #b0809e;
+    --text: #8b6914;              /* Dark gold for readability */
+    --text-secondary: #6d4c7d;   /* Muted purple */
+    --text-dim: #a0889e;
 
-    --glow-pink: rgba(233, 30, 99, 0.06);
+    --glow-pink: rgba(212, 160, 23, 0.08);
     --glow-purple: rgba(156, 39, 176, 0.05);
+
+    background-color: #fff0f5;
+    color: #8b6914;
 }
 
 /* ═══════════════════════════════════════════════
