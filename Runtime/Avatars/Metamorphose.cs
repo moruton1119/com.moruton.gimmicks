@@ -71,7 +71,6 @@ namespace Moruton.Gimmicks
         [Header("バナー広告URL")]
         [SerializeField] public string[] bannerAdUrls;
 
-        [Header("エディター表示設定")]
         /// <summary>
         /// エディターのUIテーマ（Prefabごとに指定可能）。Autoの場合はEditorPrefsの設定に従う。
         /// </summary>
@@ -82,6 +81,7 @@ namespace Moruton.Gimmicks
             Daylight = 2
         }
 
+        [Tooltip("エディターのUIテーマ。Autoの場合は手動切替の設定に従います。")]
         [SerializeField] private EditorThemeMode editorTheme = EditorThemeMode.Auto;
 
         /// <summary>現在のエディターテーマ設定</summary>
