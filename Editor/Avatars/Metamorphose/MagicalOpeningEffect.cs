@@ -8,7 +8,7 @@ namespace Moruton.Gimmicks.Editor
     /// <summary>
     /// 魔法少女風オープニング演出エレメント。
     /// グラデーション背景 + 浮遊粒子 + グロータイトル + バイネット。
-    /// generateVisualContent で直接メッシュ描画する（CSSの限界を超える）。
+    /// generateVisualContent で直接メッシュ描画する。
     /// </summary>
     public class MagicalOpeningEffect : VisualElement
     {
@@ -57,7 +57,7 @@ namespace Moruton.Gimmicks.Editor
             public Vector2 velocity;
             public float size;
             public float baseOpacity;
-            public float phase;     // twinkle 用
+            public float phase;
             public float twinkleSpeed;
         }
 
@@ -69,13 +69,13 @@ namespace Moruton.Gimmicks.Editor
         private float _elapsed;
         private float _totalDuration = 2.5f;
         private bool _isPlaying;
-        private bool _isDone;
         private System.Action _onComplete;
+
+        private Label _titleLabel;
 
         // アニメーションフェーズ
         private const float PhaseFadeIn = 0.4f;
         private const float PhaseHold = 1.2f;
-        // 残りがフェードアウト
 
         // ═══════════════════════════════════════════
         //  初期化
@@ -94,7 +94,6 @@ namespace Moruton.Gimmicks.Editor
             pickingMode = PickingMode.Ignore;
             overflow = Overflow.Hidden;
 
-            // generateVisualContent に描画コールバックを登録
             generateVisualContent += OnGenerateVisualContent;
 
             GenerateParticles(40);
@@ -130,7 +129,7 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════
         public void Play()
         {
-            if (_isPlaying || _isDone) return;
+            if (_isPlaying) return;
             _isPlaying = true;
             _elapsed = 0f;
             EditorApplication.update += Tick;
@@ -152,28 +151,33 @@ namespace Moruton.Gimmicks.Editor
 
             _elapsed += (float)EditorApplication.timeDelta;
 
-            // パーティクル更新
             float dt = (float)EditorApplication.timeDelta;
+
+            // パーティクル更新
             for (int i = 0; i < _particles.Count; i++)
             {
                 var p = _particles[i];
                 p.position += p.velocity * dt;
                 p.phase += p.twinkleSpeed * dt;
 
-                // 上に抜けたら下に戻る
                 if (p.position.y > 1.05f)
                 {
                     p.position.y = -0.05f;
                     p.position.x = Random.value;
                 }
-                // 横のラッピング
                 if (p.position.x > 1.05f) p.position.x -= 1.1f;
                 if (p.position.x < -0.05f) p.position.x += 1.1f;
 
                 _particles[i] = p;
             }
 
-            // 終了判定
+            // タイトルラベルの opacity を更新（generateVisualContent 内ではなくここで）
+            if (_titleLabel != null)
+            {
+                var (_, _, titleAlpha) = GetPhaseValues();
+                _titleLabel.style.opacity = titleAlpha;
+            }
+
             if (_elapsed >= _totalDuration)
             {
                 Stop();
@@ -184,14 +188,13 @@ namespace Moruton.Gimmicks.Editor
         }
 
         // ═══════════════════════════════════════════
-        //  現在のフェーズ取得
+        //  フェーズ計算
         // ═══════════════════════════════════════════
         private (float globalAlpha, float titleScale, float titleAlpha) GetPhaseValues()
         {
             if (_elapsed < PhaseFadeIn)
             {
                 float t = _elapsed / PhaseFadeIn;
-                // ease-out
                 float eased = 1f - Mathf.Pow(1f - t, 3f);
                 return (eased, 0.5f + eased * 0.5f, eased);
             }
@@ -203,14 +206,13 @@ namespace Moruton.Gimmicks.Editor
             {
                 float remaining = _totalDuration - PhaseFadeIn - PhaseHold;
                 float t = (_elapsed - PhaseFadeIn - PhaseHold) / remaining;
-                // ease-in
                 float eased = t * t;
                 return (1f - eased, 1f + eased * 0.1f, 1f - eased);
             }
         }
 
         // ═══════════════════════════════════════════
-        //  描画 — generateVisualContent コールバック
+        //  描画メイン
         // ═══════════════════════════════════════════
         private void OnGenerateVisualContent(MeshGenerationContext ctx)
         {
@@ -221,20 +223,11 @@ namespace Moruton.Gimmicks.Editor
 
             if (width <= 0 || height <= 0) return;
 
-            // ── 1. グラデーション背景 ──
             DrawGradientBackground(ctx, width, height, globalAlpha);
-
-            // ── 2. 中心のグロー ──
             DrawCenterGlow(ctx, width, height, globalAlpha);
-
-            // ── 3. パーティクル ──
             DrawParticles(ctx, width, height, globalAlpha);
-
-            // ── 4. バイネット（四隅が暗い） ──
             DrawVignette(ctx, width, height, globalAlpha);
-
-            // ── 5. タイトル ──
-            DrawTitle(ctx, width, height);
+            DrawTitleGlow(ctx, width, height);
         }
 
         // ── グラデーション背景 ──
@@ -242,30 +235,27 @@ namespace Moruton.Gimmicks.Editor
         {
             var mesh = ctx.Allocate(4, 6);
 
-            // 中心が明るく、外周が暗い
             Color center = _palette.bgCenter;
             Color edge = _palette.bgEdge;
             center.a *= alpha;
             edge.a *= alpha;
 
-            // 4頂点（左下→右下→左上→右上）
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, 0, 0), tint = edge });
             mesh.SetNextVertex(new Vertex { position = new Vector3(w, 0, 0), tint = edge });
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, h, 0), tint = center });
             mesh.SetNextVertex(new Vertex { position = new Vector3(w, h, 0), tint = center });
 
-            mesh.SetNextIndex(0); mesh.SetNextIndex(1); mesh.SetNextIndex(2);
-            mesh.SetNextIndex(1); mesh.SetNextIndex(3); mesh.SetNextIndex(2);
+            mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
+            mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
         }
 
-        // ── 中心のグロー（モヤッとした円） ──
+        // ── 中心グロー ──
         private void DrawCenterGlow(MeshGenerationContext ctx, float w, float h, float alpha)
         {
             float cx = w * 0.5f;
             float cy = h * 0.5f;
             float radius = Mathf.Min(w, h) * 0.6f;
 
-            // 複数の重なり合う半透明四角形でグローを表現
             int layers = 5;
             var mesh = ctx.Allocate(4 * layers, 6 * layers);
 
@@ -273,27 +263,28 @@ namespace Moruton.Gimmicks.Editor
             {
                 float t = (float)i / layers;
                 float r = radius * (1f - t * 0.7f);
-                float a = _palette.glowColor.a * alpha * (1f - t) * 0.3f;
 
                 Color c = _palette.glowColor;
-                c.a = a;
+                c.a = c.a * alpha * (1f - t) * 0.3f;
 
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx - r, cy - r, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx + r, cy - r, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx - r, cy + r, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(cx + r, cy + r, 0), tint = c });
 
-                int baseIdx = (layers - 1 - i) * 4;
-                mesh.SetNextIndex(baseIdx); mesh.SetNextIndex(baseIdx + 1); mesh.SetNextIndex(baseIdx + 2);
-                mesh.SetNextIndex(baseIdx + 1); mesh.SetNextIndex(baseIdx + 3); mesh.SetNextIndex(baseIdx + 2);
+                ushort baseIdx = (ushort)((layers - 1 - i) * 4);
+                mesh.SetNextIndex(baseIdx);
+                mesh.SetNextIndex((ushort)(baseIdx + 1));
+                mesh.SetNextIndex((ushort)(baseIdx + 2));
+                mesh.SetNextIndex((ushort)(baseIdx + 1));
+                mesh.SetNextIndex((ushort)(baseIdx + 3));
+                mesh.SetNextIndex((ushort)(baseIdx + 2));
             }
         }
 
-        // ── パーティクル（キラキラ） ──
+        // ── パーティクル ──
         private void DrawParticles(MeshGenerationContext ctx, float w, float h, float alpha)
         {
-            // 各パーティクルを小さい四角形（ダイヤ型）として描画
-            // 4頂点×粒子数
             int count = _particles.Count;
             var mesh = ctx.Allocate(4 * count, 6 * count);
 
@@ -301,42 +292,36 @@ namespace Moruton.Gimmicks.Editor
             {
                 var p = _particles[i];
 
-                float twinkle = (Mathf.Sin(p.phase) * 0.5f + 0.5f);
+                float twinkle = Mathf.Sin(p.phase) * 0.5f + 0.5f;
                 float opacity = p.baseOpacity * twinkle * alpha;
-                float size = p.size;
+                float s = p.size;
 
-                // ダイヤ型にするために45度回転
                 float px = p.position.x * w;
                 float py = p.position.y * h;
-                float s = size;
 
                 Color c = _palette.particleColor;
                 c.a = opacity;
 
-                // ダイヤ型の4頂点
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px, py - s, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px + s, py, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px, py + s, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px - s, py, 0), tint = c });
 
-                int baseIdx = i * 4;
-                mesh.SetNextIndex(baseIdx); mesh.SetNextIndex(baseIdx + 1); mesh.SetNextIndex(baseIdx + 2);
-                mesh.SetNextIndex(baseIdx); mesh.SetNextIndex(baseIdx + 2); mesh.SetNextIndex(baseIdx + 3);
+                ushort baseIdx = (ushort)(i * 4);
+                mesh.SetNextIndex(baseIdx);
+                mesh.SetNextIndex((ushort)(baseIdx + 1));
+                mesh.SetNextIndex((ushort)(baseIdx + 2));
+                mesh.SetNextIndex(baseIdx);
+                mesh.SetNextIndex((ushort)(baseIdx + 2));
+                mesh.SetNextIndex((ushort)(baseIdx + 3));
             }
         }
 
-        // ── バイネット（四隅が暗いオーバーレイ） ──
+        // ── バイネット ──
         private void DrawVignette(MeshGenerationContext ctx, float w, float h, float alpha)
         {
-            float cx = w * 0.5f;
-            float cy = h * 0.5f;
-            float maxDist = Mathf.Max(w, h) * 0.7f;
-
-            // 8分割の扇形でバイネットを近似（簡易版）
-            // 実際は4頂点のグラデーションで代用
             var mesh = ctx.Allocate(4, 6);
 
-            Color transparent = new Color(0, 0, 0, 0);
             Color dark = new Color(0, 0, 0, 0.5f * alpha);
 
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, 0, 0), tint = dark });
@@ -344,20 +329,15 @@ namespace Moruton.Gimmicks.Editor
             mesh.SetNextVertex(new Vertex { position = new Vector3(0, h, 0), tint = dark });
             mesh.SetNextVertex(new Vertex { position = new Vector3(w, h, 0), tint = dark });
 
-            // 内側に向かって透明になるグラデーションは簡易的に四隅を暗くする
-            // より正確にするには複数メッシュが必要だが、雰囲気重視で簡略化
-            mesh.SetNextIndex(0); mesh.SetNextIndex(1); mesh.SetNextIndex(2);
-            mesh.SetNextIndex(1); mesh.SetNextIndex(3); mesh.SetNextIndex(2);
+            mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
+            mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
         }
 
-        // ── タイトルテキスト ──
-        private void DrawTitle(MeshGenerationContext ctx, float w, float h)
+        // ── タイトルグロー背景 ──
+        private void DrawTitleGlow(MeshGenerationContext ctx, float w, float h)
         {
             var (_, titleScale, titleAlpha) = GetPhaseValues();
 
-            // UIToolkit の描画コンテキストではテキストを直接描画できないので、
-            // 子の Label を使う（VisualElement を重ねる方式）
-            // → この描画はタイトルの「グロー背景」のみ
             float cx = w * 0.5f;
             float cy = h * 0.5f;
             float glowSize = Mathf.Min(w, h) * 0.15f * titleScale;
@@ -372,34 +352,28 @@ namespace Moruton.Gimmicks.Editor
             mesh.SetNextVertex(new Vertex { position = new Vector3(cx - glowSize, cy + glowSize * 0.4f, 0), tint = glow });
             mesh.SetNextVertex(new Vertex { position = new Vector3(cx + glowSize, cy + glowSize * 0.4f, 0), tint = glow });
 
-            mesh.SetNextIndex(0); mesh.SetNextIndex(1); mesh.SetNextIndex(2);
-            mesh.SetNextIndex(1); mesh.SetNextIndex(3); mesh.SetNextIndex(2);
+            mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
+            mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
         }
 
         // ═══════════════════════════════════════════
-        //  タイトルラベル（テキストは子要素として配置）
+        //  タイトルラベル
         // ═══════════════════════════════════════════
         public void AddTitleLabel()
         {
-            var label = new Label(_palette.titleText);
-            label.style.position = Position.Absolute;
-            label.style.left = 0;
-            label.style.right = 0;
-            label.style.top = 0;
-            label.style.bottom = 0;
-            label.style.unityTextAlign = TextAnchor.MiddleCenter;
-            label.style.fontSize = 26;
-            label.style.unityFontStyleAndWeight = FontStyle.Bold;
-            label.style.color = _palette.titleColor;
+            _titleLabel = new Label(_palette.titleText);
+            _titleLabel.style.position = Position.Absolute;
+            _titleLabel.style.left = 0;
+            _titleLabel.style.right = 0;
+            _titleLabel.style.top = 0;
+            _titleLabel.style.bottom = 0;
+            _titleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+            _titleLabel.style.fontSize = 26;
+            _titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+            _titleLabel.style.color = _palette.titleColor;
+            _titleLabel.pickingMode = PickingMode.Ignore;
 
-            // アニメーションでopacityを更新するためのコールバック
-            label.generateVisualContent += _ =>
-            {
-                var (_, _, titleAlpha) = GetPhaseValues();
-                label.style.opacity = titleAlpha;
-            };
-
-            Add(label);
+            Add(_titleLabel);
         }
 
         // ═══════════════════════════════════════════
