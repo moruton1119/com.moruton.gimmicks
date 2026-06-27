@@ -154,6 +154,8 @@ namespace Moruton.Gimmicks.Editor
         private void OnDisable()
         {
             EditorApplication.update -= OnEditorUpdate;
+            _openingEffect?.Cleanup();
+            _openingEffect = null;
             ClearPreviewCache();
         }
 
@@ -302,96 +304,35 @@ namespace Moruton.Gimmicks.Editor
 
         #region Opening Animation
 
+        private MagicalOpeningEffect _openingEffect;
+
         /// <summary>
         /// ウィンドウを開いた時のオープニング演出。
-        /// Moonlight: 暗い画面から紫の光が広がってフェードイン
-        /// Daylight: 白いフラッシュからキラキラが降ってフェードイン
+        /// MagicalOpeningEffect でグラデーション背景 + 粒子 + グローを描画。
+        /// Moonlight: 紫の闇からピンクの光が広がる
+        /// Daylight: 白い光から金のキラキラが降る
         /// </summary>
         private void PlayOpeningAnimation()
         {
             if (_root == null || _hasPlayedOpening) return;
             _hasPlayedOpening = true;
 
-            // コンテンツ全体を最初は非表示
-            var contentPanel = _root.Q<VisualElement>("content-panel");
-            var sidebar = _root.Q<VisualElement>("sidebar");
-            var topbar = _root.Q<VisualElement>("topbar");
-            var banner = _root.Q<VisualElement>("banner");
-
-            if (contentPanel == null) return;
-
-            // オーバーレイ作成（テーマ別の色）
-            var overlay = new VisualElement();
-            overlay.name = "opening-overlay";
-            overlay.style.position = Position.Absolute;
-            overlay.style.left = 0;
-            overlay.style.top = 0;
-            overlay.style.right = 0;
-            overlay.style.bottom = 0;
-            overlay.style.flexGrow = 1;
-            overlay.pickingMode = PickingMode.Ignore;
-
-            // テーマ別のオーバーレイ色
-            Color overlayColor = _isLightTheme
-                ? new Color(1f, 0.95f, 0.97f, 1f)   // ほぼ白（Daylight）
-                : new Color(0.1f, 0.05f, 0.18f, 1f); // ほぼ黒紫（Moonlight）
-
-            overlay.style.backgroundColor = overlayColor;
-            _root.Add(overlay);
-
-            // タイトルラベル（変身風！）
-            var titleLabel = new Label(_isLightTheme ? "✦ Daylight ✦" : "✦ Moonlight ✦");
-            titleLabel.style.position = Position.Absolute;
-            titleLabel.style.left = 0;
-            titleLabel.style.right = 0;
-            titleLabel.style.top = 0;
-            titleLabel.style.bottom = 0;
-            titleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
-            titleLabel.style.fontSize = 28;
-            titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            titleLabel.style.color = _isLightTheme
-                ? new Color(0.91f, 0.12f, 0.39f, 1f)  // ピンク（Daylight）
-                : new Color(1f, 0.42f, 0.62f, 1f);     // ホットピンク（Moonlight）
-            titleLabel.pickingMode = PickingMode.Ignore;
-            overlay.Add(titleLabel);
-
-            // アニメーション：overlayをフェードアウト
-            float elapsed = 0f;
-            const float duration = 1.2f;
-            const float fadeStart = 0.5f;
-            const float fadeDuration = 0.7f;
-
-            EditorApplication.delayCall += AnimateOpening;
-
-            void AnimateOpening()
+            // MagicalOpeningEffect を生成してルートに被せる
+            _openingEffect = new MagicalOpeningEffect(_isLightTheme, onComplete: () =>
             {
-                EditorApplication.update += Step;
-            }
+                _openingEffect = null;
+            });
 
-            void Step()
+            // タイトルラベルを追加（テキストは VisualElement の子として配置）
+            _openingEffect.AddTitleLabel();
+
+            _root.Add(_openingEffect);
+
+            // 再生開始
+            EditorApplication.delayCall += () =>
             {
-                elapsed += (float)EditorApplication.timeDelta;
-
-                if (elapsed < fadeStart)
-                {
-                    // フェーズ1: タイトル表示中（少しずつ透過）
-                    float t = elapsed / fadeStart;
-                    titleLabel.style.opacity = 1f - t * 0.3f;
-                }
-                else if (elapsed < fadeStart + fadeDuration)
-                {
-                    // フェーズ2: 全体フェードアウト
-                    float t = (elapsed - fadeStart) / fadeDuration;
-                    overlay.style.opacity = 1f - t;
-                    titleLabel.style.opacity = 1f - t;
-                }
-                else
-                {
-                    // 終了：オーバーレイ削除
-                    EditorApplication.update -= Step;
-                    overlay.RemoveFromHierarchy();
-                }
-            }
+                _openingEffect?.Play();
+            };
         }
 
         #endregion
