@@ -170,6 +170,9 @@
 
               <ui:Label name="fg3-banner" class="field-group-title" />
               <ui:VisualElement name="page3-slot-bannerAdUrls" class="field-slot" />
+
+              <ui:Label name="fg3-editor-theme" class="field-group-title" text="✦ Editor Theme" />
+              <ui:VisualElement name="page3-slot-editorTheme" class="field-slot" />
             </ui:VisualElement>
 
           </ui:VisualElement>

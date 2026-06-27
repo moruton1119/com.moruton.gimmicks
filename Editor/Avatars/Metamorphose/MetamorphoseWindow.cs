@@ -42,6 +42,7 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private int _currentPage;
         private bool _isLightTheme;
+        private bool _hasPlayedOpening;
         private Color _lastGimmickColor;
         private float _previewRefreshTime = -1f;
         private readonly Dictionary<Object, Texture2D> _previewTexCache = new();
@@ -99,6 +100,7 @@ namespace Moruton.Gimmicks.Editor
             ("fadeLegMaterial", "page3-slot-devFadeLegMaterial"),
             ("gimmickCollar", "page3-slot-gimmickCollar"),
             ("bannerAdUrls", "page3-slot-bannerAdUrls"),
+            ("editorTheme", "page3-slot-editorTheme"),
         };
 
         private string L(string key) => LocalizationManager.Get("Metamorphose", key);
@@ -202,8 +204,10 @@ namespace Moruton.Gimmicks.Editor
             SetupButtonCallbacks();
             ApplyLocalization(_root);
 
-            // Apply theme
+            // Apply theme from Prefab setting (or fallback to EditorPrefs)
+            ResolveTheme();
             ApplyTheme();
+            PlayOpeningAnimation();
 
             _root.Bind(_so);
             UpdateAllPreviews();
@@ -235,11 +239,34 @@ namespace Moruton.Gimmicks.Editor
 
         #region Theme
 
+        /// <summary>
+        /// PrefabのThemeSettingに従って実際のテーマを決定する。
+        /// Autoの場合はEditorPrefs（直前の手動切替）を使用。
+        /// </summary>
+        private void ResolveTheme()
+        {
+            if (_target == null) return;
+
+            switch (_target.ThemeSetting)
+            {
+                case Metamorphose.EditorThemeMode.Moonlight:
+                    _isLightTheme = false;
+                    break;
+                case Metamorphose.EditorThemeMode.Daylight:
+                    _isLightTheme = true;
+                    break;
+                default: // Auto
+                    _isLightTheme = EditorPrefs.GetBool("MetamorphoseEditor_LightTheme", false);
+                    break;
+            }
+        }
+
         private void ApplyTheme()
         {
             if (_root == null) return;
 
             _root.EnableInClassList("light-theme", _isLightTheme);
+            rootVisualElement.EnableInClassList("light-theme", _isLightTheme);
 
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
@@ -252,7 +279,119 @@ namespace Moruton.Gimmicks.Editor
         {
             _isLightTheme = !_isLightTheme;
             EditorPrefs.SetBool("MetamorphoseEditor_LightTheme", _isLightTheme);
+
+            // Prefabの設定も更新（Auto → 明示的設定に切り替え）
+            if (_target != null)
+            {
+                Undo.RecordObject(_target, "Change Editor Theme");
+                _so.Update();
+                var prop = _so.FindProperty("editorTheme");
+                if (prop != null)
+                {
+                    prop.enumValueIndex = _isLightTheme
+                        ? (int)Metamorphose.EditorThemeMode.Daylight
+                        : (int)Metamorphose.EditorThemeMode.Moonlight;
+                    _so.ApplyModifiedProperties();
+                }
+            }
+
             ApplyTheme();
+        }
+
+        #endregion
+
+        #region Opening Animation
+
+        /// <summary>
+        /// ウィンドウを開いた時のオープニング演出。
+        /// Moonlight: 暗い画面から紫の光が広がってフェードイン
+        /// Daylight: 白いフラッシュからキラキラが降ってフェードイン
+        /// </summary>
+        private void PlayOpeningAnimation()
+        {
+            if (_root == null || _hasPlayedOpening) return;
+            _hasPlayedOpening = true;
+
+            // コンテンツ全体を最初は非表示
+            var contentPanel = _root.Q<VisualElement>("content-panel");
+            var sidebar = _root.Q<VisualElement>("sidebar");
+            var topbar = _root.Q<VisualElement>("topbar");
+            var banner = _root.Q<VisualElement>("banner");
+
+            if (contentPanel == null) return;
+
+            // オーバーレイ作成（テーマ別の色）
+            var overlay = new VisualElement();
+            overlay.name = "opening-overlay";
+            overlay.style.position = Position.Absolute;
+            overlay.style.left = 0;
+            overlay.style.top = 0;
+            overlay.style.right = 0;
+            overlay.style.bottom = 0;
+            overlay.style.flexGrow = 1;
+            overlay.pickingMode = PickingMode.Ignore;
+
+            // テーマ別のオーバーレイ色
+            Color overlayColor = _isLightTheme
+                ? new Color(1f, 0.95f, 0.97f, 1f)   // ほぼ白（Daylight）
+                : new Color(0.1f, 0.05f, 0.18f, 1f); // ほぼ黒紫（Moonlight）
+
+            overlay.style.backgroundColor = overlayColor;
+            _root.Add(overlay);
+
+            // タイトルラベル（変身風！）
+            var titleLabel = new Label(_isLightTheme ? "✦ Daylight ✦" : "✦ Moonlight ✦");
+            titleLabel.style.position = Position.Absolute;
+            titleLabel.style.left = 0;
+            titleLabel.style.right = 0;
+            titleLabel.style.top = 0;
+            titleLabel.style.bottom = 0;
+            titleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+            titleLabel.style.fontSize = 28;
+            titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+            titleLabel.style.color = _isLightTheme
+                ? new Color(0.91f, 0.12f, 0.39f, 1f)  // ピンク（Daylight）
+                : new Color(1f, 0.42f, 0.62f, 1f);     // ホットピンク（Moonlight）
+            titleLabel.pickingMode = PickingMode.Ignore;
+            overlay.Add(titleLabel);
+
+            // アニメーション：overlayをフェードアウト
+            float elapsed = 0f;
+            const float duration = 1.2f;
+            const float fadeStart = 0.5f;
+            const float fadeDuration = 0.7f;
+
+            EditorApplication.delayCall += AnimateOpening;
+
+            void AnimateOpening()
+            {
+                EditorApplication.update += Step;
+            }
+
+            void Step()
+            {
+                elapsed += (float)EditorApplication.timeDelta;
+
+                if (elapsed < fadeStart)
+                {
+                    // フェーズ1: タイトル表示中（少しずつ透過）
+                    float t = elapsed / fadeStart;
+                    titleLabel.style.opacity = 1f - t * 0.3f;
+                }
+                else if (elapsed < fadeStart + fadeDuration)
+                {
+                    // フェーズ2: 全体フェードアウト
+                    float t = (elapsed - fadeStart) / fadeDuration;
+                    overlay.style.opacity = 1f - t;
+                    titleLabel.style.opacity = 1f - t;
+                }
+                else
+                {
+                    // 終了：オーバーレイ削除
+                    EditorApplication.update -= Step;
+                    overlay.RemoveFromHierarchy();
+                }
+            }
         }
 
         #endregion
