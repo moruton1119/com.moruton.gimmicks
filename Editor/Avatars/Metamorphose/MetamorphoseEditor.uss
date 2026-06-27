@@ -1,36 +1,61 @@
 /* ============================================
-   MetamorphoseEditor — Dark Theme + Neon Accents
-   Launcher (MorulabLauncher.uss) 準拠
+   MetamorphoseEditor — Magical Girl Theme
+   🌙 Dark (Moonlight) / ☀️ Light (Daylight)
+   Inspector / SerializedObject Editor
    ============================================ */
 
-/* --- CSS Variables --- */
+/* ═══════════════════════════════════════════════
+   DARK THEME (Moonlight) — Default
+   ═══════════════════════════════════════════════ */
 .metamorphose-root {
-    --bg-primary: #1e1e1e;
-    --bg-secondary: #2a2a2a;
-    --bg-tertiary: #333333;
-    --bg-hover: #252525;
-    --bg-input: #181818;
-    --text-primary: #e0e0e0;
-    --text-secondary: #aaa;
-    --text-dim: #666;
-    --accent-blue: #3f8aff;
-    --accent-purple: #8B5CF6;
-    --accent-green: #4CAF50;
-    --accent-green-hover: #5BC960;
-    --accent-orange: #F59E0B;
-    --border-subtle: #333;
-    --border-dim: #252525;
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-}
+    --bg-primary: #1a0e2e;
+    --bg-secondary: #241638;
+    --bg-tertiary: #2e1d4a;
+    --bg-hover: #2e1d4a;
+    --bg-input: #1c1130;
+    --text-primary: #f0e6ff;
+    --text-secondary: #c4b8e0;
+    --text-dim: #7a6a9e;
+    --accent-blue: #ff6b9d;
+    --accent-purple: #c4a8ff;
+    --accent-green: #b4f8c8;
+    --accent-green-hover: #c8ffd8;
+    --accent-orange: #ffd93d;
+    --border-subtle: #2d1b4a;
+    --border-dim: #241638;
+    --glow-pink: rgba(255, 107, 157, 0.12);
+    --glow-purple: rgba(196, 168, 255, 0.08);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
 
-/* --- Root --- */
-.metamorphose-root {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     padding: 4px;
     font-size: 13px;
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHT THEME (Daylight)
+   ═══════════════════════════════════════════════ */
+.metamorphose-root.light-theme {
+    --bg-primary: #fff5f8;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f3d4e6;
+    --bg-hover: #f3d4e6;
+    --bg-input: #fdf0f5;
+    --text-primary: #4a1942;
+    --text-secondary: #7b4a6e;
+    --text-dim: #b0809e;
+    --accent-blue: #e91e63;
+    --accent-purple: #9c27b0;
+    --accent-green: #66bb6a;
+    --accent-green-hover: #81c784;
+    --accent-orange: #ffa726;
+    --border-subtle: #e8c4d8;
+    --border-dim: #f0d4e2;
+    --glow-pink: rgba(233, 30, 99, 0.06);
+    --glow-purple: rgba(156, 39, 176, 0.05);
 }
 
 /* --- Header --- */
@@ -88,7 +113,7 @@
 }
 
 .step-section:hover {
-    border-left-color: var(--border-subtle);
+    border-left-color: var(--accent-blue);
 }
 
 /* --- Step Toggle Button --- */
@@ -97,7 +122,8 @@
     font-size: 13px;
     color: var(--text-secondary);
     background-color: var(--bg-secondary);
-    border-width: 0;
+    border-width: 1px;
+    border-color: var(--border-subtle);
     border-radius: var(--radius-sm);
     -unity-font-style: bold;
     -unity-text-align: middle-left;
@@ -116,6 +142,7 @@
     border-bottom-right-radius: 0;
     color: #ffffff;
     background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
 }
 
 /* --- Step Body --- */
@@ -124,6 +151,10 @@
     border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
     padding: 10px 12px;
     flex-direction: column;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-color: var(--border-subtle);
 }
 
 .step-body.collapsed {
@@ -147,23 +178,25 @@
     margin-bottom: 4px;
     margin-top: 8px;
     padding-bottom: 2px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgba(139, 92, 246, 0.2);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--glow-pink);
 }
 
 /* --- Part Section --- */
 .part-section {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: var(--glow-purple);
     border-radius: var(--radius-sm);
     padding: 8px;
     margin-bottom: 4px;
     flex-direction: column;
+    border-width: 1px;
+    border-color: var(--border-subtle);
 }
 
 .part-label {
     font-size: 11px;
     -unity-font-style: bold;
-    color: var(--text-dim);
+    color: var(--accent-blue);
     margin-bottom: 2px;
     margin-top: 6px;
     text-transform: uppercase;
@@ -183,9 +216,10 @@
     height: 80px;
     margin: 2px;
     border-radius: var(--radius-sm);
-    border-width: 1px;
-    border-color: var(--border-subtle);
+    border-width: 2px;
+    border-color: var(--accent-blue);
     object-fit: scale-down;
+    opacity: 0.95;
 }
 
 .preview-more {
@@ -199,7 +233,7 @@
     height: 24px;
     font-size: 11px;
     color: #ffffff;
-    background-color: var(--accent-green);
+    background-color: var(--accent-blue);
     border-width: 0;
     border-radius: var(--radius-sm);
     -unity-font-style: bold;
@@ -210,16 +244,16 @@
 }
 
 .part-toggle:hover {
-    background-color: var(--accent-green-hover);
+    background-color: var(--accent-green);
 }
 
 .part-toggle-off {
     color: var(--text-dim);
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-input);
 }
 
 .part-toggle-off:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--bg-hover);
 }
 
 /* --- Items Row (wraps label + slot + preview) --- */
@@ -248,7 +282,7 @@
 
 .item-toggle.part-toggle-off {
     color: var(--text-dim);
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-input);
 }
 
 /* --- Fade Section --- */
@@ -263,12 +297,15 @@
     min-width: 80px;
     margin: 2px;
 }
+
 .fade-section {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: var(--glow-purple);
     border-radius: var(--radius-sm);
     padding: 8px;
     margin-bottom: 4px;
     flex-direction: column;
+    border-width: 1px;
+    border-color: var(--border-subtle);
 }
 
 .fade-part-label {
@@ -291,8 +328,8 @@
     width: 120px;
     height: 120px;
     border-radius: var(--radius-md);
-    border-width: 1px;
-    border-color: var(--border-subtle);
+    border-width: 2px;
+    border-color: var(--accent-blue);
 }
 
 /* --- Action Button --- */
@@ -308,11 +345,7 @@
 }
 
 .action-btn:hover {
-    background-color: #5193ff;
-}
-
-.action-btn:active {
-    background-color: #2a70e0;
+    background-color: var(--accent-purple);
 }
 
 /* --- Link Button --- */
@@ -320,15 +353,15 @@
     height: 30px;
     font-size: 12px;
     color: var(--accent-blue);
-    background-color: rgba(63, 138, 255, 0.1);
+    background-color: var(--glow-pink);
     border-width: 1px;
-    border-color: rgba(63, 138, 255, 0.3);
+    border-color: var(--accent-blue);
     border-radius: var(--radius-sm);
     transition: background-color 0.15s;
 }
 
 .link-btn:hover {
-    background-color: rgba(63, 138, 255, 0.2);
+    background-color: rgba(255, 107, 157, 0.2);
 }
 
 /* --- Setup Button --- */
@@ -337,7 +370,7 @@
     font-size: 15px;
     -unity-font-style: bold;
     color: #ffffff;
-    background-color: var(--accent-green);
+    background-color: var(--accent-blue);
     border-width: 0;
     border-radius: var(--radius-lg);
     margin-top: 4px;
@@ -345,11 +378,7 @@
 }
 
 .setup-btn:hover {
-    background-color: var(--accent-green-hover);
-}
-
-.setup-btn:active {
-    background-color: #3d9140;
+    background-color: var(--accent-purple);
 }
 
 /* --- Developer Mode --- */
@@ -363,7 +392,7 @@
 
 .devmode-toggle {
     color: var(--text-dim);
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--glow-purple);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -371,12 +400,12 @@
 
 .devmode-toggle:hover {
     color: var(--text-secondary);
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--bg-hover);
 }
 
 .devmode-toggle.expanded {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
+    background-color: var(--bg-hover);
+    color: var(--accent-purple);
 }
 
 .dev-btn {
@@ -391,10 +420,10 @@
 }
 
 .dev-btn:hover {
-    background-color: #444;
+    background-color: var(--bg-hover);
 }
 
-/* --- PropertyField Override (Dark theme) --- */
+/* --- PropertyField Override --- */
 .step-body > PropertyField {
     margin-bottom: 2px;
 }

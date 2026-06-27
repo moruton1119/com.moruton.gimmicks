@@ -1,36 +1,44 @@
 /* ============================================
-   MetamorphoseWindow — Tokyo Night Inspired
+   MetamorphoseWindow — Magical Girl Theme
+   🌙 Dark (Moonlight) / ☀️ Light (Daylight)
    ============================================ */
 
+/* ═══════════════════════════════════════════════
+   DARK THEME (Moonlight) — Default
+   ═══════════════════════════════════════════════ */
 .app-root {
-    /* Tokyo Night palette */
-    --bg-night: #1a1b26;
-    --bg-deep: #16161e;
-    --bg-elevated: #24283b;
-    --bg-hover: #2f334d;
-    --bg-input: #1f2335;
-    --topbar-bg: #1f2335;
-    --sidebar-bg: #16161e;
-    --banner-bg: #131420;
+    /* Moonlight palette */
+    --bg-night: #1a0e2e;
+    --bg-deep: #13091f;
+    --bg-elevated: #241638;
+    --bg-hover: #2e1d4a;
+    --bg-input: #1c1130;
+    --topbar-bg: #241638;
+    --sidebar-bg: #13091f;
+    --banner-bg: #0f0719;
 
-    --accent: #7aa2f7;
-    --accent-hover: #89b4fa;
-    --accent-bg: rgba(122, 162, 247, 0.12);
-    --accent-border: rgba(122, 162, 247, 0.3);
-    --accent-purple: #bb9af7;
-    --accent-green: #9ece6a;
-    --accent-orange: #e0af68;
-    --accent-red: #f7768e;
+    --accent: #ff6b9d;          /* Hot pink */
+    --accent-hover: #ff8fb8;     /* Lighter pink */
+    --accent-bg: rgba(255, 107, 157, 0.12);
+    --accent-border: rgba(255, 107, 157, 0.3);
+    --accent-purple: #c4a8ff;    /* Lavender */
+    --accent-green: #b4f8c8;     /* Mint sparkle */
+    --accent-orange: #ffd93d;    /* Star gold */
+    --accent-red: #ff5e7e;
+    --accent-cyan: #7defff;      /* Magic cyan */
 
-    --border: #2a2e42;
-    --border-subtle: #22253a;
-    --text: #c0caf5;
-    --text-secondary: #9aa5ce;
-    --text-dim: #565f89;
+    --border: #3a2658;
+    --border-subtle: #2d1b4a;
+    --text: #f0e6ff;
+    --text-secondary: #c4b8e0;
+    --text-dim: #7a6a9e;
 
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    --glow-pink: rgba(255, 107, 157, 0.15);
+    --glow-purple: rgba(196, 168, 255, 0.12);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
 
     flex: 1;
     flex-direction: column;
@@ -39,24 +47,79 @@
     font-size: 13px;
 }
 
-/* --- Top Bar --- */
+/* ═══════════════════════════════════════════════
+   LIGHT THEME (Daylight) — Add .light-theme class
+   ═══════════════════════════════════════════════ */
+.app-root.light-theme {
+    --bg-night: #fff5f8;
+    --bg-deep: #fce4ec;
+    --bg-elevated: #ffffff;
+    --bg-hover: #f3d4e6;
+    --bg-input: #fdf0f5;
+    --topbar-bg: #ffffff;
+    --sidebar-bg: #fce4ec;
+    --banner-bg: #f8d7e8;
+
+    --accent: #e91e63;           /* Strong pink */
+    --accent-hover: #f06292;      /* Soft pink */
+    --accent-bg: rgba(233, 30, 99, 0.08);
+    --accent-border: rgba(233, 30, 99, 0.25);
+    --accent-purple: #9c27b0;     /* Royal purple */
+    --accent-green: #66bb6a;      /* Fresh green */
+    --accent-orange: #ffa726;     /* Warm gold */
+    --accent-red: #ef5350;
+    --accent-cyan: #26c6da;       /* Bright cyan */
+
+    --border: #e8c4d8;
+    --border-subtle: #f0d4e2;
+    --text: #4a1942;
+    --text-secondary: #7b4a6e;
+    --text-dim: #b0809e;
+
+    --glow-pink: rgba(233, 30, 99, 0.06);
+    --glow-purple: rgba(156, 39, 176, 0.05);
+}
+
+/* ═══════════════════════════════════════════════
+   Top Bar
+   ═══════════════════════════════════════════════ */
 .topbar {
-    height: 42px;
+    height: 44px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding-left: 16px;
     padding-right: 12px;
     background-color: var(--topbar-bg);
-    border-bottom-width: 1px;
-    border-bottom-color: var(--border);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--accent);
 }
 
 .topbar-title {
     -unity-font-style: bold;
-    font-size: 15px;
-    color: #fff;
-    letter-spacing: 0.3px;
+    font-size: 16px;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 var(--glow-pink);
+}
+
+/* --- Theme Toggle --- */
+.theme-toggle {
+    width: 36px;
+    height: 28px;
+    font-size: 16px;
+    color: var(--accent);
+    background-color: var(--accent-bg);
+    border-width: 1px;
+    border-color: var(--accent-border);
+    border-radius: var(--radius-sm);
+    margin-left: 8px;
+    margin-right: 4px;
+    transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    background-color: var(--glow-pink);
 }
 
 /* --- Language Bar --- */
@@ -88,12 +151,14 @@
 }
 
 .lang-btn.selected {
-    color: #fff;
+    color: #ffffff;
     background-color: var(--accent);
     -unity-font-style: bold;
 }
 
-/* --- Main Area --- */
+/* ═══════════════════════════════════════════════
+   Main Area
+   ═══════════════════════════════════════════════ */
 .main-area {
     flex: 1;
     flex-direction: row;
@@ -104,8 +169,8 @@
 .sidebar {
     width: 56px;
     background-color: var(--sidebar-bg);
-    border-right-width: 1px;
-    border-right-color: var(--border);
+    border-right-width: 2px;
+    border-right-color: var(--accent);
     flex-direction: column;
     align-items: center;
     padding-top: 10px;
@@ -117,17 +182,18 @@
     -unity-font-style: bold;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: var(--text-dim);
+    color: var(--accent);
     margin-bottom: 10px;
     -unity-text-align: middle-center;
 }
 
 .sidebar-divider {
     width: 32px;
-    height: 1px;
-    background-color: var(--border);
+    height: 2px;
+    background-color: var(--accent-border);
     margin-top: 8px;
     margin-bottom: 8px;
+    border-radius: 1px;
 }
 
 .sidebar-spacer {
@@ -142,20 +208,23 @@
     -unity-font-style: bold;
     color: var(--text-dim);
     background-color: var(--bg-elevated);
-    border-width: 0;
+    border-width: 1px;
+    border-color: var(--border-subtle);
     border-radius: var(--radius-md);
     margin-bottom: 6px;
-    transition: background-color 0.15s, color 0.15s, transform 0.1s;
+    transition: background-color 0.15s, color 0.15s;
 }
 
 .nav-num:hover {
     background-color: var(--bg-hover);
     color: var(--text);
+    border-color: var(--accent-border);
 }
 
 .nav-num.active {
-    color: #fff;
+    color: #ffffff;
     background-color: var(--accent);
+    border-color: var(--accent);
 }
 
 /* --- Link Nav Buttons (Booth, Discord, Dev) --- */
@@ -165,7 +234,8 @@
     font-size: 11px;
     color: var(--text-secondary);
     background-color: var(--bg-elevated);
-    border-width: 0;
+    border-width: 1px;
+    border-color: var(--border-subtle);
     border-radius: var(--radius-md);
     margin-bottom: 4px;
     transition: background-color 0.15s, color 0.15s;
@@ -182,15 +252,17 @@
 
 .dev-btn:hover {
     color: var(--accent-orange);
-    background-color: rgba(224, 175, 104, 0.12);
+    background-color: rgba(255, 217, 61, 0.12);
 }
 
 .dev-btn.active {
-    color: #fff;
+    color: #ffffff;
     background-color: var(--accent-orange);
 }
 
-/* --- Content Panel --- */
+/* ═══════════════════════════════════════════════
+   Content Panel
+   ═══════════════════════════════════════════════ */
 .content-panel {
     flex: 1;
     background-color: var(--bg-night);
@@ -218,7 +290,9 @@
     line-height: 1.5;
 }
 
-/* --- Field Group --- */
+/* ═══════════════════════════════════════════════
+   Field Group — Magical Girl Card
+   ═══════════════════════════════════════════════ */
 .field-group {
     background-color: var(--bg-elevated);
     border-radius: var(--radius-md);
@@ -237,8 +311,8 @@
     color: var(--accent-purple);
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgba(187, 154, 247, 0.15);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--accent-border);
 }
 
 /* --- Field Slot --- */
@@ -251,9 +325,11 @@
     min-width: 100px;
 }
 
-/* --- Part Section --- */
+/* ═══════════════════════════════════════════════
+   Part Section
+   ═══════════════════════════════════════════════ */
 .part-section {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: var(--glow-purple);
     border-radius: var(--radius-md);
     padding: 14px;
     margin-bottom: 10px;
@@ -265,7 +341,7 @@
 .part-label {
     font-size: 11px;
     -unity-font-style: bold;
-    color: var(--text-dim);
+    color: var(--accent);
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -286,14 +362,16 @@
     margin-right: 4px;
     margin-bottom: 4px;
     border-radius: var(--radius-sm);
-    border-width: 1px;
-    border-color: var(--border);
+    border-width: 2px;
+    border-color: var(--accent-border);
     object-fit: scale-down;
 }
 
-/* --- Fade Section --- */
+/* ═══════════════════════════════════════════════
+   Fade Section
+   ═══════════════════════════════════════════════ */
 .fade-section {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: var(--glow-purple);
     border-radius: var(--radius-md);
     padding: 14px;
     margin-bottom: 10px;
@@ -310,7 +388,9 @@
     text-transform: uppercase;
 }
 
-/* --- Colabo Shop --- */
+/* ═══════════════════════════════════════════════
+   Colabo Shop
+   ═══════════════════════════════════════════════ */
 .colabo-preview {
     justify-content: center;
     align-items: center;
@@ -322,8 +402,8 @@
     width: 128px;
     height: 128px;
     border-radius: var(--radius-md);
-    border-width: 1px;
-    border-color: var(--border);
+    border-width: 2px;
+    border-color: var(--accent-border);
 }
 
 .link-btn {
@@ -339,7 +419,7 @@
 }
 
 .link-btn:hover {
-    background-color: rgba(122, 162, 247, 0.2);
+    background-color: var(--glow-pink);
 }
 
 /* --- HelpBox Override --- */
@@ -349,7 +429,9 @@
     margin-bottom: 10px;
 }
 
-/* --- Dev Page --- */
+/* ═══════════════════════════════════════════════
+   Dev Page
+   ═══════════════════════════════════════════════ */
 .dev-page .field-slot {
     margin-bottom: 3px;
 }
@@ -370,8 +452,8 @@
     min-width: 90px;
     flex: 1;
     font-size: 11px;
-    color: #fff;
-    background-color: var(--accent-green);
+    color: #ffffff;
+    background-color: var(--accent);
     border-width: 0;
     border-radius: var(--radius-sm);
     -unity-font-style: bold;
@@ -381,7 +463,7 @@
 }
 
 .part-toggle:hover {
-    opacity: 0.85;
+    background-color: var(--accent-hover);
 }
 
 .part-toggle-off {
@@ -389,11 +471,13 @@
     background-color: var(--bg-input);
 }
 
-/* --- Banner --- */
+/* ═══════════════════════════════════════════════
+   Banner
+   ═══════════════════════════════════════════════ */
 .banner {
     background-color: var(--banner-bg);
-    border-top-width: 1px;
-    border-top-color: var(--border);
+    border-top-width: 2px;
+    border-top-color: var(--accent-border);
     padding: 12px 16px 14px;
 }
 

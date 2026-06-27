@@ -41,6 +41,7 @@ namespace Moruton.Gimmicks.Editor
         private bool _uiBuilt;
         private int _selectedLanguage;
         private int _currentPage;
+        private bool _isLightTheme;
         private Color _lastGimmickColor;
         private float _previewRefreshTime = -1f;
         private readonly Dictionary<Object, Texture2D> _previewTexCache = new();
@@ -143,6 +144,7 @@ namespace Moruton.Gimmicks.Editor
         private void OnEnable()
         {
             _selectedLanguage = EditorPrefs.GetInt("MetamorphoseEditor_Language", 0);
+            _isLightTheme = EditorPrefs.GetBool("MetamorphoseEditor_LightTheme", false);
             LocalizationManager.Load("Metamorphose", _languageCodes[_selectedLanguage]);
             EditorApplication.update += OnEditorUpdate;
         }
@@ -200,6 +202,9 @@ namespace Moruton.Gimmicks.Editor
             SetupButtonCallbacks();
             ApplyLocalization(_root);
 
+            // Apply theme
+            ApplyTheme();
+
             _root.Bind(_so);
             UpdateAllPreviews();
 
@@ -224,6 +229,30 @@ namespace Moruton.Gimmicks.Editor
                 bool hasShop = _target.colaboShopTex != null || !string.IsNullOrEmpty(_target.colaboShopInfo);
                 shopSection.style.display = hasShop ? DisplayStyle.Flex : DisplayStyle.None;
             }
+        }
+
+        #endregion
+
+        #region Theme
+
+        private void ApplyTheme()
+        {
+            if (_root == null) return;
+
+            _root.EnableInClassList("light-theme", _isLightTheme);
+
+            var toggle = _root.Q<Button>("theme-toggle");
+            if (toggle != null)
+            {
+                toggle.text = _isLightTheme ? "☀️" : "🌙";
+            }
+        }
+
+        private void ToggleTheme()
+        {
+            _isLightTheme = !_isLightTheme;
+            EditorPrefs.SetBool("MetamorphoseEditor_LightTheme", _isLightTheme);
+            ApplyTheme();
         }
 
         #endregion
@@ -779,6 +808,11 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupButtonCallbacks()
         {
+            // Theme toggle
+            var themeBtn = _root.Q<Button>("theme-toggle");
+            if (themeBtn != null)
+                themeBtn.clicked += ToggleTheme;
+
             for (int i = 0; i < _languageCodes.Length; i++)
             {
                 int index = i;

@@ -5,13 +5,18 @@
 
     <!-- ===== Top Bar ===== -->
     <ui:VisualElement name="topbar" class="topbar">
-      <ui:Label name="topbar-title" class="topbar-title" text="Metamorphose Setup" />
-      <ui:VisualElement name="lang-bar" class="lang-bar">
-        <ui:Button name="lang-btn-0" class="lang-btn selected" />
-        <ui:Button name="lang-btn-1" class="lang-btn" />
-        <ui:Button name="lang-btn-2" class="lang-btn" />
-        <ui:Button name="lang-btn-3" class="lang-btn" />
-        <ui:Button name="lang-btn-4" class="lang-btn" />
+      <ui:VisualElement class="topbar-left" style="flex-direction: row; align-items: center;">
+        <ui:Label name="topbar-title" class="topbar-title" text="✦ Metamorphose Setup" />
+      </ui:VisualElement>
+      <ui:VisualElement class="topbar-right" style="flex-direction: row; align-items: center;">
+        <ui:Button name="theme-toggle" class="theme-toggle" text="🌙" tooltip="Toggle Light/Dark Theme" />
+        <ui:VisualElement name="lang-bar" class="lang-bar">
+          <ui:Button name="lang-btn-0" class="lang-btn selected" />
+          <ui:Button name="lang-btn-1" class="lang-btn" />
+          <ui:Button name="lang-btn-2" class="lang-btn" />
+          <ui:Button name="lang-btn-3" class="lang-btn" />
+          <ui:Button name="lang-btn-4" class="lang-btn" />
+        </ui:VisualElement>
       </ui:VisualElement>
     </ui:VisualElement>
 
