@@ -31,7 +31,7 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════════════════════
 
         private const int PreviewTexSize = 128;
-        private const int TotalPages = 4;
+        private const int TotalPages = 2; // メイン + Dev
 
         private readonly string[] _languageCodes = { "ja", "en", "ko", "it", "es" };
 
@@ -63,9 +63,8 @@ namespace Moruton.Gimmicks.Editor
 
         private static readonly string[][] PageFieldPaths =
         {
-            new[] { "avatar", "offTargets", "gimmickColor" },
-            new[] { "headItems", "bodyItems", "handItems", "legItems" },
-            new[] { "fadeHeadItems", "fadeBodyItems", "fadeArmItems", "fadeLegItems" },
+            // Page 0 (メインページ) — 変身前、変身後、ギミック色
+            new[] { "offTargets", "gimmickColor", "avatar", "headItems", "bodyItems", "handItems", "legItems" },
         };
 
         private static readonly (string path, string previewName)[] PreviewBindings =
@@ -359,31 +358,38 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupNavigation()
         {
-            for (int i = 0; i < TotalPages; i++)
-            {
-                int pageIdx = i;
-                var btn = _root.Q<Button>($"nav-{i}");
-                if (btn != null)
-                    btn.clicked += () => SwitchPage(pageIdx);
-            }
+            // Dev ボタンでメインページ ↔ Devページを切替
+            var devBtn = _root.Q<Button>("nav-3");
+            if (devBtn != null)
+                devBtn.clicked += () =>
+                {
+                    bool isDev = _currentPage == 3;
+                    if (isDev)
+                    {
+                        // Dev → メイン
+                        var devPage = _root.Q<VisualElement>("page-3");
+                        if (devPage != null) devPage.style.display = DisplayStyle.None;
+                        var mainPage = _root.Q<VisualElement>("page-main");
+                        if (mainPage != null) mainPage.style.display = DisplayStyle.Flex;
+                        devBtn.RemoveFromClassList("active");
+                        _currentPage = 0;
+                    }
+                    else
+                    {
+                        // メイン → Dev
+                        var mainPage = _root.Q<VisualElement>("page-main");
+                        if (mainPage != null) mainPage.style.display = DisplayStyle.None;
+                        var devPage = _root.Q<VisualElement>("page-3");
+                        if (devPage != null) devPage.style.display = DisplayStyle.Flex;
+                        devBtn.AddToClassList("active");
+                        _currentPage = 3;
+                    }
+                };
         }
 
         private void SwitchPage(int pageIndex)
         {
-            if (_currentPage == pageIndex) return;
-
-            var oldBtn = _root.Q<Button>($"nav-{_currentPage}");
-            if (oldBtn != null) oldBtn.RemoveFromClassList("active");
-
-            var newBtn = _root.Q<Button>($"nav-{pageIndex}");
-            if (newBtn != null) newBtn.AddToClassList("active");
-
-            var oldPage = _root.Q<VisualElement>($"page-{_currentPage}");
-            if (oldPage != null) oldPage.style.display = DisplayStyle.None;
-
-            var newPage = _root.Q<VisualElement>($"page-{pageIndex}");
-            if (newPage != null) newPage.style.display = DisplayStyle.Flex;
-
+            // 互換性のため残す（現在はメイン/Devの2ページのみ）
             _currentPage = pageIndex;
         }
 
@@ -858,25 +864,19 @@ namespace Moruton.Gimmicks.Editor
                 if (btn != null) btn.text = langNames[i];
             }
 
-            root.Q<Label>("page0-desc").text = L("step1_description");
-            root.Q<Label>("fg0-avatar").text = L("step1_avatar_label");
-            SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
-            root.Q<Label>("fg0-off").text = L("step1_before_clothes_label");
-            root.Q<Label>("fg0-color").text = L("step3_color_label");
-
-            root.Q<Label>("page1-desc").text = L("step2_description");
-            root.Q<Label>("fg1-parts").text = L("step2_parts_title");
+            // メインページのラベル
+            root.Q<Label>("fg-off-title").text = L("step1_before_clothes_label");
+            root.Q<Label>("fg-after-title").text = L("step2_parts_title");
             root.Q<HelpBox>("page1-help").text = L("step2_parts_help");
             root.Q<Label>("label-head").text = L("step2_head_items");
             root.Q<Label>("label-body").text = L("step2_body_items");
             root.Q<Label>("label-hand").text = L("step2_hand_items");
             root.Q<Label>("label-leg").text = L("step2_leg_items");
+            root.Q<Label>("fg-color-title").text = L("step3_color_label");
+            root.Q<Label>("fg-avatar-title").text = L("step1_avatar_label");
+            SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
 
-            root.Q<Label>("page2-desc").text = L("step4_description");
-            root.Q<Button>("btn-colabo-shop").text = LC("colabo_shop_button");
-            root.Q<HelpBox>("step4-colabo-help").text = LC("colabo_info");
-            root.Q<Label>("fg2-fade").text = L("step4_fade_fx_title");
-
+            // Dev ページのラベル
             root.Q<Label>("fg3-basic").text = LC("dev_basic_label");
             root.Q<Label>("fg3-targets").text = LC("dev_target_label");
             root.Q<Label>("fg3-fade-transforms").text = LC("dev_fade_transform_label");

@@ -510,3 +510,61 @@
     font-size: 11px;
 }
 
+/* ═══════════════════════════════════════════════
+   Parts Grid — 部位カードの自動折り返しレイアウト
+   ═══════════════════════════════════════════════ */
+.parts-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 8px;
+}
+
+.part-card {
+    flex: 1;
+    min-width: 140px;
+    max-width: 260px;
+    margin: 4px;
+    padding: 12px;
+    flex-direction: column;
+    background-color: var(--bg-elevated);
+    border-radius: var(--radius-md);
+    border-width: 1px;
+    border-color: var(--border-subtle);
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.part-card:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-hover);
+}
+
+.part-card-label {
+    font-size: 13px;
+    -unity-font-style: bold;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--accent-border);
+    -unity-text-align: middle-center;
+}
+
+/* part-card の中の PropertyField を少しコンパクトに */
+.part-card .field-slot {
+    margin-bottom: 2px;
+}
+
+.part-card .preview-row {
+    justify-content: center;
+    margin-top: 6px;
+}
+
+/* ── outfit-section（変身前の衣装） ── */
+.outfit-section {
+    margin-bottom: 16px;
+}
+
