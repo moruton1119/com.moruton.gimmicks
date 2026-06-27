@@ -545,3 +545,204 @@
     color: var(--text-dim);
     font-size: 11px;
 }
+
+/* ═══════════════════════════════════════════════
+   LIGHT THEME EXPLICIT OVERRIDES
+   .app-root.light-theme 配下の全要素の色を明示的に上書き
+   ═══════════════════════════════════════════════ */
+
+/* Content panel */
+.app-root.light-theme .content-panel {
+    background-color: #fff0f5;
+}
+
+/* Pages container */
+.app-root.light-theme .pages-container {
+    background-color: #fff0f5;
+}
+
+/* Page description */
+.app-root.light-theme .page-desc {
+    color: #6d4c7d;
+}
+
+/* Field Group */
+.app-root.light-theme .field-group {
+    background-color: #ffffff;
+    border-color: #f0d4e2;
+}
+
+.app-root.light-theme .field-group-title {
+    color: #9c27b0;
+    border-bottom-color: rgba(212, 160, 23, 0.2);
+}
+
+/* Part Section */
+.app-root.light-theme .part-section {
+    background-color: #fdf0f5;
+    border-color: #f0d4e2;
+}
+
+.app-root.light-theme .part-label {
+    color: #d4a017;
+}
+
+/* Fade Section */
+.app-root.light-theme .fade-section {
+    background-color: #fdf0f5;
+    border-color: #f0d4e2;
+}
+
+.app-root.light-theme .fade-part-label {
+    color: #ff8f00;
+}
+
+/* Dev Page field slots */
+.app-root.light-theme .dev-page .field-slot > PropertyField > .unity-property-field__label {
+    color: #a0889e;
+}
+
+/* Field Slot labels */
+.app-root.light-theme .field-slot > PropertyField > .unity-property-field__label {
+    color: #6d4c7d;
+}
+
+/* Nav buttons in light mode */
+.app-root.light-theme .nav-num {
+    background-color: #ffffff;
+    color: #a0889e;
+    border-color: #e8c4d8;
+}
+
+.app-root.light-theme .nav-num:hover {
+    background-color: #f3d4e6;
+    color: #4a1942;
+}
+
+.app-root.light-theme .nav-num.active {
+    background-color: #d4a017;
+    color: #ffffff;
+    border-color: #d4a017;
+}
+
+/* Link buttons */
+.app-root.light-theme .nav-link {
+    background-color: #ffffff;
+    color: #6d4c7d;
+    border-color: #e8c4d8;
+}
+
+.app-root.light-theme .nav-link:hover {
+    background-color: #f3d4e6;
+}
+
+/* Dev button */
+.app-root.light-theme .dev-btn {
+    color: #ff8f00;
+}
+
+.app-root.light-theme .dev-btn:hover {
+    background-color: rgba(255, 143, 0, 0.12);
+}
+
+.app-root.light-theme .dev-btn.active {
+    background-color: #ff8f00;
+    color: #ffffff;
+}
+
+/* Part toggle */
+.app-root.light-theme .part-toggle {
+    background-color: #d4a017;
+}
+
+.app-root.light-theme .part-toggle:hover {
+    background-color: #e6b800;
+}
+
+.app-root.light-theme .part-toggle-off {
+    background-color: #fdf0f5;
+    color: #a0889e;
+}
+
+/* Topbar */
+.app-root.light-theme .topbar {
+    background-color: #ffffff;
+    border-bottom-color: #d4a017;
+}
+
+.app-root.light-theme .topbar-title {
+    color: #d4a017;
+}
+
+/* Language bar */
+.app-root.light-theme .lang-bar {
+    background-color: #fdf0f5;
+}
+
+.app-root.light-theme .lang-btn {
+    color: #a0889e;
+}
+
+.app-root.light-theme .lang-btn:hover {
+    color: #4a1942;
+    background-color: #f3d4e6;
+}
+
+.app-root.light-theme .lang-btn.selected {
+    background-color: #d4a017;
+    color: #ffffff;
+}
+
+/* Sidebar */
+.app-root.light-theme .sidebar {
+    background-color: #fce4ec;
+    border-right-color: #d4a017;
+}
+
+.app-root.light-theme .sidebar-header {
+    color: #d4a017;
+}
+
+/* Banner */
+.app-root.light-theme .banner {
+    background-color: #f8d7e8;
+    border-top-color: rgba(212, 160, 23, 0.3);
+}
+
+.app-root.light-theme .banner-card {
+    background-color: #ffffff;
+    border-color: #e8c4d8;
+}
+
+.app-root.light-theme .banner-card:hover {
+    border-color: #d4a017;
+    background-color: #fdf0f5;
+}
+
+.app-root.light-theme .banner-card-label {
+    color: #4a1942;
+}
+
+/* Theme toggle */
+.app-root.light-theme .theme-toggle {
+    color: #d4a017;
+    background-color: rgba(212, 160, 23, 0.08);
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Link button */
+.app-root.light-theme .link-btn {
+    color: #d4a017;
+    background-color: rgba(212, 160, 23, 0.08);
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Preview thumb */
+.app-root.light-theme .preview-thumb {
+    border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Colabo */
+.app-root.light-theme .colabo-shop-image {
+    border-color: rgba(212, 160, 23, 0.3);
+}
