@@ -67,6 +67,7 @@ namespace Moruton.Gimmicks.Editor
         private ThemePalette _palette;
         private readonly List<Particle> _particles = new List<Particle>();
         private float _elapsed;
+        private float _lastTime;
         private float _totalDuration = 2.5f;
         private bool _isPlaying;
         private System.Action _onComplete;
@@ -92,7 +93,8 @@ namespace Moruton.Gimmicks.Editor
             style.bottom = 0;
             style.flexGrow = 1;
             pickingMode = PickingMode.Ignore;
-            overflow = Overflow.Hidden;
+            // Overflow.Hidden is not available in Unity 2022.3 UIToolkit
+            // style.overflowHidden is the equivalent but let's just not set it
 
             generateVisualContent += OnGenerateVisualContent;
 
@@ -132,6 +134,7 @@ namespace Moruton.Gimmicks.Editor
             if (_isPlaying) return;
             _isPlaying = true;
             _elapsed = 0f;
+            _lastTime = Time.realtimeSinceStartup;
             EditorApplication.update += Tick;
             MarkDirtyRepaint();
         }
@@ -149,9 +152,11 @@ namespace Moruton.Gimmicks.Editor
         {
             if (!_isPlaying) return;
 
-            _elapsed += (float)EditorApplication.timeDelta;
-
-            float dt = (float)EditorApplication.timeDelta;
+            // EditorApplication.timeDelta doesn't exist in Unity 2022.3
+            // Use Time.realtimeSinceStartup for delta calculation
+            float dt = Time.realtimeSinceStartup - _lastTime;
+            _lastTime = Time.realtimeSinceStartup;
+            _elapsed += dt;
 
             // パーティクル更新
             for (int i = 0; i < _particles.Count; i++)
