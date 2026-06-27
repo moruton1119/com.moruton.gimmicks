@@ -71,21 +71,18 @@ namespace Moruton.Gimmicks
         [Header("バナー広告URL")]
         [SerializeField] public string[] bannerAdUrls;
 
-        /// <summary>
-        /// エディターのUIテーマ（Prefabごとに指定可能）。Autoの場合はEditorPrefsの設定に従う。
-        /// </summary>
-        public enum EditorThemeMode
+        [Header("エディターUIテーマ")]
+        [Tooltip("エディターのUIテーマID。\"Auto\"の場合は手動切替の設定に従います。Devページで変更可能。")]
+        [SerializeField] private string editorTheme = "Auto";
+
+        /// <summary>現在のエディターテーマ設定（文字列ID）</summary>
+        public string ThemeSetting => editorTheme;
+
+        /// <summary>エディターテーマを設定</summary>
+        public void SetEditorTheme(string themeId)
         {
-            Auto = 0,
-            Moonlight = 1,
-            Daylight = 2
+            editorTheme = themeId;
         }
-
-        [Tooltip("エディターのUIテーマ。Autoの場合は手動切替の設定に従います。")]
-        [SerializeField] private EditorThemeMode editorTheme = EditorThemeMode.Auto;
-
-        /// <summary>現在のエディターテーマ設定</summary>
-        public EditorThemeMode ThemeSetting => editorTheme;
 
         [SerializeField] public bool showHead = true;
         [SerializeField] public bool showBody = true;

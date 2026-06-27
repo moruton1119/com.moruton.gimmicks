@@ -42,6 +42,7 @@ namespace Moruton.Gimmicks.Editor
         private int _selectedLanguage;
         private int _currentPage;
         private bool _isLightTheme;
+        private string _currentThemeId;
         private bool _hasPlayedOpening;
         private Color _lastGimmickColor;
         private float _previewRefreshTime = -1f;
@@ -146,7 +147,7 @@ namespace Moruton.Gimmicks.Editor
         private void OnEnable()
         {
             _selectedLanguage = EditorPrefs.GetInt("MetamorphoseEditor_Language", 0);
-            _isLightTheme = EditorPrefs.GetBool("MetamorphoseEditor_LightTheme", false);
+            _currentThemeId = EditorPrefs.GetString("MetamorphoseEditor_ThemeId", "Auto");
             LocalizationManager.Load("Metamorphose", _languageCodes[_selectedLanguage]);
             EditorApplication.update += OnEditorUpdate;
         }
@@ -249,41 +250,58 @@ namespace Moruton.Gimmicks.Editor
         {
             if (_target == null) return;
 
-            switch (_target.ThemeSetting)
+            string prefabTheme = _target.ThemeSetting;
+            if (!string.IsNullOrEmpty(prefabTheme) && prefabTheme != "Auto")
             {
-                case Metamorphose.EditorThemeMode.Moonlight:
-                    _isLightTheme = false;
-                    break;
-                case Metamorphose.EditorThemeMode.Daylight:
-                    _isLightTheme = true;
-                    break;
-                default: // Auto
-                    _isLightTheme = EditorPrefs.GetBool("MetamorphoseEditor_LightTheme", false);
-                    break;
+                _currentThemeId = prefabTheme;
             }
+            else
+            {
+                _currentThemeId = EditorPrefs.GetString("MetamorphoseEditor_ThemeId", "Moonlight");
+            }
+
+            _isLightTheme = _currentThemeId == "Daylight";
+        }
+
+        private EditorThemeDefinition GetCurrentTheme()
+        {
+            return EditorThemeRegistry.GetTheme(_currentThemeId);
         }
 
         private void ApplyTheme()
         {
             if (_root == null) return;
 
-            // USS クラスを切り替えて、全ての色をUSS変数で制御する
-            _root.EnableInClassList("light-theme", _isLightTheme);
-            rootVisualElement.EnableInClassList("light-theme", _isLightTheme);
+            var theme = GetCurrentTheme();
+
+            // 全ての theme-* クラスを削除
+            foreach (var t in EditorThemeRegistry.Themes)
+            {
+                _root.RemoveFromClassList(t.ussClassName);
+                rootVisualElement.RemoveFromClassList(t.ussClassName);
+            }
+
+            // 現在のテーマのクラスを追加
+            _root.AddToClassList(theme.ussClassName);
+            rootVisualElement.AddToClassList(theme.ussClassName);
+
+            // 互換性: light-theme クラスも維持
+            _root.EnableInClassList("light-theme", theme.id == "Daylight");
+            rootVisualElement.EnableInClassList("light-theme", theme.id == "Daylight");
 
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
             {
-                toggle.text = _isLightTheme ? "☀️" : "🌙";
+                toggle.text = theme.id == "Daylight" ? "☀️" : "🌙";
             }
         }
 
         private void ToggleTheme()
         {
-            _isLightTheme = !_isLightTheme;
-            EditorPrefs.SetBool("MetamorphoseEditor_LightTheme", _isLightTheme);
+            _currentThemeId = _currentThemeId == "Daylight" ? "Moonlight" : "Daylight";
+            EditorPrefs.SetString("MetamorphoseEditor_ThemeId", _currentThemeId);
+            _isLightTheme = _currentThemeId == "Daylight";
 
-            // Prefabの設定も更新（Auto → 明示的設定に切り替え）
             if (_target != null)
             {
                 Undo.RecordObject(_target, "Change Editor Theme");
@@ -291,9 +309,7 @@ namespace Moruton.Gimmicks.Editor
                 var prop = _so.FindProperty("editorTheme");
                 if (prop != null)
                 {
-                    prop.enumValueIndex = _isLightTheme
-                        ? (int)Metamorphose.EditorThemeMode.Daylight
-                        : (int)Metamorphose.EditorThemeMode.Moonlight;
+                    prop.stringValue = _currentThemeId;
                     _so.ApplyModifiedProperties();
                 }
             }
@@ -319,7 +335,8 @@ namespace Moruton.Gimmicks.Editor
             _hasPlayedOpening = true;
 
             // MagicalOpeningEffect を生成してルートに被せる
-            _openingEffect = new MagicalOpeningEffect(_isLightTheme, onComplete: () =>
+            var theme = GetCurrentTheme();
+            _openingEffect = new MagicalOpeningEffect(theme.openingPalette, onComplete: () =>
             {
                 _openingEffect = null;
             });

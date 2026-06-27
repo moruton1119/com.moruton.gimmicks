@@ -101,9 +101,9 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════
         //  初期化
         // ═══════════════════════════════════════════
-        public MagicalOpeningEffect(bool isLightTheme, System.Action onComplete = null)
+        public MagicalOpeningEffect(MagicalOpeningEffect.ThemePalette palette, System.Action onComplete = null)
         {
-            _palette = isLightTheme ? ThemePalette.Daylight : ThemePalette.Moonlight;
+            _palette = palette;
             _onComplete = onComplete;
 
             style.position = Position.Absolute;

@@ -1,0 +1,25 @@
+/* ═══════════════════════════════════════════════
+   Moonlight Theme — Dark Magical Girl
+   ═══════════════════════════════════════════════ */
+
+/* Moonlight はデフォルト (.app-root 直下) で既に定義済み。
+   このファイルは明示的なオーバーライド用。 */
+
+.theme-moonlight .content-panel {
+    background-color: #1a0e2e;
+}
+
+.theme-moonlight .pages-container {
+    background-color: #1a0e2e;
+}
+
+.theme-moonlight .field-group {
+    background-color: #241638;
+    border-color: #2d1b4a;
+}
+
+.theme-moonlight .field-group-title {
+    color: #c4a8ff;
+    border-bottom-color: rgba(255, 107, 157, 0.15);
+}
+
