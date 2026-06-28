@@ -350,36 +350,36 @@ namespace Moruton.Gimmicks.Editor
             float circleRadius = minDim * 0.12f; // 丸の半径
             float maxRadius = minDim * 0.5f;     // 飛んでいく最大距離
 
+            // ★ 全sparkleを必ず描画する（スキップしない）
+            // 透明度0でも頂点を書き込むことでallocate数と一致させる
             int count = _sparkles.Count;
-            // 透明なものはスキップ
-            int visibleCount = 0;
-            for (int i = 0; i < count; i++)
-            {
-                if (_sparkles[i].life < 1f && _sparkles[i].distance > 0.01f)
-                    visibleCount++;
-            }
+            if (count == 0) return;
 
-            if (visibleCount == 0) return;
-
-            var mesh = ctx.Allocate(4 * visibleCount, 6 * visibleCount);
-            int meshIdx = 0;
+            var mesh = ctx.Allocate(4 * count, 6 * count);
 
             for (int i = 0; i < count; i++)
             {
                 var s = _sparkles[i];
-                if (s.life >= 1f || s.distance <= 0.01f) continue;
 
-                // 中心からの距離
-                float dist = circleRadius + s.distance * (maxRadius - circleRadius);
+                // 描画データを計算（条件に関わらず必ず頂点を書く）
+                float dist, fadeOpacity, sz;
+                if (s.life >= 1f || s.distance <= 0.01f)
+                {
+                    // 非表示の時は透明にする（頂点は書く）
+                    fadeOpacity = 0f;
+                    dist = 0f;
+                    sz = 0f;
+                }
+                else
+                {
+                    dist = circleRadius + s.distance * (maxRadius - circleRadius);
+                    fadeOpacity = s.opacity * (1f - s.life) * alpha;
+                    sz = s.size * (1f - s.life * 0.3f);
+                }
+
                 float px = cx + Mathf.Cos(s.angle) * dist;
                 float py = cy + Mathf.Sin(s.angle) * dist;
 
-                // フェードアウト（遠ざかるほど薄くなる）
-                float fadeOpacity = s.opacity * (1f - s.life) * alpha;
-                if (fadeOpacity <= 0.01f) continue;
-
-                // ダイヤ型のキラキラ
-                float sz = s.size * (1f - s.life * 0.3f);
                 Color c = _palette.sparkleColor;
                 c.a = fadeOpacity;
 
@@ -388,14 +388,13 @@ namespace Moruton.Gimmicks.Editor
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px, py + sz, 0), tint = c });
                 mesh.SetNextVertex(new Vertex { position = new Vector3(px - sz, py, 0), tint = c });
 
-                ushort bi = (ushort)(meshIdx * 4);
+                ushort bi = (ushort)(i * 4);
                 mesh.SetNextIndex(bi);
                 mesh.SetNextIndex((ushort)(bi + 1));
                 mesh.SetNextIndex((ushort)(bi + 2));
                 mesh.SetNextIndex(bi);
                 mesh.SetNextIndex((ushort)(bi + 2));
                 mesh.SetNextIndex((ushort)(bi + 3));
-                meshIdx++;
             }
         }
 
