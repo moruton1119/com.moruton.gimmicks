@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════ */
 
 /* ★ CSS変数の上書き — Moonlight変数をDaylight用に全上書き */
-.app-root.theme-daylight {
+.theme-daylight {
     --bg-night: #fff0f5;
     --bg-deep: #ffe4ed;
     --bg-elevated: #ffffff;

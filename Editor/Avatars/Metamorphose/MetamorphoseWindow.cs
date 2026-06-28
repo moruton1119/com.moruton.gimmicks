@@ -201,6 +201,9 @@ namespace Moruton.Gimmicks.Editor
 
             _root = visualTree.CloneTree();
 
+            // ★ 初期テーマクラスを即座に付与（USS変数未定義状態を防ぐ）
+            _root.AddToClassList("theme-moonlight");
+
             CreatePropertyFields();
             RegisterPreviewCallbacks();
             SetupNavigation();
