@@ -176,6 +176,7 @@ namespace Moruton.Gimmicks.Editor
             if (!_isPlaying) return;
             _isPlaying = false;
             EditorApplication.update -= Tick;
+            generateVisualContent -= OnGenerateVisualContent; // ★ コールバック解除
             _onComplete?.Invoke();
             RemoveFromHierarchy();
         }
@@ -263,6 +264,9 @@ namespace Moruton.Gimmicks.Editor
         // ═══════════════════════════════════════════
         private void OnGenerateVisualContent(MeshGenerationContext ctx)
         {
+            // ★ 再生中以外は描画しない（安全ガード）
+            if (!_isPlaying) return;
+
             var (globalAlpha, titleScale, _) = GetPhaseValues();
 
             float width = contentRect.width;
@@ -535,6 +539,7 @@ namespace Moruton.Gimmicks.Editor
                 _isPlaying = false;
                 EditorApplication.update -= Tick;
             }
+            generateVisualContent -= OnGenerateVisualContent; // ★ コールバック確実に解除
         }
     }
 }
