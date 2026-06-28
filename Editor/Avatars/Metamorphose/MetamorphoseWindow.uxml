@@ -11,7 +11,6 @@
         <ui:Label name="topbar-title" class="topbar-title" text="✦ Metamorphose Setup" />
       </ui:VisualElement>
       <ui:VisualElement class="topbar-right" style="flex-direction: row; align-items: center;">
-        <ui:Button name="theme-toggle" class="theme-toggle" text="🌙" tooltip="Toggle Light/Dark Theme" />
         <ui:VisualElement name="lang-bar" class="lang-bar">
           <ui:Button name="lang-btn-0" class="lang-btn selected" />
           <ui:Button name="lang-btn-1" class="lang-btn" />
@@ -192,6 +191,7 @@
 
               <ui:Label name="fg3-editor-theme" class="field-group-title" text="✦ Editor Theme" />
               <ui:VisualElement name="page3-slot-editorTheme" class="field-slot" />
+              <ui:Button name="theme-toggle" class="link-btn" text="🌙 Toggle Theme" tooltip="Toggle Light/Dark Theme" />
             </ui:VisualElement>
 
           </ui:VisualElement>
