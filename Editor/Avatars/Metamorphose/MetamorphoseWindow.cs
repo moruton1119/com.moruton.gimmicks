@@ -280,7 +280,7 @@ namespace Moruton.Gimmicks.Editor
             var theme = GetCurrentTheme();
             bool isDaylight = theme.id == "Daylight";
 
-            // ★ テーマクラスを _root, app要素, rootVisualElement の3箇所全てに付与
+            // ★ テーマクラスを付与（USSの細かい styling 用）
             var appElement = _root.Q<VisualElement>("app");
 
             foreach (var t in EditorThemeRegistry.Themes)
@@ -297,53 +297,33 @@ namespace Moruton.Gimmicks.Editor
             _root.EnableInClassList("light-theme", isDaylight);
             rootVisualElement.EnableInClassList("light-theme", isDaylight);
 
-            // ★ イライン色指定 — USSキャッシュ問題を回避する最終奥義
-            // inline style は USS より常に優先される
-            Color bgMain = isDaylight ? new Color(1f, 0.94f, 0.96f) : new Color(0.10f, 0.055f, 0.18f);
-            Color bgPanel = isDaylight ? new Color(1f, 0.88f, 0.93f) : new Color(0.14f, 0.08f, 0.24f);
-            Color bgSidebar = isDaylight ? new Color(1f, 0.84f, 0.89f) : new Color(0.075f, 0.035f, 0.12f);
-            Color bgTopbar = isDaylight ? new Color(1f, 0.89f, 0.93f) : new Color(0.14f, 0.085f, 0.22f);
-            Color bgElevated = isDaylight ? new Color(1f, 1f, 1f) : new Color(0.14f, 0.085f, 0.22f);
-            Color bgBanner = isDaylight ? new Color(1f, 0.89f, 0.93f) : new Color(0.06f, 0.027f, 0.1f);
-            Color textColor = isDaylight ? new Color(0.29f, 0.19f, 0.25f) : new Color(0.94f, 0.90f, 1f);
-            Color textSecondary = isDaylight ? new Color(0.43f, 0.30f, 0.49f) : new Color(0.77f, 0.72f, 0.88f);
-
-            // _root
-            _root.style.backgroundColor = bgMain;
-            _root.style.color = textColor;
+            // ★ 色は全部 EditorThemeDefinition から読む（唯一のソース）
+            _root.style.backgroundColor = theme.windowBg;
+            _root.style.color = theme.windowText;
 
             if (appElement != null)
             {
-                appElement.style.backgroundColor = bgMain;
-                appElement.style.color = textColor;
+                appElement.style.backgroundColor = theme.windowBg;
+                appElement.style.color = theme.windowText;
             }
 
-            // 主要要素を直接着色
-            SetBg(_root, "content-panel", bgPanel);
-            SetBg(_root, "topbar", bgTopbar);
-            SetBg(_root, "sidebar", bgSidebar);
-            SetBg(_root, "pages-container", bgPanel);
-            SetBg(_root, "banner", bgBanner);
+            SetBg(_root, "content-panel", theme.panelBg);
+            SetBg(_root, "topbar", theme.topbarBg);
+            SetBg(_root, "sidebar", theme.sidebarBg);
+            SetBg(_root, "pages-container", theme.panelBg);
+            SetBg(_root, "banner", theme.bannerBg);
 
-            // part-card を着色
             var cards = _root.Query<VisualElement>(className: "part-card").ToList();
             foreach (var card in cards)
-            {
-                card.style.backgroundColor = bgElevated;
-            }
+                card.style.backgroundColor = theme.elevatedBg;
 
-            // field-group を着色
             var groups = _root.Query<VisualElement>(className: "field-group").ToList();
             foreach (var g in groups)
-            {
-                g.style.backgroundColor = bgElevated;
-            }
+                g.style.backgroundColor = theme.elevatedBg;
 
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
-            {
                 toggle.text = isDaylight ? "☀️" : "🌙";
-            }
         }
 
         private void SetBg(VisualElement root, string elementName, Color color)
