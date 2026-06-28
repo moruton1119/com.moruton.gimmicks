@@ -7,6 +7,39 @@
    DARK THEME (Moonlight) — Default
    ═══════════════════════════════════════════════ */
 .app-root {
+    /* Moonlight palette — デフォルト */
+    --bg-night: #1a0e2e;
+    --bg-deep: #13091f;
+    --bg-elevated: #241638;
+    --bg-hover: #2e1d4a;
+    --bg-input: #1c1130;
+    --topbar-bg: #241638;
+    --sidebar-bg: #13091f;
+    --banner-bg: #0f0719;
+
+    --accent: #ff6b9d;
+    --accent-hover: #ff8fb8;
+    --accent-bg: rgba(255, 107, 157, 0.12);
+    --accent-border: rgba(255, 107, 157, 0.3);
+    --accent-purple: #c4a8ff;
+    --accent-green: #b4f8c8;
+    --accent-orange: #ffd93d;
+    --accent-red: #ff5e7e;
+    --accent-cyan: #7defff;
+
+    --border: #3a2658;
+    --border-subtle: #2d1b4a;
+    --text: #f0e6ff;
+    --text-secondary: #c4b8e0;
+    --text-dim: #7a6a9e;
+
+    --glow-pink: rgba(255, 107, 157, 0.15);
+    --glow-purple: rgba(196, 168, 255, 0.12);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+
     flex: 1;
     flex-direction: column;
     background-color: var(--bg-night);

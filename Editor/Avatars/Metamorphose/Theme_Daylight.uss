@@ -2,8 +2,9 @@
    .app-root.theme-daylight 配下の全要素の色を明示的に上書き
    ═══════════════════════════════════════════════ */
 
-/* ★ CSS変数の上書き — Moonlight変数をDaylight用に全上書き */
-.theme-daylight {
+/* ★ CSS変数の上書き — Moonlight変数をDaylight用に全上書き
+   .app-root と .theme-daylight が同じ要素につくことで機能する */
+.app-root.theme-daylight {
     --bg-night: #fff0f5;
     --bg-deep: #ffe4ed;
     --bg-elevated: #ffffff;
