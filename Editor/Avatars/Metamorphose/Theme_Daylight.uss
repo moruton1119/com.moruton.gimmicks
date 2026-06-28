@@ -1,10 +1,11 @@
    LIGHT THEME EXPLICIT OVERRIDES
-   .app-root.theme-daylight 配下の全要素の色を明示的に上書き
+   .theme-daylight 配下の全要素の色を明示的に上書き
    ═══════════════════════════════════════════════ */
 
-/* ★ CSS変数の上書き — Moonlight変数をDaylight用に全上書き
-   .app-root と .theme-daylight が同じ要素につくことで機能する */
-.app-root.theme-daylight {
+/* ★ CSS変数の上書き — Daylight パレット
+   .theme-moonlight と同じ詳細度。
+   後に読み込まれるので Daylight が勝つ。 */
+.theme-daylight {
     --bg-night: #fff0f5;
     --bg-deep: #ffe4ed;
     --bg-elevated: #ffffff;
@@ -36,229 +37,229 @@
 }
 
 /* Content panel */
-.app-root.theme-daylight .content-panel {
+.theme-daylight .content-panel {
     background-color: #fff0f5;
 }
 
 /* Pages container */
-.app-root.theme-daylight .pages-container {
+.theme-daylight .pages-container {
     background-color: #fff0f5;
 }
 
 /* Page description */
-.app-root.theme-daylight .page-desc {
+.theme-daylight .page-desc {
     color: #6d4c7d;
 }
 
 /* Field Group */
-.app-root.theme-daylight .field-group {
+.theme-daylight .field-group {
     background-color: #ffffff;
     border-color: #f0d4e2;
 }
 
-.app-root.theme-daylight .field-group-title {
+.theme-daylight .field-group-title {
     color: #9c27b0;
     border-bottom-color: rgba(212, 160, 23, 0.2);
 }
 
 /* Part Section */
-.app-root.theme-daylight .part-section {
+.theme-daylight .part-section {
     background-color: #fdf0f5;
     border-color: #f0d4e2;
 }
 
-.app-root.theme-daylight .part-label {
+.theme-daylight .part-label {
     color: #d4a017;
 }
 
 /* Fade Section */
-.app-root.theme-daylight .fade-section {
+.theme-daylight .fade-section {
     background-color: #fdf0f5;
     border-color: #f0d4e2;
 }
 
-.app-root.theme-daylight .fade-part-label {
+.theme-daylight .fade-part-label {
     color: #ff8f00;
 }
 
 /* Dev Page field slots */
-.app-root.theme-daylight .dev-page .field-slot > PropertyField > .unity-property-field__label {
+.theme-daylight .dev-page .field-slot > PropertyField > .unity-property-field__label {
     color: #a0889e;
 }
 
 /* Field Slot labels */
-.app-root.theme-daylight .field-slot > PropertyField > .unity-property-field__label {
+.theme-daylight .field-slot > PropertyField > .unity-property-field__label {
     color: #6d4c7d;
 }
 
 /* Nav buttons in light mode */
-.app-root.theme-daylight .nav-num {
+.theme-daylight .nav-num {
     background-color: #ffffff;
     color: #a0889e;
     border-color: #e8c4d8;
 }
 
-.app-root.theme-daylight .nav-num:hover {
+.theme-daylight .nav-num:hover {
     background-color: #f3d4e6;
     color: #4a1942;
 }
 
-.app-root.theme-daylight .nav-num.active {
+.theme-daylight .nav-num.active {
     background-color: #d4a017;
     color: #ffffff;
     border-color: #d4a017;
 }
 
 /* Link buttons */
-.app-root.theme-daylight .nav-link {
+.theme-daylight .nav-link {
     background-color: #ffffff;
     color: #6d4c7d;
     border-color: #e8c4d8;
 }
 
-.app-root.theme-daylight .nav-link:hover {
+.theme-daylight .nav-link:hover {
     background-color: #f3d4e6;
 }
 
 /* Dev button */
-.app-root.theme-daylight .dev-btn {
+.theme-daylight .dev-btn {
     color: #ff8f00;
 }
 
-.app-root.theme-daylight .dev-btn:hover {
+.theme-daylight .dev-btn:hover {
     background-color: rgba(255, 143, 0, 0.12);
 }
 
-.app-root.theme-daylight .dev-btn.active {
+.theme-daylight .dev-btn.active {
     background-color: #ff8f00;
     color: #ffffff;
 }
 
 /* Part toggle */
-.app-root.theme-daylight .part-toggle {
+.theme-daylight .part-toggle {
     background-color: #d4a017;
 }
 
-.app-root.theme-daylight .part-toggle:hover {
+.theme-daylight .part-toggle:hover {
     background-color: #e6b800;
 }
 
-.app-root.theme-daylight .part-toggle-off {
+.theme-daylight .part-toggle-off {
     background-color: #fdf0f5;
     color: #a0889e;
 }
 
 /* Topbar */
-.app-root.theme-daylight .topbar {
+.theme-daylight .topbar {
     background-color: #ffffff;
     border-bottom-color: #d4a017;
 }
 
-.app-root.theme-daylight .topbar-title {
+.theme-daylight .topbar-title {
     color: #d4a017;
 }
 
 /* Language bar */
-.app-root.theme-daylight .lang-bar {
+.theme-daylight .lang-bar {
     background-color: #fdf0f5;
 }
 
-.app-root.theme-daylight .lang-btn {
+.theme-daylight .lang-btn {
     color: #a0889e;
 }
 
-.app-root.theme-daylight .lang-btn:hover {
+.theme-daylight .lang-btn:hover {
     color: #4a1942;
     background-color: #f3d4e6;
 }
 
-.app-root.theme-daylight .lang-btn.selected {
+.theme-daylight .lang-btn.selected {
     background-color: #d4a017;
     color: #ffffff;
 }
 
 /* Sidebar */
-.app-root.theme-daylight .sidebar {
+.theme-daylight .sidebar {
     background-color: #fce4ec;
     border-right-color: #d4a017;
 }
 
-.app-root.theme-daylight .sidebar-header {
+.theme-daylight .sidebar-header {
     color: #d4a017;
 }
 
 /* Banner */
-.app-root.theme-daylight .banner {
+.theme-daylight .banner {
     background-color: #f8d7e8;
     border-top-color: rgba(212, 160, 23, 0.3);
 }
 
-.app-root.theme-daylight .banner-card {
+.theme-daylight .banner-card {
     background-color: #ffffff;
     border-color: #e8c4d8;
 }
 
-.app-root.theme-daylight .banner-card:hover {
+.theme-daylight .banner-card:hover {
     border-color: #d4a017;
     background-color: #fdf0f5;
 }
 
-.app-root.theme-daylight .banner-card-label {
+.theme-daylight .banner-card-label {
     color: #4a1942;
 }
 
 /* Theme toggle */
-.app-root.theme-daylight .theme-toggle {
+.theme-daylight .theme-toggle {
     color: #d4a017;
     background-color: rgba(212, 160, 23, 0.08);
     border-color: rgba(212, 160, 23, 0.3);
 }
 
 /* Link button */
-.app-root.theme-daylight .link-btn {
+.theme-daylight .link-btn {
     color: #d4a017;
     background-color: rgba(212, 160, 23, 0.08);
     border-color: rgba(212, 160, 23, 0.3);
 }
 
 /* Preview thumb */
-.app-root.theme-daylight .preview-thumb {
+.theme-daylight .preview-thumb {
     border-color: rgba(212, 160, 23, 0.3);
 }
 
 /* Colabo */
-.app-root.theme-daylight .colabo-shop-image {
+.theme-daylight .colabo-shop-image {
     border-color: rgba(212, 160, 23, 0.3);
 }
 
 /* HelpBox */
-.app-root.theme-daylight HelpBox {
+.theme-daylight HelpBox {
     background-color: rgba(212, 160, 23, 0.06);
     border-color: rgba(212, 160, 23, 0.15);
     color: #6d4c7d;
 }
 
 /* Part card */
-.app-root.theme-daylight .part-card {
+.theme-daylight .part-card {
     background-color: #ffffff;
     border-color: #f0d4e2;
 }
 
-.app-root.theme-daylight .part-card:hover {
+.theme-daylight .part-card:hover {
     border-color: #d4a017;
     background-color: #fdf0f5;
 }
 
-.app-root.theme-daylight .part-card-label {
+.theme-daylight .part-card-label {
     color: #d4a017;
 }
 
 /* Fade section */
-.app-root.theme-daylight .fade-section {
+.theme-daylight .fade-section {
     background-color: #fdf0f5;
     border-color: #f0d4e2;
 }
 
-.app-root.theme-daylight .fade-part-label {
+.theme-daylight .fade-part-label {
     color: #ff8f00;
 }

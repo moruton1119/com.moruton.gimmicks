@@ -201,8 +201,8 @@ namespace Moruton.Gimmicks.Editor
 
             _root = visualTree.CloneTree();
 
-            // ★ _root は TemplateContainer の場合がある。実際の app 要素を取得
-            var appElement = _root.Q<VisualElement>("app") ?? _root;
+            // ★ ルートにテーマクラスを直接付ける（CSS変数はカスケードで全子孫に伝わる）
+            _root.AddToClassList("theme-moonlight");
 
             CreatePropertyFields();
             RegisterPreviewCallbacks();
@@ -278,24 +278,19 @@ namespace Moruton.Gimmicks.Editor
 
             var theme = GetCurrentTheme();
 
-            // ★ _root (TemplateContainer) と app 要素の両方にクラスを付ける
-            var appElement = _root.Q<VisualElement>("app") ?? _root;
-
-            // 全ての theme-* クラスを削除
+            // ★ _root に直接テーマクラスを付ける（TemplateContainer含む）
+            // CSS変数はカスケードするので全子孫に伝わる
             foreach (var t in EditorThemeRegistry.Themes)
             {
-                appElement.RemoveFromClassList(t.ussClassName);
                 _root.RemoveFromClassList(t.ussClassName);
                 rootVisualElement.RemoveFromClassList(t.ussClassName);
             }
 
-            // 現在のテーマのクラスを追加（app要素 = app-root と同じ要素につける）
-            appElement.AddToClassList(theme.ussClassName);
             _root.AddToClassList(theme.ussClassName);
             rootVisualElement.AddToClassList(theme.ussClassName);
 
             // 互換性: light-theme クラスも維持
-            appElement.EnableInClassList("light-theme", theme.id == "Daylight");
+            _root.EnableInClassList("light-theme", theme.id == "Daylight");
             rootVisualElement.EnableInClassList("light-theme", theme.id == "Daylight");
 
             var toggle = _root.Q<Button>("theme-toggle");
