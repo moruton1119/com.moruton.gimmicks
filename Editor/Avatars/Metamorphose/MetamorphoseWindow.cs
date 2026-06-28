@@ -922,11 +922,7 @@ namespace Moruton.Gimmicks.Editor
             _root.Q<Button>("btn-booth").clicked += () => Application.OpenURL(BoothUrl);
             _root.Q<Button>("btn-discord").clicked += () => Application.OpenURL(DiscordUrl);
 
-            _root.Q<Button>("btn-colabo-shop").clicked += () =>
-            {
-                if (!string.IsNullOrEmpty(_target.colaboShopInfo))
-                    Application.OpenURL(_target.colaboShopInfo);
-            };
+            // btn-colabo-shop はワンページレイアウトに存在しないためスキップ
 
             var btnGenerateAnim = _root.Q<Button>("btn-generate-anim");
             if (btnGenerateAnim != null)
