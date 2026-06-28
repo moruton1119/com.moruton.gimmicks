@@ -2,6 +2,38 @@
    .app-root.theme-daylight 配下の全要素の色を明示的に上書き
    ═══════════════════════════════════════════════ */
 
+/* ★ CSS変数の上書き — Moonlight変数をDaylight用に全上書き */
+.app-root.theme-daylight {
+    --bg-night: #fff0f5;
+    --bg-deep: #ffe4ed;
+    --bg-elevated: #ffffff;
+    --bg-hover: #fdf0f5;
+    --bg-input: #fff5f8;
+    --topbar-bg: #ffe4ed;
+    --sidebar-bg: #ffd6e4;
+    --banner-bg: #ffe4ed;
+
+    --accent: #d4a017;
+    --accent-hover: #f0b020;
+    --accent-bg: rgba(212, 160, 23, 0.08);
+    --accent-border: rgba(212, 160, 23, 0.25);
+    --accent-purple: #9c27b0;
+    --accent-green: #4caf50;
+    --accent-orange: #ff8f00;
+    --accent-red: #e91e63;
+    --accent-cyan: #00acc1;
+
+    --border: #f0d4e2;
+    --border-subtle: #fce4ec;
+
+    --text: #4a3040;
+    --text-secondary: #6d4c7d;
+    --text-dim: #9e7eae;
+
+    --glow-pink: rgba(255, 143, 171, 0.12);
+    --glow-purple: rgba(156, 39, 176, 0.08);
+}
+
 /* Content panel */
 .app-root.theme-daylight .content-panel {
     background-color: #fff0f5;
