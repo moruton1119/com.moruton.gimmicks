@@ -43,13 +43,13 @@ namespace Moruton.Gimmicks.Editor
 
             public static ThemePalette Daylight => new ThemePalette
             {
-                bgCenter = new Color(1f, 0.82f, 0.88f, 1f),   // 鮮やかな薄ピンク
-                bgEdge = new Color(0.96f, 0.70f, 0.80f, 1f),    // 少し濃いピンク
-                particleColor = new Color(0.85f, 0.65f, 0.13f, 1f), // 鮮やかゴールド
-                glowColor = new Color(1f, 0.84f, 0.20f, 0.7f),  // 明るい金のグロー
-                circleColor = new Color(1f, 0.96f, 0.98f, 0.95f),
+                bgCenter = new Color(1f, 0.88f, 0.93f, 1f),   // 明るいピンク
+                bgEdge = new Color(0.97f, 0.80f, 0.87f, 1f),    // 少し濃いピンク
+                particleColor = new Color(1f, 0.84f, 0.20f, 1f), // 明るいゴールド
+                glowColor = new Color(1f, 0.88f, 0.30f, 0.7f),  // 金のグロー
+                circleColor = new Color(1f, 0.97f, 0.99f, 0.95f),
                 circleBorderColor = new Color(0.85f, 0.65f, 0.13f, 1f), // ゴールド枠
-                titleColor = new Color(0.55f, 0.41f, 0.08f, 1f), // ダークゴールド
+                titleColor = new Color(0.50f, 0.35f, 0.05f, 1f), // 濃いゴールド
                 titleGlow = new Color(1f, 0.84f, 0.20f, 0.8f),  // 明るい金グロー
                 sparkleColor = new Color(1f, 0.84f, 0.20f, 1f), // 鮮やか金色
                 titleText = "✦ Metamorphose ✦",

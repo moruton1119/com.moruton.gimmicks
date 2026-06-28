@@ -63,8 +63,10 @@ namespace Moruton.Gimmicks.Editor
 
         private static readonly string[][] PageFieldPaths =
         {
-            // Page 0 (メインページ) — 変身前、変身後、ギミック色
+            // Page 0 (メインページ)
             new[] { "offTargets", "gimmickColor", "avatar", "headItems", "bodyItems", "handItems", "legItems" },
+            // Page 1 (コラボページ) — フェードアイテム
+            new[] { "fadeHeadItems", "fadeBodyItems", "fadeArmItems", "fadeLegItems" },
         };
 
         private static readonly (string path, string previewName)[] PreviewBindings =
@@ -358,6 +360,24 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupNavigation()
         {
+            // Colabo ボタン: メイン ↔ コラボページ
+            var colaboBtn = _root.Q<Button>("btn-colabo");
+            if (colaboBtn != null)
+                colaboBtn.clicked += () =>
+                {
+                    bool isColabo = _currentPage == 1;
+                    if (isColabo)
+                    {
+                        ShowPage("page-colabo", "page-main", false);
+                        _currentPage = 0;
+                    }
+                    else
+                    {
+                        ShowPage(_currentPage == 0 ? "page-main" : "page-3", "page-colabo", true);
+                        _currentPage = 1;
+                    }
+                };
+
             // Dev ボタンでメインページ ↔ Devページを切替
             var devBtn = _root.Q<Button>("nav-3");
             if (devBtn != null)
@@ -366,25 +386,24 @@ namespace Moruton.Gimmicks.Editor
                     bool isDev = _currentPage == 3;
                     if (isDev)
                     {
-                        // Dev → メイン
-                        var devPage = _root.Q<VisualElement>("page-3");
-                        if (devPage != null) devPage.style.display = DisplayStyle.None;
-                        var mainPage = _root.Q<VisualElement>("page-main");
-                        if (mainPage != null) mainPage.style.display = DisplayStyle.Flex;
-                        devBtn.RemoveFromClassList("active");
+                        ShowPage("page-3", "page-main", false);
                         _currentPage = 0;
                     }
                     else
                     {
-                        // メイン → Dev
-                        var mainPage = _root.Q<VisualElement>("page-main");
-                        if (mainPage != null) mainPage.style.display = DisplayStyle.None;
-                        var devPage = _root.Q<VisualElement>("page-3");
-                        if (devPage != null) devPage.style.display = DisplayStyle.Flex;
-                        devBtn.AddToClassList("active");
+                        ShowPage(_currentPage == 0 ? "page-main" : "page-colabo", "page-3", true);
                         _currentPage = 3;
                     }
                 };
+        }
+
+        private void ShowPage(string hidePage, string showPage, bool show)
+        {
+            var hide = _root.Q<VisualElement>(hidePage);
+            if (hide != null) hide.style.display = DisplayStyle.None;
+            var showEl = _root.Q<VisualElement>(showPage);
+            if (showEl != null) showEl.style.display = DisplayStyle.Flex;
+        }
         }
 
         private void SwitchPage(int pageIndex)
@@ -489,7 +508,7 @@ namespace Moruton.Gimmicks.Editor
         {
             foreach (var (path, previewName) in PreviewBindings)
             {
-                var slot = _root.Q<VisualElement>($"page1-slot-{path}");
+                var slot = _root.Q<VisualElement>($"page0-slot-{path}");
                 if (slot == null) continue;
 
                 var pf = slot.Q<PropertyField>();
@@ -616,7 +635,8 @@ namespace Moruton.Gimmicks.Editor
                 if (maxDim <= 0f) maxDim = 1f;
 
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 1.05f;
+                // より近づける（0.75 → 0.65）
+                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 0.65f;
 
                 Vector3 center = bounds.center;
                 preview.camera.transform.position = center - Vector3.forward * dist;
@@ -876,6 +896,14 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("fg-avatar-title").text = L("step1_avatar_label");
             SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
 
+            // コラボページのラベル
+            root.Q<Label>("fg-colabo-title").text = L("step4_description");
+            var colaboShopBtn = root.Q<Button>("btn-colabo-shop");
+            if (colaboShopBtn != null) colaboShopBtn.text = LC("colabo_shop_button");
+            var colaboHelp = root.Q<HelpBox>("colabo-help");
+            if (colaboHelp != null) colaboHelp.text = LC("colabo_info");
+            root.Q<Label>("fg-fade-title").text = L("step4_fade_fx_title");
+
             // Dev ページのラベル
             root.Q<Label>("fg3-basic").text = LC("dev_basic_label");
             root.Q<Label>("fg3-targets").text = LC("dev_target_label");
@@ -922,7 +950,15 @@ namespace Moruton.Gimmicks.Editor
             _root.Q<Button>("btn-booth").clicked += () => Application.OpenURL(BoothUrl);
             _root.Q<Button>("btn-discord").clicked += () => Application.OpenURL(DiscordUrl);
 
-            // btn-colabo-shop はワンページレイアウトに存在しないためスキップ
+            var colaboShopBtn = _root.Q<Button>("btn-colabo-shop");
+            if (colaboShopBtn != null)
+            {
+                colaboShopBtn.clicked += () =>
+                {
+                    if (!string.IsNullOrEmpty(_target.colaboShopInfo))
+                        Application.OpenURL(_target.colaboShopInfo);
+                };
+            }
 
             var btnGenerateAnim = _root.Q<Button>("btn-generate-anim");
             if (btnGenerateAnim != null)

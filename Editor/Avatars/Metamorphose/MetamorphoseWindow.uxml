@@ -31,6 +31,7 @@
 
         <ui:Button name="btn-booth" class="nav-link" text="Booth" />
         <ui:Button name="btn-discord" class="nav-link" text="Discord" />
+        <ui:Button name="btn-colabo" class="nav-link" text="Colabo" />
 
         <ui:VisualElement class="sidebar-spacer" />
 
@@ -42,22 +43,21 @@
         <ui:ScrollView name="scroll-content">
           <ui:VisualElement name="pages-container" class="pages-container">
 
-            <!-- ===== Main Page: ワンページ編成 ===== -->
+            <!-- ===== Main Page ===== -->
             <ui:VisualElement name="page-main" class="page">
 
-              <!-- ── セクション: 変身前の衣装 ── -->
+              <!-- 変身前の衣装 -->
               <ui:VisualElement name="section-off" class="field-group outfit-section">
-                <ui:Label name="fg-off-title" class="field-group-title" text="◆ 変身前の衣装 (Off Targets)" />
+                <ui:Label name="fg-off-title" class="field-group-title" text="◆ 変身前の衣装" />
                 <ui:VisualElement name="page0-slot-offTargets" class="field-slot" />
                 <ui:VisualElement name="off-preview" class="preview-row" />
               </ui:VisualElement>
 
-              <!-- ── セクション: 変身後の衣装 ── -->
+              <!-- 変身後の衣装 -->
               <ui:VisualElement name="section-after" class="field-group">
                 <ui:Label name="fg-after-title" class="field-group-title" text="◆ 変身後の衣装" />
                 <ui:HelpBox name="page1-help" message-type="Info" />
 
-                <!-- 部位カードのコンテナ（flex-wrap で自動折り返し） -->
                 <ui:VisualElement name="parts-grid" class="parts-grid">
 
                   <ui:VisualElement name="section-head" class="part-card">
@@ -87,13 +87,13 @@
                 </ui:VisualElement>
               </ui:VisualElement>
 
-              <!-- ── セクション: ギミック色 ── -->
+              <!-- ギミック色 -->
               <ui:VisualElement name="section-color" class="field-group">
                 <ui:Label name="fg-color-title" class="field-group-title" text="◆ ギミック色" />
                 <ui:VisualElement name="page0-slot-gimmickColor" class="field-slot" />
               </ui:VisualElement>
 
-              <!-- ── セクション: アバター設定 ── -->
+              <!-- Avatar -->
               <ui:VisualElement name="section-avatar" class="field-group">
                 <ui:Label name="fg-avatar-title" class="field-group-title" text="◆ Avatar" />
                 <ui:VisualElement name="page0-slot-avatar" class="field-slot" />
@@ -102,7 +102,42 @@
 
             </ui:VisualElement>
 
-            <!-- ===== Page 3: Dev Mode（変更なし） ===== -->
+            <!-- ===== Colabo Page ===== -->
+            <ui:VisualElement name="page-colabo" class="page" style="display: none;">
+
+              <!-- コラボショップ -->
+              <ui:VisualElement name="section-colabo-shop" class="field-group">
+                <ui:Label name="fg-colabo-title" class="field-group-title" text="◆ コラボ情報" />
+                <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
+                <ui:Button name="btn-colabo-shop" class="link-btn" text="Open Shop" />
+                <ui:HelpBox name="colabo-help" message-type="Info" />
+              </ui:VisualElement>
+
+              <!-- フェード演出 -->
+              <ui:VisualElement name="section-fade" class="field-group">
+                <ui:Label name="fg-fade-title" class="field-group-title" text="◆ フェード演出" />
+
+                <ui:VisualElement name="section-fadeHead" class="fade-section">
+                  <ui:Label text="Head" class="fade-part-label" />
+                  <ui:VisualElement name="page2-slot-fadeHeadItems" class="field-slot" />
+                </ui:VisualElement>
+                <ui:VisualElement name="section-fadeBody" class="fade-section">
+                  <ui:Label text="Body" class="fade-part-label" />
+                  <ui:VisualElement name="page2-slot-fadeBodyItems" class="field-slot" />
+                </ui:VisualElement>
+                <ui:VisualElement name="section-fadeArm" class="fade-section">
+                  <ui:Label text="Arm" class="fade-part-label" />
+                  <ui:VisualElement name="page2-slot-fadeArmItems" class="field-slot" />
+                </ui:VisualElement>
+                <ui:VisualElement name="section-fadeLeg" class="fade-section">
+                  <ui:Label text="Leg" class="fade-part-label" />
+                  <ui:VisualElement name="page2-slot-fadeLegItems" class="field-slot" />
+                </ui:VisualElement>
+              </ui:VisualElement>
+
+            </ui:VisualElement>
+
+            <!-- ===== Dev Page ===== -->
             <ui:VisualElement name="page-3" class="page dev-page" style="display: none;">
               <ui:Label name="fg3-basic" class="field-group-title" />
               <ui:VisualElement name="page3-slot-dummyImage" class="field-slot" />

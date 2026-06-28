@@ -23,3 +23,24 @@
     border-bottom-color: rgba(255, 107, 157, 0.15);
 }
 
+.theme-moonlight HelpBox {
+    background-color: rgba(255, 107, 157, 0.08);
+    border-color: rgba(255, 107, 157, 0.2);
+    color: #c4b8e0;
+}
+
+.theme-moonlight .part-card {
+    background-color: #241638;
+    border-color: #2d1b4a;
+}
+
+.theme-moonlight .part-card:hover {
+    border-color: #ff6b9d;
+    background-color: #2e1d4a;
+}
+
+.theme-moonlight .fade-section {
+    background-color: rgba(196, 168, 255, 0.08);
+    border-color: #2d1b4a;
+}
+

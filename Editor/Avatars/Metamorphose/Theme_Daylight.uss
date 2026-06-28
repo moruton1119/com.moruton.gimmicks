@@ -197,3 +197,35 @@
 .app-root.theme-daylight .colabo-shop-image {
     border-color: rgba(212, 160, 23, 0.3);
 }
+
+/* HelpBox */
+.app-root.theme-daylight HelpBox {
+    background-color: rgba(212, 160, 23, 0.06);
+    border-color: rgba(212, 160, 23, 0.15);
+    color: #6d4c7d;
+}
+
+/* Part card */
+.app-root.theme-daylight .part-card {
+    background-color: #ffffff;
+    border-color: #f0d4e2;
+}
+
+.app-root.theme-daylight .part-card:hover {
+    border-color: #d4a017;
+    background-color: #fdf0f5;
+}
+
+.app-root.theme-daylight .part-card-label {
+    color: #d4a017;
+}
+
+/* Fade section */
+.app-root.theme-daylight .fade-section {
+    background-color: #fdf0f5;
+    border-color: #f0d4e2;
+}
+
+.app-root.theme-daylight .fade-part-label {
+    color: #ff8f00;
+}
