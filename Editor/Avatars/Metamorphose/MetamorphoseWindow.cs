@@ -404,7 +404,6 @@ namespace Moruton.Gimmicks.Editor
             var showEl = _root.Q<VisualElement>(showPage);
             if (showEl != null) showEl.style.display = DisplayStyle.Flex;
         }
-        }
 
         private void SwitchPage(int pageIndex)
         {
