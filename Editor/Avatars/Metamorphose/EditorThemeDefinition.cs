@@ -111,19 +111,19 @@ namespace Moruton.Gimmicks.Editor
             accent = new Color(0.910f, 0.118f, 0.388f, 1f),      // #e91e63 鮮やかローズピンク
             accentHover = new Color(0.757f, 0.094f, 0.353f, 1f),  // #c2185b ディープピンク
             border = new Color(0.973f, 0.733f, 0.816f, 1f),      // #f8bbd0 ピンク系境界線
-            textSecondary = new Color(0.620f, 0.310f, 0.510f, 1f), // #9e4f82 ラベンダーピンク
-            textDim = new Color(0.808f, 0.576f, 0.847f, 1f),     // #ce93d8 薄ラベンダー
+            textSecondary = new Color(0.380f, 0.149f, 0.290f, 1f), // #61264a 深いピンク紫（視認性UP）
+            textDim = new Color(0.451f, 0.275f, 0.380f, 1f),     // #734661 ディープラベンダー（視認性UP）
             helpBoxBg = new Color(0.988f, 0.894f, 0.925f, 1f),   // #fce4ec ピンク50
 
-            // ── オープニング演出色: 白い光からピンクのキラキラ ──
-            openingBgCenter = new Color(1f, 0.941f, 0.961f, 1f), // #fff0f5
-            openingBgEdge = new Color(0.965f, 0.839f, 0.894f, 1f), // #f7d6e4
+            // ── オープニング演出色: 中心が明るく光る ──
+            openingBgCenter = new Color(1f, 1f, 1f, 1f),         // #ffffff 中心は真っ白に光る
+            openingBgEdge = new Color(0.953f, 0.808f, 0.871f, 1f), // #f3cede 外縁はふんわりピンク
             openingParticleColor = new Color(0.910f, 0.118f, 0.388f, 1f), // #e91e63
-            openingGlowColor = new Color(0.910f, 0.118f, 0.388f, 0.45f),
-            openingCircleColor = new Color(1f, 0.973f, 0.988f, 0.95f),
+            openingGlowColor = new Color(1f, 0.753f, 0.827f, 0.5f), // #ffc0d3 明るいピンクグロー
+            openingCircleColor = new Color(1f, 1f, 1f, 0.95f),   // #ffffff 中心の丸も白く光る
             openingCircleBorder = new Color(0.910f, 0.118f, 0.388f, 0.8f),
             openingTitleColor = new Color(0.447f, 0.125f, 0.290f, 1f), // #72204a
-            openingTitleGlow = new Color(0.910f, 0.118f, 0.388f, 0.6f),
+            openingTitleGlow = new Color(1f, 0.753f, 0.827f, 0.7f), // #ffc0d3 明るいグロー
             openingSparkleColor = new Color(1f, 0.753f, 0.827f, 1f), // #ffc0d3
         };
 

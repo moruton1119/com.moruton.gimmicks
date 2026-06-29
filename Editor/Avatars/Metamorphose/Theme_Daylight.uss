@@ -30,8 +30,8 @@
     --border-subtle: #fce4ec;
 
     --text: #4a1942;
-    --text-secondary: #9e4f82;
-    --text-dim: #ce93d8;
+    --text-secondary: #61264a;
+    --text-dim: #734661;
 
     --glow-pink: rgba(233, 30, 99, 0.10);
     --glow-purple: rgba(206, 147, 216, 0.06);
