@@ -4,37 +4,37 @@
    全色 CSS変数で制御 — ハードコードなし
    ═══════════════════════════════════════════════ */
 
-/* ★ Daylight CSS変数定義 — 唯一の色ソース */
+/* ★ Daylight CSS変数定義 — 白基底 × 落ち着いたピンク */
 .theme-daylight {
-    --bg-night: #fff5f8;
-    --bg-deep: #ffe4ed;
+    --bg-night: #ffffff;
+    --bg-deep: #fbf9f9;
     --bg-elevated: #ffffff;
-    --bg-hover: #fce4ec;
-    --bg-input: #fff0f4;
-    --topbar-bg: #ffe4ed;
-    --sidebar-bg: #ffd6e4;
-    --banner-bg: #ffe4ed;
-    --helpbox-bg: #fff8e1;
+    --bg-hover: #f7f3f4;
+    --bg-input: #fcfbfb;
+    --topbar-bg: #fbf9f9;
+    --sidebar-bg: #f7f3f4;
+    --banner-bg: #f7f3f4;
+    --helpbox-bg: #f9f6f7;
 
-    --accent: #e91e63;
-    --accent-hover: #f06292;
-    --accent-bg: rgba(233, 30, 99, 0.08);
-    --accent-border: rgba(233, 30, 99, 0.25);
-    --accent-purple: #ad1457;
-    --accent-green: #2e7d32;
-    --accent-orange: #e65100;
-    --accent-red: #c62828;
-    --accent-cyan: #00838f;
+    --accent: #d8869b;
+    --accent-hover: #c9748b;
+    --accent-bg: rgba(216, 134, 155, 0.08);
+    --accent-border: rgba(216, 134, 155, 0.25);
+    --accent-purple: #b48aab;
+    --accent-green: #4caf50;
+    --accent-orange: #e6941a;
+    --accent-red: #e57373;
+    --accent-cyan: #4db6ac;
 
-    --border: #f8bbd0;
-    --border-subtle: #fce4ec;
+    --border: #e6e1e1;
+    --border-subtle: #f0ebec;
 
-    --text: #4a1942;
-    --text-secondary: #880e4f;
-    --text-dim: #ad7baa;
+    --text: #403b3a;
+    --text-secondary: #8c7c8c;
+    --text-dim: #b4aab4;
 
-    --glow-pink: rgba(233, 30, 99, 0.10);
-    --glow-purple: rgba(173, 20, 87, 0.06);
+    --glow-pink: rgba(216, 134, 155, 0.06);
+    --glow-purple: rgba(180, 138, 171, 0.04);
 
     --radius-sm: 6px;
     --radius-md: 10px;

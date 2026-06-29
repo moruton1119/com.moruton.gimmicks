@@ -78,22 +78,22 @@ namespace Moruton.Gimmicks.Editor
             ussClassName = "theme-daylight",
             openingPalette = MagicalOpeningEffect.ThemePalette.Daylight,
 
-            // ★ Rose-Pink palette — ピンク背景と調和する統一感のある配色
-            windowBg = new Color(1f, 0.961f, 0.973f, 1f),       // #fff5f8
-            windowText = new Color(0.290f, 0.098f, 0.259f, 1f),  // #4a1942
-            panelBg = new Color(1f, 0.894f, 0.929f, 1f),         // #ffe4ec
-            sidebarBg = new Color(0.988f, 0.839f, 0.894f, 1f),   // #fce4ec
-            topbarBg = new Color(1f, 0.894f, 0.929f, 1f),         // #ffe4ec
+            // ★ 白基底 × 落ち着いたピンクアクセント
+            windowBg = new Color(1f, 1f, 1f, 1f),               // #ffffff
+            windowText = new Color(0.25f, 0.231f, 0.227f, 1f),   // #403b3a
+            panelBg = new Color(0.984f, 0.976f, 0.976f, 1f),    // #fbf9f9
+            sidebarBg = new Color(0.965f, 0.953f, 0.957f, 1f),  // #f7f3f4
+            topbarBg = new Color(0.984f, 0.976f, 0.976f, 1f),    // #fbf9f9
             elevatedBg = new Color(1f, 1f, 1f, 1f),              // #ffffff
-            bannerBg = new Color(0.988f, 0.839f, 0.894f, 1f),   // #fce4ec
-            inputBg = new Color(1f, 0.941f, 0.965f, 1f),         // #fff0f4
-            hoverBg = new Color(0.988f, 0.894f, 0.925f, 1f),     // #fce4ec
-            accent = new Color(0.910f, 0.118f, 0.388f, 1f),      // #e91e63 (rose-pink)
-            accentHover = new Color(0.941f, 0.384f, 0.573f, 1f),  // #f06292
-            border = new Color(0.973f, 0.733f, 0.816f, 1f),      // #f8bbd0
-            textSecondary = new Color(0.533f, 0.055f, 0.310f, 1f), // #880e4f
-            textDim = new Color(0.678f, 0.482f, 0.667f, 1f),     // #ad7baa
-            helpBoxBg = new Color(1f, 0.973f, 0.882f, 1f),      // #fff8e1
+            bannerBg = new Color(0.965f, 0.953f, 0.957f, 1f),    // #f7f3f4
+            inputBg = new Color(0.988f, 0.984f, 0.984f, 1f),     // #fcfbfb
+            hoverBg = new Color(0.965f, 0.953f, 0.957f, 1f),     // #f7f3f4
+            accent = new Color(0.847f, 0.525f, 0.608f, 1f),      // #d8869b
+            accentHover = new Color(0.788f, 0.455f, 0.545f, 1f),  // #c9748b
+            border = new Color(0.902f, 0.882f, 0.882f, 1f),      // #e6e1e1
+            textSecondary = new Color(0.549f, 0.486f, 0.549f, 1f), // #8c7c8c
+            textDim = new Color(0.706f, 0.667f, 0.706f, 1f),     // #b4aab4
+            helpBoxBg = new Color(0.976f, 0.965f, 0.969f, 1f),   // #f9f6f7
         };
 
         // ═══════════════════════════════════════════
