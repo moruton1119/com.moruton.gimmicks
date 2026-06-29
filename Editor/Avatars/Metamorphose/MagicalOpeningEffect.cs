@@ -292,20 +292,36 @@ namespace Moruton.Gimmicks.Editor
         // ── グラデーション背景 ──
         private void DrawGradientBackground(MeshGenerationContext ctx, float w, float h, float alpha)
         {
-            var mesh = ctx.Allocate(4, 6);
+            // 3段グラデーション: 上端(edge) → 中央(center/明るい) → 下端(edge)
+            // これで「中心が明るく光る」放射状っぽい見た目になる
+            var mesh = ctx.Allocate(8, 12);
 
             Color center = _palette.bgCenter;
             Color edge = _palette.bgEdge;
             center.a *= alpha;
             edge.a *= alpha;
 
-            mesh.SetNextVertex(new Vertex { position = new Vector3(0, 0, 0), tint = edge });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(w, 0, 0), tint = edge });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(0, h, 0), tint = center });
-            mesh.SetNextVertex(new Vertex { position = new Vector3(w, h, 0), tint = center });
+            float midY = h * 0.5f;
 
+            // 上半分: edge → center
+            mesh.SetNextVertex(new Vertex { position = new Vector3(0, 0, 0), tint = edge });      // 0: 左上
+            mesh.SetNextVertex(new Vertex { position = new Vector3(w, 0, 0), tint = edge });      // 1: 右上
+            mesh.SetNextVertex(new Vertex { position = new Vector3(0, midY, 0), tint = center }); // 2: 左中央
+            mesh.SetNextVertex(new Vertex { position = new Vector3(w, midY, 0), tint = center }); // 3: 右中央
+
+            // 下半分: center → edge
+            mesh.SetNextVertex(new Vertex { position = new Vector3(0, midY, 0), tint = center }); // 4: 左中央
+            mesh.SetNextVertex(new Vertex { position = new Vector3(w, midY, 0), tint = center }); // 5: 右中央
+            mesh.SetNextVertex(new Vertex { position = new Vector3(0, h, 0), tint = edge });      // 6: 左下
+            mesh.SetNextVertex(new Vertex { position = new Vector3(w, h, 0), tint = edge });      // 7: 右下
+
+            // 上半分の三角形
             mesh.SetNextIndex((ushort)0); mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)2);
             mesh.SetNextIndex((ushort)1); mesh.SetNextIndex((ushort)3); mesh.SetNextIndex((ushort)2);
+
+            // 下半分の三角形
+            mesh.SetNextIndex((ushort)4); mesh.SetNextIndex((ushort)5); mesh.SetNextIndex((ushort)6);
+            mesh.SetNextIndex((ushort)5); mesh.SetNextIndex((ushort)7); mesh.SetNextIndex((ushort)6);
         }
 
         // ── 中心グロー ──
