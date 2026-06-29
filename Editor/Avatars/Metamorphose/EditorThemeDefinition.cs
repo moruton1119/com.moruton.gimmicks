@@ -98,33 +98,33 @@ namespace Moruton.Gimmicks.Editor
             displayName = "☀️ Daylight (Light)",
             ussClassName = "theme-daylight",
 
-            // ── UI色: 白基底 × 落ち着いたピンク ──
-            windowBg = new Color(1f, 1f, 1f, 1f),
-            windowText = new Color(0.25f, 0.231f, 0.227f, 1f),
-            panelBg = new Color(0.984f, 0.976f, 0.976f, 1f),
-            sidebarBg = new Color(0.965f, 0.953f, 0.957f, 1f),
-            topbarBg = new Color(0.984f, 0.976f, 0.976f, 1f),
-            elevatedBg = new Color(1f, 1f, 1f, 1f),
-            bannerBg = new Color(0.965f, 0.953f, 0.957f, 1f),
-            inputBg = new Color(0.988f, 0.984f, 0.984f, 1f),
-            hoverBg = new Color(0.965f, 0.953f, 0.957f, 1f),
-            accent = new Color(0.847f, 0.525f, 0.608f, 1f),
-            accentHover = new Color(0.788f, 0.455f, 0.545f, 1f),
-            border = new Color(0.902f, 0.882f, 0.882f, 1f),
-            textSecondary = new Color(0.549f, 0.486f, 0.549f, 1f),
-            textDim = new Color(0.706f, 0.667f, 0.706f, 1f),
-            helpBoxBg = new Color(0.976f, 0.965f, 0.969f, 1f),
+            // ── UI色: 魔法少女ライト ── パステルピンク × ラベンダー紫
+            windowBg = new Color(1f, 0.969f, 0.973f, 1f),       // #fff7f8 ほんのりピンク白
+            windowText = new Color(0.290f, 0.098f, 0.259f, 1f),  // #4a1942 魔法少女ピンク紫
+            panelBg = new Color(1f, 0.941f, 0.961f, 1f),         // #fff0f5 lavenderblush
+            sidebarBg = new Color(1f, 0.894f, 0.929f, 1f),       // #ffe4ed パステルピンク
+            topbarBg = new Color(1f, 0.941f, 0.961f, 1f),         // #fff0f5
+            elevatedBg = new Color(1f, 1f, 1f, 1f),              // #ffffff 純白カード
+            bannerBg = new Color(1f, 0.894f, 0.929f, 1f),       // #ffe4ed
+            inputBg = new Color(1f, 0.965f, 0.976f, 1f),         // #fff7f9
+            hoverBg = new Color(1f, 0.910f, 0.941f, 1f),         // #ffe8f0 ホバーで少し濃いピンク
+            accent = new Color(0.910f, 0.118f, 0.388f, 1f),      // #e91e63 鮮やかローズピンク
+            accentHover = new Color(0.757f, 0.094f, 0.353f, 1f),  // #c2185b ディープピンク
+            border = new Color(0.973f, 0.733f, 0.816f, 1f),      // #f8bbd0 ピンク系境界線
+            textSecondary = new Color(0.620f, 0.310f, 0.510f, 1f), // #9e4f82 ラベンダーピンク
+            textDim = new Color(0.808f, 0.576f, 0.847f, 1f),     // #ce93d8 薄ラベンダー
+            helpBoxBg = new Color(0.988f, 0.894f, 0.925f, 1f),   // #fce4ec ピンク50
 
-            // ── オープニング演出色 ──
-            openingBgCenter = new Color(1f, 0.953f, 0.965f, 1f),
-            openingBgEdge = new Color(0.965f, 0.902f, 0.929f, 1f),
-            openingParticleColor = new Color(0.847f, 0.525f, 0.608f, 1f),
-            openingGlowColor = new Color(0.847f, 0.525f, 0.608f, 0.5f),
-            openingCircleColor = new Color(1f, 0.976f, 0.984f, 0.95f),
-            openingCircleBorder = new Color(0.847f, 0.525f, 0.608f, 0.8f),
-            openingTitleColor = new Color(0.4f, 0.235f, 0.290f, 1f),
-            openingTitleGlow = new Color(0.847f, 0.525f, 0.608f, 0.6f),
-            openingSparkleColor = new Color(0.847f, 0.525f, 0.608f, 1f),
+            // ── オープニング演出色: 白い光からピンクのキラキラ ──
+            openingBgCenter = new Color(1f, 0.941f, 0.961f, 1f), // #fff0f5
+            openingBgEdge = new Color(0.965f, 0.839f, 0.894f, 1f), // #f7d6e4
+            openingParticleColor = new Color(0.910f, 0.118f, 0.388f, 1f), // #e91e63
+            openingGlowColor = new Color(0.910f, 0.118f, 0.388f, 0.45f),
+            openingCircleColor = new Color(1f, 0.973f, 0.988f, 0.95f),
+            openingCircleBorder = new Color(0.910f, 0.118f, 0.388f, 0.8f),
+            openingTitleColor = new Color(0.447f, 0.125f, 0.290f, 1f), // #72204a
+            openingTitleGlow = new Color(0.910f, 0.118f, 0.388f, 0.6f),
+            openingSparkleColor = new Color(1f, 0.753f, 0.827f, 1f), // #ffc0d3
         };
 
         // ═══════════════════════════════════════════
