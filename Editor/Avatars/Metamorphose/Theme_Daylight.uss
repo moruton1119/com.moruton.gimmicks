@@ -269,7 +269,7 @@
     border-bottom-width: 1px;
 }
 
-/* ObjectField */
+/* ObjectField — 選択済みオブジェクトの文字色を黒く */
 .theme-daylight .unity-object-field__object {
     background-color: var(--bg-input);
     color: var(--text);
@@ -278,6 +278,22 @@
 
 .theme-daylight .unity-object-field__object:hover {
     border-color: var(--accent);
+}
+
+/* ObjectField の内部ラベル（オブジェクト名表示部分） */
+.theme-daylight .unity-object-field__object > .unity-label,
+.theme-daylight .unity-object-field__object > Label,
+.theme-daylight .unity-object-field .unity-object-field-display,
+.theme-daylight .unity-object-field .unity-object-field__display {
+    color: var(--text) !important;
+}
+
+/* プレースホルダーテキスト（None (Texture2D) 等）も黒く */
+.theme-daylight .unity-object-field__selector,
+.theme-daylight .unity-object-field .unity-text-element,
+.theme-daylight .unity-base-field > .unity-label,
+.theme-daylight .unity-base-field__text {
+    color: var(--text) !important;
 }
 
 /* ColorField */
