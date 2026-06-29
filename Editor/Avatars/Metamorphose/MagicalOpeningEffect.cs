@@ -13,6 +13,8 @@ namespace Moruton.Gimmicks.Editor
     {
         // ═══════════════════════════════════════════
         //  テーマ別カラー
+        //  ※ 色の定義は EditorThemeDefinition 側で一元管理。
+        //    この構造体は受け取った色を使うだけの入れ物。
         // ═══════════════════════════════════════════
         public struct ThemePalette
         {
@@ -26,32 +28,26 @@ namespace Moruton.Gimmicks.Editor
             public Color titleGlow;
             public Color sparkleColor;
             public string titleText;
+        }
 
-            public static ThemePalette Moonlight => new ThemePalette
+        /// <summary>
+        /// EditorThemeDefinition から ThemePalette を生成。
+        /// 色の定義は EditorThemeDefinition にしかないので、
+        /// ここで変換するだけ。
+        /// </summary>
+        public static ThemePalette FromDefinition(EditorThemeDefinition theme)
+        {
+            return new ThemePalette
             {
-                bgCenter = new Color(0.12f, 0.06f, 0.22f, 1f),
-                bgEdge = new Color(0.03f, 0.01f, 0.06f, 1f),
-                particleColor = new Color(1f, 0.42f, 0.62f, 1f),
-                glowColor = new Color(0.77f, 0.40f, 1f, 0.6f),
-                circleColor = new Color(0.14f, 0.08f, 0.24f, 0.9f),
-                circleBorderColor = new Color(1f, 0.42f, 0.62f, 0.8f),
-                titleColor = new Color(1f, 0.85f, 1f, 1f),
-                titleGlow = new Color(1f, 0.42f, 0.62f, 0.8f),
-                sparkleColor = new Color(1f, 0.85f, 1f, 1f),
-                titleText = "✦ Metamorphose ✦",
-            };
-
-            public static ThemePalette Daylight => new ThemePalette
-            {
-                bgCenter = new Color(1f, 0.88f, 0.93f, 1f),   // 明るいピンク
-                bgEdge = new Color(0.97f, 0.80f, 0.87f, 1f),    // 少し濃いピンク
-                particleColor = new Color(1f, 0.84f, 0.20f, 1f), // 明るいゴールド
-                glowColor = new Color(1f, 0.88f, 0.30f, 0.7f),  // 金のグロー
-                circleColor = new Color(1f, 0.97f, 0.99f, 0.95f),
-                circleBorderColor = new Color(0.85f, 0.65f, 0.13f, 1f), // ゴールド枠
-                titleColor = new Color(0.50f, 0.35f, 0.05f, 1f), // 濃いゴールド
-                titleGlow = new Color(1f, 0.84f, 0.20f, 0.8f),  // 明るい金グロー
-                sparkleColor = new Color(1f, 0.84f, 0.20f, 1f), // 鮮やか金色
+                bgCenter = theme.openingBgCenter,
+                bgEdge = theme.openingBgEdge,
+                particleColor = theme.openingParticleColor,
+                glowColor = theme.openingGlowColor,
+                circleColor = theme.openingCircleColor,
+                circleBorderColor = theme.openingCircleBorder,
+                titleColor = theme.openingTitleColor,
+                titleGlow = theme.openingTitleGlow,
+                sparkleColor = theme.openingSparkleColor,
                 titleText = "✦ Metamorphose ✦",
             };
         }

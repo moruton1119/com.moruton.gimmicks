@@ -223,10 +223,12 @@ namespace Moruton.Gimmicks.Editor
 
             // MagicalOpeningEffect を生成してルートに被せる
             var theme = GetCurrentTheme();
-            _openingEffect = new MagicalOpeningEffect(theme.openingPalette, onComplete: () =>
-            {
-                _openingEffect = null;
-            });
+            _openingEffect = new MagicalOpeningEffect(
+                MagicalOpeningEffect.FromDefinition(theme),
+                onComplete: () =>
+                {
+                    _openingEffect = null;
+                });
 
             // タイトルラベルを追加（テキストは VisualElement の子として配置）
             _openingEffect.AddTitleLabel();
