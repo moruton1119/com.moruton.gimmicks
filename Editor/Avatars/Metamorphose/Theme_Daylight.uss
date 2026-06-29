@@ -1,207 +1,211 @@
+/* ═══════════════════════════════════════════════
    LIGHT THEME EXPLICIT OVERRIDES
    .theme-daylight 配下の全要素の色を明示的に上書き
    ═══════════════════════════════════════════════ */
 
 /* ★ CSS変数の上書き — Daylight パレット
-   .theme-moonlight と同じ詳細度。
-   後に読み込まれるので Daylight が勝つ。 */
+   アクセントをrose-pinkに統一してピンク背景と調和させる */
 .theme-daylight {
-    --bg-night: #fff0f5;
+    --bg-night: #fff5f8;
     --bg-deep: #ffe4ed;
     --bg-elevated: #ffffff;
-    --bg-hover: #fdf0f5;
-    --bg-input: #fff5f8;
+    --bg-hover: #fce4ec;
+    --bg-input: #fff0f4;
     --topbar-bg: #ffe4ed;
     --sidebar-bg: #ffd6e4;
     --banner-bg: #ffe4ed;
 
-    --accent: #d4a017;
-    --accent-hover: #f0b020;
-    --accent-bg: rgba(212, 160, 23, 0.08);
-    --accent-border: rgba(212, 160, 23, 0.25);
-    --accent-purple: #9c27b0;
-    --accent-green: #4caf50;
-    --accent-orange: #ff8f00;
-    --accent-red: #e91e63;
-    --accent-cyan: #00acc1;
+    --accent: #e91e63;
+    --accent-hover: #f06292;
+    --accent-bg: rgba(233, 30, 99, 0.08);
+    --accent-border: rgba(233, 30, 99, 0.25);
+    --accent-purple: #ad1457;
+    --accent-green: #2e7d32;
+    --accent-orange: #e65100;
+    --accent-red: #c62828;
+    --accent-cyan: #00838f;
 
-    --border: #f0d4e2;
+    --border: #f8bbd0;
     --border-subtle: #fce4ec;
 
-    --text: #4a3040;
-    --text-secondary: #6d4c7d;
-    --text-dim: #9e7eae;
+    --text: #4a1942;
+    --text-secondary: #880e4f;
+    --text-dim: #ad7baa;
 
-    --glow-pink: rgba(255, 143, 171, 0.12);
-    --glow-purple: rgba(156, 39, 176, 0.08);
+    --glow-pink: rgba(233, 30, 99, 0.10);
+    --glow-purple: rgba(173, 20, 87, 0.06);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
 }
 
 /* Content panel */
 .theme-daylight .content-panel {
-    background-color: #fff0f5;
+    background-color: #fff5f8;
 }
 
 /* Pages container */
 .theme-daylight .pages-container {
-    background-color: #fff0f5;
+    background-color: #fff5f8;
 }
 
 /* Page description */
 .theme-daylight .page-desc {
-    color: #6d4c7d;
+    color: #880e4f;
 }
 
 /* Field Group */
 .theme-daylight .field-group {
     background-color: #ffffff;
-    border-color: #f0d4e2;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .field-group-title {
-    color: #9c27b0;
-    border-bottom-color: rgba(212, 160, 23, 0.2);
+    color: #ad1457;
+    border-bottom-color: rgba(233, 30, 99, 0.2);
 }
 
 /* Part Section */
 .theme-daylight .part-section {
     background-color: #fdf0f5;
-    border-color: #f0d4e2;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .part-label {
-    color: #d4a017;
+    color: #e91e63;
 }
 
 /* Fade Section */
 .theme-daylight .fade-section {
     background-color: #fdf0f5;
-    border-color: #f0d4e2;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .fade-part-label {
-    color: #ff8f00;
+    color: #e65100;
 }
 
 /* Dev Page field slots */
 .theme-daylight .dev-page .field-slot > PropertyField > .unity-property-field__label {
-    color: #a0889e;
+    color: #880e4f;
 }
 
 /* Field Slot labels */
 .theme-daylight .field-slot > PropertyField > .unity-property-field__label {
-    color: #6d4c7d;
+    color: #880e4f;
 }
 
 /* Nav buttons in light mode */
 .theme-daylight .nav-num {
     background-color: #ffffff;
-    color: #a0889e;
-    border-color: #e8c4d8;
+    color: #ad7baa;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .nav-num:hover {
-    background-color: #f3d4e6;
+    background-color: #fce4ec;
     color: #4a1942;
 }
 
 .theme-daylight .nav-num.active {
-    background-color: #d4a017;
+    background-color: #e91e63;
     color: #ffffff;
-    border-color: #d4a017;
+    border-color: #e91e63;
 }
 
 /* Link buttons */
 .theme-daylight .nav-link {
     background-color: #ffffff;
-    color: #6d4c7d;
-    border-color: #e8c4d8;
+    color: #880e4f;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .nav-link:hover {
-    background-color: #f3d4e6;
+    background-color: #fce4ec;
 }
 
 /* Dev button */
 .theme-daylight .dev-btn {
-    color: #ff8f00;
+    color: #e65100;
 }
 
 .theme-daylight .dev-btn:hover {
-    background-color: rgba(255, 143, 0, 0.12);
+    background-color: rgba(230, 81, 0, 0.10);
 }
 
 .theme-daylight .dev-btn.active {
-    background-color: #ff8f00;
+    background-color: #e65100;
     color: #ffffff;
 }
 
 /* Part toggle */
 .theme-daylight .part-toggle {
-    background-color: #d4a017;
+    background-color: #e91e63;
 }
 
 .theme-daylight .part-toggle:hover {
-    background-color: #e6b800;
+    background-color: #f06292;
 }
 
 .theme-daylight .part-toggle-off {
-    background-color: #fdf0f5;
-    color: #a0889e;
+    background-color: #fce4ec;
+    color: #ad7baa;
 }
 
 /* Topbar */
 .theme-daylight .topbar {
     background-color: #ffffff;
-    border-bottom-color: #d4a017;
+    border-bottom-color: #e91e63;
 }
 
 .theme-daylight .topbar-title {
-    color: #d4a017;
+    color: #e91e63;
 }
 
 /* Language bar */
 .theme-daylight .lang-bar {
-    background-color: #fdf0f5;
+    background-color: #fce4ec;
 }
 
 .theme-daylight .lang-btn {
-    color: #a0889e;
+    color: #ad7baa;
 }
 
 .theme-daylight .lang-btn:hover {
     color: #4a1942;
-    background-color: #f3d4e6;
+    background-color: #f8bbd0;
 }
 
 .theme-daylight .lang-btn.selected {
-    background-color: #d4a017;
+    background-color: #e91e63;
     color: #ffffff;
 }
 
 /* Sidebar */
 .theme-daylight .sidebar {
     background-color: #fce4ec;
-    border-right-color: #d4a017;
+    border-right-color: #e91e63;
 }
 
 .theme-daylight .sidebar-header {
-    color: #d4a017;
+    color: #e91e63;
 }
 
 /* Banner */
 .theme-daylight .banner {
-    background-color: #f8d7e8;
-    border-top-color: rgba(212, 160, 23, 0.3);
+    background-color: #fce4ec;
+    border-top-color: rgba(233, 30, 99, 0.3);
 }
 
 .theme-daylight .banner-card {
     background-color: #ffffff;
-    border-color: #e8c4d8;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .banner-card:hover {
-    border-color: #d4a017;
-    background-color: #fdf0f5;
+    border-color: #e91e63;
+    background-color: #fff5f8;
 }
 
 .theme-daylight .banner-card-label {
@@ -210,56 +214,108 @@
 
 /* Theme toggle */
 .theme-daylight .theme-toggle {
-    color: #d4a017;
-    background-color: rgba(212, 160, 23, 0.08);
-    border-color: rgba(212, 160, 23, 0.3);
+    color: #e91e63;
+    background-color: rgba(233, 30, 99, 0.08);
+    border-color: rgba(233, 30, 99, 0.25);
 }
 
 /* Link button */
 .theme-daylight .link-btn {
-    color: #d4a017;
-    background-color: rgba(212, 160, 23, 0.08);
-    border-color: rgba(212, 160, 23, 0.3);
+    color: #e91e63;
+    background-color: rgba(233, 30, 99, 0.08);
+    border-color: rgba(233, 30, 99, 0.25);
 }
 
 /* Preview thumb */
 .theme-daylight .preview-thumb {
-    border-color: rgba(212, 160, 23, 0.3);
+    border-color: rgba(233, 30, 99, 0.25);
 }
 
 /* Colabo */
 .theme-daylight .colabo-shop-image {
-    border-color: rgba(212, 160, 23, 0.3);
+    border-color: rgba(233, 30, 99, 0.25);
 }
 
-/* HelpBox */
+/* HelpBox — USS fallback (C#でも上書きするが二重保险) */
 .theme-daylight HelpBox {
-    background-color: rgba(212, 160, 23, 0.06);
-    border-color: rgba(212, 160, 23, 0.15);
-    color: #6d4c7d;
+    background-color: #fff8e1;
+    border-color: rgba(233, 30, 99, 0.2);
+    color: #880e4f;
 }
 
 /* Part card */
 .theme-daylight .part-card {
     background-color: #ffffff;
-    border-color: #f0d4e2;
+    border-color: #f8bbd0;
 }
 
 .theme-daylight .part-card:hover {
-    border-color: #d4a017;
-    background-color: #fdf0f5;
+    border-color: #e91e63;
+    background-color: #fff5f8;
 }
 
 .theme-daylight .part-card-label {
-    color: #d4a017;
+    color: #e91e63;
 }
 
-/* Fade section */
-.theme-daylight .fade-section {
-    background-color: #fdf0f5;
-    border-color: #f0d4e2;
+/* ── Unity標準要素のライトモード上書き ── */
+
+/* TextField 入力欄 */
+.theme-daylight .unity-base-field__input {
+    background-color: #fff0f4;
+    border-color: #f8bbd0;
+    color: #4a1942;
 }
 
-.theme-daylight .fade-part-label {
-    color: #ff8f00;
+/* ObjectField */
+.theme-daylight .unity-object-field {
+    background-color: #fff0f4;
+}
+
+.theme-daylight .unity-object-field__object {
+    background-color: #fff0f4;
+    color: #4a1942;
+}
+
+/* Color Field */
+.theme-daylight .unity-color-field {
+    background-color: #fff0f4;
+    border-color: #f8bbd0;
+}
+
+/* Integer/Float Field */
+.theme-daylight .unity-integer-field,
+.theme-daylight .unity-float-field {
+    background-color: #fff0f4;
+    color: #4a1942;
+}
+
+/* PropertyField label */
+.theme-daylight .unity-property-field__label {
+    color: #880e4f !important;
+}
+
+/* Foldout */
+.theme-daylight .unity-foldout {
+    color: #4a1942;
+}
+
+.theme-daylight .unity-foldout__text {
+    color: #4a1942;
+}
+
+/* Toggle */
+.theme-daylight .unity-toggle {
+    color: #4a1942;
+}
+
+/* LayerMask Field */
+.theme-daylight .unity-layer-mask-field {
+    background-color: #fff0f4;
+    border-color: #f8bbd0;
+}
+
+/* Array size field */
+.theme-daylight .unity-array-size-field {
+    background-color: #fff0f4;
 }

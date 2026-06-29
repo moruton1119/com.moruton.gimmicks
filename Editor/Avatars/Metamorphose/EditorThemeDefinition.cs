@@ -76,20 +76,21 @@ namespace Moruton.Gimmicks.Editor
             ussClassName = "theme-daylight",
             openingPalette = MagicalOpeningEffect.ThemePalette.Daylight,
 
-            windowBg = new Color(1f, 0.941f, 0.961f, 1f),
-            windowText = new Color(0.290f, 0.188f, 0.251f, 1f),
-            panelBg = new Color(1f, 0.882f, 0.929f, 1f),
-            sidebarBg = new Color(1f, 0.839f, 0.894f, 1f),
-            topbarBg = new Color(1f, 0.882f, 0.929f, 1f),
-            elevatedBg = new Color(1f, 1f, 1f, 1f),
-            bannerBg = new Color(1f, 0.882f, 0.929f, 1f),
-            inputBg = new Color(1f, 0.965f, 0.976f, 1f),
-            hoverBg = new Color(0.992f, 0.941f, 0.961f, 1f),
-            accent = new Color(0.831f, 0.627f, 0.090f, 1f),
-            accentHover = new Color(0.941f, 0.690f, 0.125f, 1f),
-            border = new Color(0.941f, 0.831f, 0.886f, 1f),
-            textSecondary = new Color(0.427f, 0.298f, 0.490f, 1f),
-            textDim = new Color(0.620f, 0.494f, 0.682f, 1f),
+            // ★ Rose-Pink palette — ピンク背景と調和する統一感のある配色
+            windowBg = new Color(1f, 0.961f, 0.973f, 1f),       // #fff5f8
+            windowText = new Color(0.290f, 0.098f, 0.259f, 1f),  // #4a1942
+            panelBg = new Color(1f, 0.894f, 0.929f, 1f),         // #ffe4ec
+            sidebarBg = new Color(0.988f, 0.839f, 0.894f, 1f),   // #fce4ec
+            topbarBg = new Color(1f, 0.894f, 0.929f, 1f),         // #ffe4ec
+            elevatedBg = new Color(1f, 1f, 1f, 1f),              // #ffffff
+            bannerBg = new Color(0.988f, 0.839f, 0.894f, 1f),   // #fce4ec
+            inputBg = new Color(1f, 0.941f, 0.965f, 1f),         // #fff0f4
+            hoverBg = new Color(0.988f, 0.894f, 0.925f, 1f),     // #fce4ec
+            accent = new Color(0.910f, 0.118f, 0.388f, 1f),      // #e91e63 (rose-pink)
+            accentHover = new Color(0.941f, 0.384f, 0.573f, 1f),  // #f06292
+            border = new Color(0.973f, 0.733f, 0.816f, 1f),      // #f8bbd0
+            textSecondary = new Color(0.533f, 0.055f, 0.310f, 1f), // #880e4f
+            textDim = new Color(0.678f, 0.482f, 0.667f, 1f),     // #ad7baa
         };
 
         // ═══════════════════════════════════════════
