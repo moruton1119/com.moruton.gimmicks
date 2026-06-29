@@ -322,3 +322,59 @@
 .theme-daylight .unity-toggle {
     color: var(--text);
 }
+
+/* ═══════════════════════════════════════════════
+   配列・リスト要素 (ReorderableList)
+   ═══════════════════════════════════════════════ */
+
+/* リスト全体の背景 */
+.theme-daylight .unity-list-view {
+    background-color: var(--bg-input);
+    border-color: var(--border-subtle);
+}
+
+/* 個別の配列要素 */
+.theme-daylight .unity-list-view__reorderable-item {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
+}
+
+.theme-daylight .unity-list-view__reorderable-item:hover {
+    background-color: var(--bg-hover);
+}
+
+/* ドラッグハンドル */
+.theme-daylight .unity-list-view__reorderable-item__drag-handle {
+    background-color: var(--border);
+}
+
+.theme-daylight .unity-list-view__reorderable-item__drag-handle:hover {
+    background-color: var(--accent);
+}
+
+/* 削除ボタン */
+.theme-daylight .unity-list-view__reorderable-item__remove-button {
+    color: var(--text-dim);
+    background-color: transparent;
+}
+
+.theme-daylight .unity-list-view__reorderable-item__remove-button:hover {
+    color: var(--accent-red);
+    background-color: var(--bg-hover);
+}
+
+/* 配列のサイズ変更フィールド */
+.theme-daylight .unity-array-size-field__input {
+    background-color: var(--bg-input);
+    color: var(--text);
+}
+
+/* Foldout（配列の折りたたみヘッダー） */
+.theme-daylight .unity-foldout__toggle {
+    color: var(--accent);
+}
+
+/* ScrollView内のリストスクロールバー */
+.theme-daylight .unity-scroll-view {
+    background-color: transparent;
+}

@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════
    Moonlight Theme — Dark Magical Girl
+   全色 CSS変数で制御 — ハードコードなし
    ═══════════════════════════════════════════════ */
 
 /* ★ Moonlight CSS変数定義 */
@@ -38,42 +39,137 @@
     --radius-lg: 14px;
 }
 
+/* ═══════════════════════════════════════════════
+   Layout elements
+   ═══════════════════════════════════════════════ */
+
 .theme-moonlight .content-panel {
-    background-color: #1a0e2e;
+    background-color: var(--bg-night);
 }
 
 .theme-moonlight .pages-container {
-    background-color: #1a0e2e;
+    background-color: var(--bg-night);
 }
 
 .theme-moonlight .field-group {
-    background-color: #241638;
-    border-color: #2d1b4a;
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
 }
 
 .theme-moonlight .field-group-title {
-    color: #c4a8ff;
-    border-bottom-color: rgba(255, 107, 157, 0.15);
+    color: var(--accent-purple);
+    border-bottom-color: var(--accent-border);
 }
 
 .theme-moonlight HelpBox {
-    background-color: rgba(255, 107, 157, 0.08);
-    border-color: rgba(255, 107, 157, 0.2);
-    color: #c4b8e0;
+    background-color: var(--helpbox-bg);
+    border-color: var(--accent-border);
+    color: var(--text-secondary);
 }
 
 .theme-moonlight .part-card {
-    background-color: #241638;
-    border-color: #2d1b4a;
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
 }
 
 .theme-moonlight .part-card:hover {
-    border-color: #ff6b9d;
-    background-color: #2e1d4a;
+    border-color: var(--accent);
+    background-color: var(--bg-hover);
 }
 
 .theme-moonlight .fade-section {
-    background-color: rgba(196, 168, 255, 0.08);
-    border-color: #2d1b4a;
+    background-color: var(--glow-purple);
+    border-color: var(--border-subtle);
 }
 
+/* ═══════════════════════════════════════════════
+   Unity標準要素
+   ═══════════════════════════════════════════════ */
+
+/* TextField / ObjectField 入力欄 */
+.theme-moonlight .unity-base-field__input {
+    background-color: var(--bg-input);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.theme-moonlight .unity-object-field__object {
+    background-color: var(--bg-input);
+    color: var(--text);
+}
+
+.theme-moonlight .unity-color-field {
+    background-color: var(--bg-input);
+    border-color: var(--border);
+}
+
+.theme-moonlight .unity-integer-field,
+.theme-moonlight .unity-float-field {
+    background-color: var(--bg-input);
+    color: var(--text);
+}
+
+.theme-moonlight .unity-property-field__label {
+    color: var(--text-secondary) !important;
+}
+
+.theme-moonlight .unity-foldout {
+    color: var(--text);
+}
+
+.theme-moonlight .unity-foldout__text {
+    color: var(--text);
+}
+
+.theme-moonlight .unity-toggle {
+    color: var(--text);
+}
+
+/* ═══════════════════════════════════════════════
+   配列・リスト要素 (ReorderableList)
+   ═══════════════════════════════════════════════ */
+
+.theme-moonlight .unity-list-view {
+    background-color: var(--bg-input);
+    border-color: var(--border-subtle);
+}
+
+.theme-moonlight .unity-list-view__reorderable-item {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-subtle);
+}
+
+.theme-moonlight .unity-list-view__reorderable-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.theme-moonlight .unity-list-view__reorderable-item__drag-handle {
+    background-color: var(--border);
+}
+
+.theme-moonlight .unity-list-view__reorderable-item__drag-handle:hover {
+    background-color: var(--accent);
+}
+
+.theme-moonlight .unity-list-view__reorderable-item__remove-button {
+    color: var(--text-dim);
+    background-color: transparent;
+}
+
+.theme-moonlight .unity-list-view__reorderable-item__remove-button:hover {
+    color: var(--accent-red);
+    background-color: var(--bg-hover);
+}
+
+.theme-moonlight .unity-array-size-field__input {
+    background-color: var(--bg-input);
+    color: var(--text);
+}
+
+.theme-moonlight .unity-foldout__toggle {
+    color: var(--accent);
+}
+
+.theme-moonlight .unity-scroll-view {
+    background-color: transparent;
+}

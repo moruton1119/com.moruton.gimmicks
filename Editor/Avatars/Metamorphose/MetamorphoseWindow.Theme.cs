@@ -153,6 +153,31 @@ namespace Moruton.Gimmicks.Editor
             {
                 sv.style.backgroundColor = new Color(0, 0, 0, 0);
             }
+
+            // 配列・リスト要素（USS cascadeが届かないことがあるのでC#でも確実に）
+            var listItems = root.Query(className: "unity-list-view__reorderable-item").ToList();
+            foreach (var item in listItems)
+            {
+                item.style.backgroundColor = theme.elevatedBg;
+                item.style.borderTopColor = theme.border;
+                item.style.borderBottomColor = theme.border;
+                item.style.borderLeftColor = theme.border;
+                item.style.borderRightColor = theme.border;
+            }
+
+            // 配列要素のドラッグハンドル
+            var dragHandles = root.Query(className: "unity-list-view__reorderable-item__drag-handle").ToList();
+            foreach (var handle in dragHandles)
+            {
+                handle.style.backgroundColor = theme.border;
+            }
+
+            // リスト全体の背景
+            var listViews = root.Query<ListView>().ToList();
+            foreach (var lv in listViews)
+            {
+                lv.style.backgroundColor = theme.inputBg;
+            }
         }
 
         private void SetBg(VisualElement root, string elementName, Color color)
