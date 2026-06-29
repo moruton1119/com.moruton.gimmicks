@@ -1,10 +1,10 @@
 /* ═══════════════════════════════════════════════
    LIGHT THEME EXPLICIT OVERRIDES
    .theme-daylight 配下の全要素の色を明示的に上書き
+   全色 CSS変数で制御 — ハードコードなし
    ═══════════════════════════════════════════════ */
 
-/* ★ CSS変数の上書き — Daylight パレット
-   アクセントをrose-pinkに統一してピンク背景と調和させる */
+/* ★ Daylight CSS変数定義 — 唯一の色ソース */
 .theme-daylight {
     --bg-night: #fff5f8;
     --bg-deep: #ffe4ed;
@@ -14,6 +14,7 @@
     --topbar-bg: #ffe4ed;
     --sidebar-bg: #ffd6e4;
     --banner-bg: #ffe4ed;
+    --helpbox-bg: #fff8e1;
 
     --accent: #e91e63;
     --accent-hover: #f06292;
@@ -40,282 +41,284 @@
     --radius-lg: 14px;
 }
 
-/* Content panel */
+/* ═══════════════════════════════════════════════
+   Layout elements — 全部 var() 参照
+   ═══════════════════════════════════════════════ */
+
 .theme-daylight .content-panel {
-    background-color: #fff5f8;
+    background-color: var(--bg-night);
 }
 
-/* Pages container */
 .theme-daylight .pages-container {
-    background-color: #fff5f8;
+    background-color: var(--bg-night);
 }
 
-/* Page description */
 .theme-daylight .page-desc {
-    color: #880e4f;
+    color: var(--text-secondary);
 }
 
 /* Field Group */
 .theme-daylight .field-group {
-    background-color: #ffffff;
-    border-color: #f8bbd0;
+    background-color: var(--bg-elevated);
+    border-color: var(--border);
 }
 
 .theme-daylight .field-group-title {
-    color: #ad1457;
-    border-bottom-color: rgba(233, 30, 99, 0.2);
+    color: var(--accent-purple);
+    border-bottom-color: var(--accent-border);
 }
 
 /* Part Section */
 .theme-daylight .part-section {
-    background-color: #fdf0f5;
-    border-color: #f8bbd0;
+    background-color: var(--glow-purple);
+    border-color: var(--border);
 }
 
 .theme-daylight .part-label {
-    color: #e91e63;
+    color: var(--accent);
 }
 
 /* Fade Section */
 .theme-daylight .fade-section {
-    background-color: #fdf0f5;
-    border-color: #f8bbd0;
+    background-color: var(--glow-purple);
+    border-color: var(--border);
 }
 
 .theme-daylight .fade-part-label {
-    color: #e65100;
-}
-
-/* Dev Page field slots */
-.theme-daylight .dev-page .field-slot > PropertyField > .unity-property-field__label {
-    color: #880e4f;
+    color: var(--accent-orange);
 }
 
 /* Field Slot labels */
 .theme-daylight .field-slot > PropertyField > .unity-property-field__label {
-    color: #880e4f;
+    color: var(--text-secondary);
 }
 
-/* Nav buttons in light mode */
+.theme-daylight .dev-page .field-slot > PropertyField > .unity-property-field__label {
+    color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════════
+   Navigation
+   ═══════════════════════════════════════════════ */
+
 .theme-daylight .nav-num {
-    background-color: #ffffff;
-    color: #ad7baa;
-    border-color: #f8bbd0;
+    background-color: var(--bg-elevated);
+    color: var(--text-dim);
+    border-color: var(--border);
 }
 
 .theme-daylight .nav-num:hover {
-    background-color: #fce4ec;
-    color: #4a1942;
+    background-color: var(--bg-hover);
+    color: var(--text);
 }
 
 .theme-daylight .nav-num.active {
-    background-color: #e91e63;
+    background-color: var(--accent);
     color: #ffffff;
-    border-color: #e91e63;
+    border-color: var(--accent);
 }
 
-/* Link buttons */
 .theme-daylight .nav-link {
-    background-color: #ffffff;
-    color: #880e4f;
-    border-color: #f8bbd0;
+    background-color: var(--bg-elevated);
+    color: var(--text-secondary);
+    border-color: var(--border);
 }
 
 .theme-daylight .nav-link:hover {
-    background-color: #fce4ec;
+    background-color: var(--bg-hover);
 }
 
-/* Dev button */
 .theme-daylight .dev-btn {
-    color: #e65100;
+    color: var(--accent-orange);
 }
 
 .theme-daylight .dev-btn:hover {
-    background-color: rgba(230, 81, 0, 0.10);
+    background-color: var(--accent-bg);
 }
 
 .theme-daylight .dev-btn.active {
-    background-color: #e65100;
+    background-color: var(--accent-orange);
     color: #ffffff;
 }
 
 /* Part toggle */
 .theme-daylight .part-toggle {
-    background-color: #e91e63;
+    background-color: var(--accent);
 }
 
 .theme-daylight .part-toggle:hover {
-    background-color: #f06292;
+    background-color: var(--accent-hover);
 }
 
 .theme-daylight .part-toggle-off {
-    background-color: #fce4ec;
-    color: #ad7baa;
+    background-color: var(--bg-hover);
+    color: var(--text-dim);
 }
 
-/* Topbar */
+/* ═══════════════════════════════════════════════
+   Topbar / Language bar
+   ═══════════════════════════════════════════════ */
+
 .theme-daylight .topbar {
-    background-color: #ffffff;
-    border-bottom-color: #e91e63;
+    background-color: var(--bg-elevated);
+    border-bottom-color: var(--accent);
 }
 
 .theme-daylight .topbar-title {
-    color: #e91e63;
+    color: var(--accent);
 }
 
-/* Language bar */
 .theme-daylight .lang-bar {
-    background-color: #fce4ec;
+    background-color: var(--bg-hover);
 }
 
 .theme-daylight .lang-btn {
-    color: #ad7baa;
+    color: var(--text-dim);
 }
 
 .theme-daylight .lang-btn:hover {
-    color: #4a1942;
-    background-color: #f8bbd0;
+    color: var(--text);
+    background-color: var(--border);
 }
 
 .theme-daylight .lang-btn.selected {
-    background-color: #e91e63;
+    background-color: var(--accent);
     color: #ffffff;
 }
 
-/* Sidebar */
+/* ═══════════════════════════════════════════════
+   Sidebar / Banner
+   ═══════════════════════════════════════════════ */
+
 .theme-daylight .sidebar {
-    background-color: #fce4ec;
-    border-right-color: #e91e63;
+    background-color: var(--sidebar-bg);
+    border-right-color: var(--accent);
 }
 
 .theme-daylight .sidebar-header {
-    color: #e91e63;
+    color: var(--accent);
 }
 
-/* Banner */
 .theme-daylight .banner {
-    background-color: #fce4ec;
-    border-top-color: rgba(233, 30, 99, 0.3);
+    background-color: var(--banner-bg);
+    border-top-color: var(--accent-border);
 }
 
 .theme-daylight .banner-card {
-    background-color: #ffffff;
-    border-color: #f8bbd0;
+    background-color: var(--bg-elevated);
+    border-color: var(--border);
 }
 
 .theme-daylight .banner-card:hover {
-    border-color: #e91e63;
-    background-color: #fff5f8;
+    border-color: var(--accent);
+    background-color: var(--bg-night);
 }
 
 .theme-daylight .banner-card-label {
-    color: #4a1942;
+    color: var(--text);
 }
 
-/* Theme toggle */
+/* ═══════════════════════════════════════════════
+   Buttons / Toggle / Preview
+   ═══════════════════════════════════════════════ */
+
 .theme-daylight .theme-toggle {
-    color: #e91e63;
-    background-color: rgba(233, 30, 99, 0.08);
-    border-color: rgba(233, 30, 99, 0.25);
+    color: var(--accent);
+    background-color: var(--accent-bg);
+    border-color: var(--accent-border);
 }
 
-/* Link button */
 .theme-daylight .link-btn {
-    color: #e91e63;
-    background-color: rgba(233, 30, 99, 0.08);
-    border-color: rgba(233, 30, 99, 0.25);
+    color: var(--accent);
+    background-color: var(--accent-bg);
+    border-color: var(--accent-border);
 }
 
-/* Preview thumb */
 .theme-daylight .preview-thumb {
-    border-color: rgba(233, 30, 99, 0.25);
+    border-color: var(--accent-border);
 }
 
-/* Colabo */
 .theme-daylight .colabo-shop-image {
-    border-color: rgba(233, 30, 99, 0.25);
-}
-
-/* HelpBox — USS fallback (C#でも上書きするが二重保险) */
-.theme-daylight HelpBox {
-    background-color: #fff8e1;
-    border-color: rgba(233, 30, 99, 0.2);
-    color: #880e4f;
+    border-color: var(--accent-border);
 }
 
 /* Part card */
 .theme-daylight .part-card {
-    background-color: #ffffff;
-    border-color: #f8bbd0;
+    background-color: var(--bg-elevated);
+    border-color: var(--border);
 }
 
 .theme-daylight .part-card:hover {
-    border-color: #e91e63;
-    background-color: #fff5f8;
+    border-color: var(--accent);
+    background-color: var(--bg-night);
 }
 
 .theme-daylight .part-card-label {
-    color: #e91e63;
+    color: var(--accent);
 }
 
-/* ── Unity標準要素のライトモード上書き ── */
+/* ═══════════════════════════════════════════════
+   Unity標準要素のライトモード上書き
+   ═══════════════════════════════════════════════ */
 
-/* TextField 入力欄 */
+/* HelpBox */
+.theme-daylight HelpBox {
+    background-color: var(--helpbox-bg);
+    border-color: var(--accent-border);
+    color: var(--text-secondary);
+}
+
+/* TextField / ObjectField 入力欄 */
 .theme-daylight .unity-base-field__input {
-    background-color: #fff0f4;
-    border-color: #f8bbd0;
-    color: #4a1942;
+    background-color: var(--bg-input);
+    border-color: var(--border);
+    color: var(--text);
 }
 
-/* ObjectField */
 .theme-daylight .unity-object-field {
-    background-color: #fff0f4;
+    background-color: var(--bg-input);
 }
 
 .theme-daylight .unity-object-field__object {
-    background-color: #fff0f4;
-    color: #4a1942;
+    background-color: var(--bg-input);
+    color: var(--text);
 }
 
-/* Color Field */
 .theme-daylight .unity-color-field {
-    background-color: #fff0f4;
-    border-color: #f8bbd0;
+    background-color: var(--bg-input);
+    border-color: var(--border);
 }
 
-/* Integer/Float Field */
 .theme-daylight .unity-integer-field,
 .theme-daylight .unity-float-field {
-    background-color: #fff0f4;
-    color: #4a1942;
+    background-color: var(--bg-input);
+    color: var(--text);
+}
+
+.theme-daylight .unity-layer-mask-field {
+    background-color: var(--bg-input);
+    border-color: var(--border);
+}
+
+.theme-daylight .unity-array-size-field {
+    background-color: var(--bg-input);
 }
 
 /* PropertyField label */
 .theme-daylight .unity-property-field__label {
-    color: #880e4f !important;
+    color: var(--text-secondary) !important;
 }
 
 /* Foldout */
 .theme-daylight .unity-foldout {
-    color: #4a1942;
+    color: var(--text);
 }
 
 .theme-daylight .unity-foldout__text {
-    color: #4a1942;
+    color: var(--text);
 }
 
 /* Toggle */
 .theme-daylight .unity-toggle {
-    color: #4a1942;
-}
-
-/* LayerMask Field */
-.theme-daylight .unity-layer-mask-field {
-    background-color: #fff0f4;
-    border-color: #f8bbd0;
-}
-
-/* Array size field */
-.theme-daylight .unity-array-size-field {
-    background-color: #fff0f4;
+    color: var(--text);
 }

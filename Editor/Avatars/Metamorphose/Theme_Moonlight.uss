@@ -12,6 +12,7 @@
     --topbar-bg: #241638;
     --sidebar-bg: #13091f;
     --banner-bg: #0f0719;
+    --helpbox-bg: #28193e;
 
     --accent: #ff6b9d;
     --accent-hover: #ff8fb8;

@@ -103,9 +103,7 @@ namespace Moruton.Gimmicks.Editor
             var helpBoxes = root.Query<HelpBox>().ToList();
             foreach (var hb in helpBoxes)
             {
-                hb.style.backgroundColor = theme.id == "Daylight"
-                    ? new Color(1f, 0.965f, 0.882f, 1f)   // クリーミーな暖色
-                    : new Color(0.16f, 0.10f, 0.25f, 1f);  // 暗い紫;
+                hb.style.backgroundColor = theme.helpBoxBg;
                 hb.style.color = theme.textSecondary;
                 hb.style.borderLeftWidth = 3f;
                 hb.style.borderLeftColor = theme.accent;

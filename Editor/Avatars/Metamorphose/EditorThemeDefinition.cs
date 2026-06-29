@@ -39,6 +39,7 @@ namespace Moruton.Gimmicks.Editor
         public Color border;         // 境界線
         public Color textSecondary;  // 補助文字色
         public Color textDim;        // 薄い文字色
+        public Color helpBoxBg;      // HelpBox背景色
 
         /// <summary>
         /// Moonlight（ダーク・魔法少女）テーマ
@@ -64,6 +65,7 @@ namespace Moruton.Gimmicks.Editor
             border = new Color(0.227f, 0.149f, 0.345f, 1f),
             textSecondary = new Color(0.769f, 0.722f, 0.878f, 1f),
             textDim = new Color(0.478f, 0.416f, 0.62f, 1f),
+            helpBoxBg = new Color(0.16f, 0.10f, 0.25f, 1f),
         };
 
         /// <summary>
@@ -91,6 +93,7 @@ namespace Moruton.Gimmicks.Editor
             border = new Color(0.973f, 0.733f, 0.816f, 1f),      // #f8bbd0
             textSecondary = new Color(0.533f, 0.055f, 0.310f, 1f), // #880e4f
             textDim = new Color(0.678f, 0.482f, 0.667f, 1f),     // #ad7baa
+            helpBoxBg = new Color(1f, 0.973f, 0.882f, 1f),      // #fff8e1
         };
 
         // ═══════════════════════════════════════════
