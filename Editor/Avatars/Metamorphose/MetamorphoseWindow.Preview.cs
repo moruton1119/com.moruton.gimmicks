@@ -147,8 +147,7 @@ namespace Moruton.Gimmicks.Editor
                 if (maxDim <= 0f) maxDim = 1f;
 
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-                // より近づける（0.75 → 0.65）
-                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 0.65f;
+                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 0.45f; // もっと近づける
 
                 Vector3 center = bounds.center;
                 preview.camera.transform.position = center - Vector3.forward * dist;

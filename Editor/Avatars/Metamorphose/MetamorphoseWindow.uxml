@@ -8,7 +8,7 @@
     <!-- ===== Top Bar ===== -->
     <ui:VisualElement name="topbar" class="topbar">
       <ui:VisualElement class="topbar-left" style="flex-direction: row; align-items: center;">
-        <ui:Label name="topbar-title" class="topbar-title" text="✦ Metamorphose Setup" />
+        <ui:Label name="topbar-title" class="topbar-title" text="Metamorphose Setup" />
       </ui:VisualElement>
       <ui:VisualElement class="topbar-right" style="flex-direction: row; align-items: center;">
         <ui:VisualElement name="lang-bar" class="lang-bar">
@@ -29,8 +29,9 @@
         <ui:Label class="sidebar-header" text="MENU" />
 
         <ui:Button name="btn-booth" class="nav-link" text="Booth" />
+        <ui:Button name="btn-x" class="nav-link" text="X" />
+        <ui:Button name="btn-note" class="nav-link" text="Note" />
         <ui:Button name="btn-discord" class="nav-link" text="Discord" />
-        <ui:Button name="btn-colabo" class="nav-link" text="Colabo" />
 
         <ui:VisualElement class="sidebar-spacer" />
 
@@ -39,64 +40,73 @@
 
       <!-- Content -->
       <ui:VisualElement name="content" class="content-panel">
+
+        <!-- Tab Bar -->
+        <ui:VisualElement name="tab-bar" class="tab-bar">
+          <ui:Button name="tab-main" class="tab-btn tab-active" text="Main" />
+          <ui:Button name="tab-colabo" class="tab-btn" text="Colabo" />
+        </ui:VisualElement>
+
         <ui:ScrollView name="scroll-content">
           <ui:VisualElement name="pages-container" class="pages-container">
 
             <!-- ===== Main Page ===== -->
             <ui:VisualElement name="page-main" class="page">
 
-              <!-- 変身前の衣装 -->
+              <!-- Step 1: 変身前の衣装 -->
               <ui:VisualElement name="section-off" class="field-group outfit-section">
-                <ui:Label name="fg-off-title" class="field-group-title" text="◆ 変身前の衣装" />
-                <ui:VisualElement name="page0-slot-offTargets" class="field-slot" />
+                <ui:Label name="fg-off-title" class="field-group-title" text="Step 1: Before" />
+                <ui:HelpBox name="off-help" message-type="Info" />
+                <ui:VisualElement name="page0-slot-offTargets" class="field-slot drag-drop-area" />
                 <ui:VisualElement name="off-preview" class="preview-row" />
               </ui:VisualElement>
 
-              <!-- 変身後の衣装 -->
+              <!-- Step 2: 変身後の衣装 -->
               <ui:VisualElement name="section-after" class="field-group">
-                <ui:Label name="fg-after-title" class="field-group-title" text="◆ 変身後の衣装" />
+                <ui:Label name="fg-after-title" class="field-group-title" text="Step 2: After" />
                 <ui:HelpBox name="page1-help" message-type="Info" />
 
                 <ui:VisualElement name="parts-grid" class="parts-grid">
 
                   <ui:VisualElement name="section-head" class="part-card">
                     <ui:Label name="label-head" class="part-card-label" text="Head" />
-                    <ui:VisualElement name="page0-slot-headItems" class="field-slot" />
+                    <ui:VisualElement name="page0-slot-headItems" class="field-slot drag-drop-area" />
                     <ui:VisualElement name="head-preview" class="preview-row" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-body" class="part-card">
                     <ui:Label name="label-body" class="part-card-label" text="Body" />
-                    <ui:VisualElement name="page0-slot-bodyItems" class="field-slot" />
+                    <ui:VisualElement name="page0-slot-bodyItems" class="field-slot drag-drop-area" />
                     <ui:VisualElement name="body-preview" class="preview-row" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-hand" class="part-card">
                     <ui:Label name="label-hand" class="part-card-label" text="Hand" />
-                    <ui:VisualElement name="page0-slot-handItems" class="field-slot" />
+                    <ui:VisualElement name="page0-slot-handItems" class="field-slot drag-drop-area" />
                     <ui:VisualElement name="hand-preview" class="preview-row" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-leg" class="part-card">
                     <ui:Label name="label-leg" class="part-card-label" text="Leg" />
-                    <ui:VisualElement name="page0-slot-legItems" class="field-slot" />
+                    <ui:VisualElement name="page0-slot-legItems" class="field-slot drag-drop-area" />
                     <ui:VisualElement name="leg-preview" class="preview-row" />
                   </ui:VisualElement>
 
                 </ui:VisualElement>
               </ui:VisualElement>
 
-              <!-- ギミック色 -->
+              <!-- Step 3: ギミック色 -->
               <ui:VisualElement name="section-color" class="field-group">
-                <ui:Label name="fg-color-title" class="field-group-title" text="◆ ギミック色" />
+                <ui:Label name="fg-color-title" class="field-group-title" text="Step 3: Color" />
                 <ui:VisualElement name="page0-slot-gimmickColor" class="field-slot" />
               </ui:VisualElement>
 
-              <!-- Avatar -->
+              <!-- Step 4: Avatar & Animation -->
               <ui:VisualElement name="section-avatar" class="field-group">
-                <ui:Label name="fg-avatar-title" class="field-group-title" text="◆ Avatar" />
+                <ui:Label name="fg-avatar-title" class="field-group-title" text="Step 4: Finish" />
+                <ui:HelpBox name="anim-help" message-type="Warning" />
                 <ui:VisualElement name="page0-slot-avatar" class="field-slot" />
-                <ui:Button name="btn-generate-anim" class="link-btn" text="Generate Animation" />
+                <ui:Button name="btn-generate-anim" class="action-btn-generate" text="Generate Animation" />
               </ui:VisualElement>
 
             </ui:VisualElement>
@@ -104,33 +114,31 @@
             <!-- ===== Colabo Page ===== -->
             <ui:VisualElement name="page-colabo" class="page" style="display: none;">
 
-              <!-- コラボショップ -->
               <ui:VisualElement name="section-colabo-shop" class="field-group">
-                <ui:Label name="fg-colabo-title" class="field-group-title" text="◆ コラボ情報" />
+                <ui:Label name="fg-colabo-title" class="field-group-title" text="Colabo Info" />
                 <ui:VisualElement name="colabo-image-container" class="colabo-preview" />
                 <ui:Button name="btn-colabo-shop" class="link-btn" text="Open Shop" />
                 <ui:HelpBox name="colabo-help" message-type="Info" />
               </ui:VisualElement>
 
-              <!-- フェード演出 -->
               <ui:VisualElement name="section-fade" class="field-group">
-                <ui:Label name="fg-fade-title" class="field-group-title" text="◆ フェード演出" />
+                <ui:Label name="fg-fade-title" class="field-group-title" text="Fade Effects" />
 
                 <ui:VisualElement name="section-fadeHead" class="fade-section">
                   <ui:Label text="Head" class="fade-part-label" />
-                  <ui:VisualElement name="page2-slot-fadeHeadItems" class="field-slot" />
+                  <ui:VisualElement name="page2-slot-fadeHeadItems" class="field-slot drag-drop-area" />
                 </ui:VisualElement>
                 <ui:VisualElement name="section-fadeBody" class="fade-section">
                   <ui:Label text="Body" class="fade-part-label" />
-                  <ui:VisualElement name="page2-slot-fadeBodyItems" class="field-slot" />
+                  <ui:VisualElement name="page2-slot-fadeBodyItems" class="field-slot drag-drop-area" />
                 </ui:VisualElement>
                 <ui:VisualElement name="section-fadeArm" class="fade-section">
                   <ui:Label text="Arm" class="fade-part-label" />
-                  <ui:VisualElement name="page2-slot-fadeArmItems" class="field-slot" />
+                  <ui:VisualElement name="page2-slot-fadeArmItems" class="field-slot drag-drop-area" />
                 </ui:VisualElement>
                 <ui:VisualElement name="section-fadeLeg" class="fade-section">
                   <ui:Label text="Leg" class="fade-part-label" />
-                  <ui:VisualElement name="page2-slot-fadeLegItems" class="field-slot" />
+                  <ui:VisualElement name="page2-slot-fadeLegItems" class="field-slot drag-drop-area" />
                 </ui:VisualElement>
               </ui:VisualElement>
 
@@ -155,7 +163,7 @@
               <ui:VisualElement name="page3-slot-devColaboItem" class="field-slot" />
               <ui:VisualElement name="page3-slot-devColaboFBX" class="field-slot" />
 
-              <ui:Label name="fg3-items-toggle" class="field-group-title" text="部位表示切替" />
+              <ui:Label name="fg3-items-toggle" class="field-group-title" text="Parts Visibility" />
               <ui:VisualElement class="dev-toggle-grid">
                 <ui:Button name="toggle-head" class="part-toggle" text="Head: ON" />
                 <ui:Button name="toggle-body" class="part-toggle" text="Body: ON" />
@@ -163,7 +171,7 @@
                 <ui:Button name="toggle-leg" class="part-toggle" text="Leg: ON" />
               </ui:VisualElement>
 
-              <ui:Label name="fg3-fade-toggle" class="field-group-title" text="フェード部位表示切替" />
+              <ui:Label name="fg3-fade-toggle" class="field-group-title" text="Fade Parts Visibility" />
               <ui:VisualElement class="dev-toggle-grid">
                 <ui:Button name="toggle-fadeHead" class="part-toggle" text="F-Head: ON" />
                 <ui:Button name="toggle-fadeBody" class="part-toggle" text="F-Body: ON" />
@@ -189,9 +197,9 @@
               <ui:Label name="fg3-banner" class="field-group-title" />
               <ui:VisualElement name="page3-slot-bannerAdUrls" class="field-slot" />
 
-              <ui:Label name="fg3-editor-theme" class="field-group-title" text="✦ Editor Theme" />
+              <ui:Label name="fg3-editor-theme" class="field-group-title" text="Editor Theme" />
               <ui:VisualElement name="page3-slot-editorTheme" class="field-slot" />
-              <ui:Button name="theme-toggle" class="link-btn" text="🌙 Toggle Theme" tooltip="Toggle Light/Dark Theme" />
+              <ui:Button name="theme-toggle" class="link-btn" text="Toggle Theme" tooltip="Toggle Light/Dark Theme" />
             </ui:VisualElement>
 
           </ui:VisualElement>

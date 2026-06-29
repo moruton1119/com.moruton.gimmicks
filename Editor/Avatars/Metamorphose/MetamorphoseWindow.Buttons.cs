@@ -26,6 +26,8 @@ namespace Moruton.Gimmicks.Editor
             }
 
             _root.Q<Button>("btn-booth").clicked += () => Application.OpenURL(BoothUrl);
+            _root.Q<Button>("btn-x").clicked += () => Application.OpenURL(XUrl);
+            _root.Q<Button>("btn-note").clicked += () => Application.OpenURL(NoteUrl);
             _root.Q<Button>("btn-discord").clicked += () => Application.OpenURL(DiscordUrl);
 
             var colaboShopBtn = _root.Q<Button>("btn-colabo-shop");

@@ -1,33 +1,26 @@
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Moruton.Gimmicks.Editor
 {
-    // ページ遷移・部位トグル・プロパティフィールド生成
+    // ページ遷移・部位トグル・プロパティフィールド生成・D&D
     public partial class MetamorphoseWindow
     {
         #region Navigation
 
         private void SetupNavigation()
         {
-            // Colabo ボタン: メイン ↔ コラボページ
-            var colaboBtn = _root.Q<Button>("btn-colabo");
-            if (colaboBtn != null)
-                colaboBtn.clicked += () =>
-                {
-                    bool isColabo = _currentPage == 1;
-                    if (isColabo)
-                    {
-                        ShowPage("page-colabo", "page-main", false);
-                        _currentPage = 0;
-                    }
-                    else
-                    {
-                        ShowPage(_currentPage == 0 ? "page-main" : "page-3", "page-colabo", true);
-                        _currentPage = 1;
-                    }
-                };
+            // Tab切り替え: Main ↔ Colabo
+            var tabMain = _root.Q<Button>("tab-main");
+            var tabColabo = _root.Q<Button>("tab-colabo");
+
+            if (tabMain != null)
+                tabMain.clicked += () => SwitchToMain();
+
+            if (tabColabo != null)
+                tabColabo.clicked += () => SwitchToColabo();
 
             // Dev ボタンでメインページ ↔ Devページを切替
             var devBtn = _root.Q<Button>("nav-3");
@@ -39,13 +32,56 @@ namespace Moruton.Gimmicks.Editor
                     {
                         ShowPage("page-3", "page-main", false);
                         _currentPage = 0;
+                        UpdateTabActive(true);
                     }
                     else
                     {
                         ShowPage(_currentPage == 0 ? "page-main" : "page-colabo", "page-3", true);
                         _currentPage = 3;
+                        UpdateTabActive(false);
                     }
                 };
+        }
+
+        private void SwitchToMain()
+        {
+            if (_currentPage == 3)
+            {
+                ShowPage("page-3", "page-main", false);
+            }
+            else
+            {
+                ShowPage("page-colabo", "page-main", false);
+            }
+            _currentPage = 0;
+            UpdateTabActive(true);
+        }
+
+        private void SwitchToColabo()
+        {
+            if (_currentPage == 3)
+            {
+                ShowPage("page-3", "page-colabo", false);
+            }
+            else
+            {
+                ShowPage("page-main", "page-colabo", false);
+            }
+            _currentPage = 1;
+            UpdateTabActive(false);
+        }
+
+        private void UpdateTabActive(bool mainActive)
+        {
+            var tabMain = _root.Q<Button>("tab-main");
+            var tabColabo = _root.Q<Button>("tab-colabo");
+            if (tabMain != null) tabMain.EnableInClassList("tab-active", mainActive);
+            if (tabColabo != null) tabColabo.EnableInClassList("tab-active", !mainActive);
+
+            // タブバーの表示切替（Devページでは隠す）
+            var tabBar = _root.Q<VisualElement>("tab-bar");
+            if (tabBar != null)
+                tabBar.style.display = _currentPage == 3 ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private void ShowPage(string hidePage, string showPage, bool show)
@@ -54,6 +90,116 @@ namespace Moruton.Gimmicks.Editor
             if (hide != null) hide.style.display = DisplayStyle.None;
             var showEl = _root.Q<VisualElement>(showPage);
             if (showEl != null) showEl.style.display = DisplayStyle.Flex;
+        }
+
+        #endregion
+
+        #region Drag & Drop Setup
+
+        /// <summary>
+        /// 全ドラッグ&ドロップエリアにD&Dハンドラを登録する。
+        /// GameObjectがドロップされたら対応する配列プロパティに追加。
+        /// </summary>
+        private void SetupDragAndDrop()
+        {
+            // OffTargets
+            SetupDragDropForSlot("page0-slot-offTargets", "offTargets");
+
+            // 部位ごとのアイテム
+            SetupDragDropForSlot("page0-slot-headItems", "headItems");
+            SetupDragDropForSlot("page0-slot-bodyItems", "bodyItems");
+            SetupDragDropForSlot("page0-slot-handItems", "handItems");
+            SetupDragDropForSlot("page0-slot-legItems", "legItems");
+
+            // フェード演出アイテム
+            SetupDragDropForSlot("page2-slot-fadeHeadItems", "fadeHeadItems");
+            SetupDragDropForSlot("page2-slot-fadeBodyItems", "fadeBodyItems");
+            SetupDragDropForSlot("page2-slot-fadeArmItems", "fadeArmItems");
+            SetupDragDropForSlot("page2-slot-fadeLegItems", "fadeLegItems");
+        }
+
+        private void SetupDragDropForSlot(string slotName, string propertyPath)
+        {
+            var slot = _root.Q<VisualElement>(slotName);
+            if (slot == null) return;
+
+            // ドラッグ中のハイライト
+            slot.RegisterCallback<DragEnterEvent>(e =>
+            {
+                slot.AddToClassList("drag-drop-hover");
+            });
+            slot.RegisterCallback<DragLeaveEvent>(e =>
+            {
+                slot.RemoveFromClassList("drag-drop-hover");
+            });
+
+            // ドロップ処理
+            slot.RegisterCallback<DragPerformEvent>(e =>
+            {
+                slot.RemoveFromClassList("drag-drop-hover");
+
+                if (_target == null || _so == null) return;
+
+                // ドラッグされたオブジェクトを取得
+                var draggedObjects = DragAndDrop.objectReferences;
+                if (draggedObjects == null || draggedObjects.Length == 0) return;
+
+                _so.Update();
+                var prop = _so.FindProperty(propertyPath);
+                if (prop == null || !prop.isArray) return;
+
+                foreach (var obj in draggedObjects)
+                {
+                    GameObject go = null;
+
+                    // GameObject直接
+                    if (obj is GameObject directGo)
+                        go = directGo;
+                    // Prefabやアセットの場合
+                    else if (obj is Component comp)
+                        go = comp.gameObject;
+
+                    if (go == null) continue;
+
+                    // 重複チェック
+                    bool exists = false;
+                    for (int i = 0; i < prop.arraySize; i++)
+                    {
+                        if (prop.GetArrayElementAtIndex(i).objectReferenceValue == go)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists)
+                    {
+                        prop.InsertArrayElementAtIndex(prop.arraySize);
+                        prop.GetArrayElementAtIndex(prop.arraySize - 1).objectReferenceValue = go;
+                    }
+                }
+
+                _so.ApplyModifiedProperties();
+
+                // プレビュー更新
+                var previewName = GetPreviewNameForSlot(slotName);
+                if (previewName != null)
+                    UpdatePartPreview(previewName, propertyPath);
+
+                _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
+            });
+        }
+
+        private string GetPreviewNameForSlot(string slotName)
+        {
+            return slotName switch
+            {
+                "page0-slot-headItems" => "head-preview",
+                "page0-slot-bodyItems" => "body-preview",
+                "page0-slot-handItems" => "hand-preview",
+                "page0-slot-legItems" => "leg-preview",
+                _ => null,
+            };
         }
 
         #endregion

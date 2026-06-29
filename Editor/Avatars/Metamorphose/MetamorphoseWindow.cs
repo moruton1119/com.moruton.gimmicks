@@ -24,6 +24,8 @@ namespace Moruton.Gimmicks.Editor
 
         private const string BoothUrl = "https://moruton.booth.pm/";
         private const string DiscordUrl = "https://discord.gg/GHJwmyTcfX";
+        private const string XUrl = "https://x.com/MoruLabo";
+        private const string NoteUrl = "https://note.com/mortonlaboratory";
 
         // ═══════════════════════════════════════════════════════════
         //  バナー広告URL — 変更する場合はここを編集
@@ -196,6 +198,7 @@ namespace Moruton.Gimmicks.Editor
             RegisterPreviewCallbacks();
             SetupNavigation();
             SetupPartToggles();
+            SetupDragAndDrop();
             SetupButtonCallbacks();
             ApplyLocalization(_root);
 

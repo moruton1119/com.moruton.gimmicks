@@ -48,7 +48,7 @@ namespace Moruton.Gimmicks.Editor
                 titleColor = theme.openingTitleColor,
                 titleGlow = theme.openingTitleGlow,
                 sparkleColor = theme.openingSparkleColor,
-                titleText = "✦ Metamorphose ✦",
+                titleText = "Metamorphose",
             };
         }
 

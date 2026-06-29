@@ -17,17 +17,36 @@ namespace Moruton.Gimmicks.Editor
                 if (btn != null) btn.text = langNames[i];
             }
 
-            // メインページのラベル
+            // Step 1: 変身前の衣装
             root.Q<Label>("fg-off-title").text = L("step1_before_clothes_label");
+            var offHelp = root.Q<HelpBox>("off-help");
+            if (offHelp != null) offHelp.text = L("step1_before_clothes_help");
+            SetPropLabel(root, "page0-slot-offTargets", L("step1_before_clothes_field"));
+
+            // Step 2: 変身後の衣装
             root.Q<Label>("fg-after-title").text = L("step2_parts_title");
             root.Q<HelpBox>("page1-help").text = L("step2_parts_help");
             root.Q<Label>("label-head").text = L("step2_head_items");
             root.Q<Label>("label-body").text = L("step2_body_items");
             root.Q<Label>("label-hand").text = L("step2_hand_items");
             root.Q<Label>("label-leg").text = L("step2_leg_items");
+
+            // Step 3: ギミック色
             root.Q<Label>("fg-color-title").text = L("step3_color_label");
-            root.Q<Label>("fg-avatar-title").text = L("step1_avatar_label");
+
+            // Step 4: アニメーション生成
+            root.Q<Label>("fg-avatar-title").text = L("step4_finish_label");
+            var animHelp = root.Q<HelpBox>("anim-help");
+            if (animHelp != null) animHelp.text = L("step4_anim_help");
             SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
+            var genBtn = root.Q<Button>("btn-generate-anim");
+            if (genBtn != null) genBtn.text = L("step4_generate_button");
+
+            // タブ
+            var tabMain = root.Q<Button>("tab-main");
+            if (tabMain != null) tabMain.text = L("tab_main");
+            var tabColabo = root.Q<Button>("tab-colabo");
+            if (tabColabo != null) tabColabo.text = L("tab_colabo");
 
             // コラボページのラベル
             root.Q<Label>("fg-colabo-title").text = L("step4_description");

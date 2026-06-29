@@ -5,7 +5,9 @@
     {"key": "step1_avatar_label", "value": "Select Avatar"},
     {"key": "step1_model", "value": "Transformed Model"},
     {"key": "step1_animator", "value": "Animator"},
-    {"key": "step1_before_clothes_label", "value": "Outfit Before Transformation"},
+    {"key": "step1_before_clothes_label", "value": "Step 1: Outfit Before Transformation"},
+    {"key": "step1_before_clothes_help", "value": "Set the meshes of the outfit you want to hide before transformation. You can drag and drop meshes directly from the Hierarchy."},
+    {"key": "step1_before_clothes_field", "value": "Pre-transformation meshes"},
     
     {"key": "step2_title", "value": "Step 2: Prepare Outfit After Transformation"},
     {"key": "step2_description", "value": "Prepare the outfit to be displayed after transformation and set it for each part."},
@@ -14,7 +16,7 @@
     {"key": "step2_unpack_object_label", "value": "Outfit Prefab to Unpack"},
     {"key": "step2_unpack_button", "value": "Unpack Selected Item's Prefab"},
     {"key": "step2_parts_title", "value": "2. Set Items for Each Part"},
-    {"key": "step2_parts_help", "value": "From the unpacked outfit, set the parts corresponding to each body part in the list below."},
+    {"key": "step2_parts_help", "value": "Set the meshes of the outfit you want to show after transformation for each body part. You can drag and drop meshes directly from the Hierarchy."},
     {"key": "step2_head_target", "value": "Head Target"},
     {"key": "step2_head_items", "value": "Head Items"},
     {"key": "step2_body_target", "value": "Body Target"},
@@ -26,7 +28,14 @@
     
     {"key": "step3_title", "value": "Step 3: Change Gimmick Color"},
     {"key": "step3_description", "value": "Change the color of the transformation effect."},
-    {"key": "step3_color_label", "value": "Gimmick Color"},
+    {"key": "step3_color_label", "value": "Step 3: Gimmick Color"},
+    
+    {"key": "step4_finish_label", "value": "Step 4: Generate Animation"},
+    {"key": "step4_anim_help", "value": "Once setup is complete, press the button below to generate animations. The transformation gimmick will not work until animations are generated."},
+    {"key": "step4_generate_button", "value": "Generate Animation"},
+    
+    {"key": "tab_main", "value": "Main"},
+    {"key": "tab_colabo", "value": "Colabo"},
     
     {"key": "step4_title", "value": "Step 4: Special Settings (Optional)"},
     {"key": "step4_description", "value": "Set these when using collaboration outfits or special effects."},

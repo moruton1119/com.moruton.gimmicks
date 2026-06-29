@@ -5,7 +5,9 @@
     {"key": "step1_avatar_label", "value": "アバターを選択"},
     {"key": "step1_model", "value": "変身後モデル"},
     {"key": "step1_animator", "value": "アニメーター"},
-    {"key": "step1_before_clothes_label", "value": "変身前の服"},
+    {"key": "step1_before_clothes_label", "value": "Step 1: 変身前の服"},
+    {"key": "step1_before_clothes_help", "value": "変身前に非表示にしたい衣装のメッシュを設定してください。Hierarchyから直接ドラッグ＆ドロップで追加できます。"},
+    {"key": "step1_before_clothes_field", "value": "変身前の衣装（メッシュ）"},
     
     {"key": "step2_title", "value": "ステップ②：変身後の衣装を準備"},
     {"key": "step2_description", "value": "変身後に表示する衣装を準備し、部位ごとに設定します。"},
@@ -14,7 +16,7 @@
     {"key": "step2_unpack_object_label", "value": "解除する衣装Prefab"},
     {"key": "step2_unpack_button", "value": "選択したアイテムのPrefabを解除"},
     {"key": "step2_parts_title", "value": "2. 部位ごとのアイテムを設定する"},
-    {"key": "step2_parts_help", "value": "解除した衣装の中から、各部位に対応するパーツを下のリストに設定してください。"},
+    {"key": "step2_parts_help", "value": "変身後に表示したい衣装のメッシュを、各部位ごとに設定してください。Hierarchyから直接ドラッグ＆ドロップで追加できます。"},
     {"key": "step2_head_target", "value": "頭部ターゲット"},
     {"key": "step2_head_items", "value": "頭部アイテム"},
     {"key": "step2_body_target", "value": "胴体ターゲット"},
@@ -26,7 +28,14 @@
     
     {"key": "step3_title", "value": "ステップ③：ギミックの色を変更"},
     {"key": "step3_description", "value": "変身エフェクトの色などを変更します。"},
-    {"key": "step3_color_label", "value": "ギミックカラー"},
+    {"key": "step3_color_label", "value": "Step 3: ギミックカラー"},
+    
+    {"key": "step4_finish_label", "value": "Step 4: アニメーション生成"},
+    {"key": "step4_anim_help", "value": "設定が完了したら、必ず下のボタンを押してアニメーションを生成してください。アニメーションが生成されるまで変身ギミックは機能しません。"},
+    {"key": "step4_generate_button", "value": "アニメーションを生成"},
+    
+    {"key": "tab_main", "value": "メイン"},
+    {"key": "tab_colabo", "value": "コラボ"},
     
     {"key": "step4_title", "value": "ステップ④：特殊設定（オプション）"},
     {"key": "step4_description", "value": "コラボ衣装や、特殊な演出を利用する場合に設定します。"},
