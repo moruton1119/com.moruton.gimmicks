@@ -116,8 +116,8 @@ namespace Moruton.Gimmicks.Editor
             helpBoxBg = new Color(0.988f, 0.894f, 0.925f, 1f),   // #fce4ec ピンク50
 
             // ── オープニング演出色: 中心が明るく光る ──
-            openingBgCenter = new Color(0.953f, 0.882f, 0.933f, 1f), // #f3e1ee 中心は明るいラベンダー白
-            openingBgEdge = new Color(0.820f, 0.620f, 0.710f, 1f),    // #d19eb5 外縁は濃いピンク
+            openingBgCenter = new Color(1f, 0.965f, 0.976f, 1f), // #fef7f9 中心はパっと明るいピンク白
+            openingBgEdge = new Color(0.910f, 0.706f, 0.780f, 1f),    // #e8b4c7 外縁ははっきり濃いピンク
             openingParticleColor = new Color(0.910f, 0.118f, 0.388f, 1f), // #e91e63
             openingGlowColor = new Color(1f, 0.753f, 0.827f, 0.5f), // #ffc0d3 明るいピンクグロー
             openingCircleColor = new Color(1f, 1f, 1f, 0.95f),   // #ffffff 中心の丸も白く光る

@@ -508,6 +508,11 @@ namespace Moruton.Gimmicks.Editor
         // ── バイネット ──
         private void DrawVignette(MeshGenerationContext ctx, float w, float h, float alpha)
         {
+            // Daylight（ライトテーマ）ではバイネットを描画しない
+            // （暗い膜がかかって見えるため）
+            if (_palette.bgCenter.r > 0.7f && _palette.bgCenter.g > 0.7f)
+                return;
+
             var mesh = ctx.Allocate(4, 6);
 
             Color dark = new Color(0, 0, 0, 0.4f * alpha);
