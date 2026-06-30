@@ -228,9 +228,16 @@ namespace Moruton.Gimmicks.Editor
             if (_previewTexCache.TryGetValue(go, out var cached))
                 return cached;
 
-            // AssetPreviewは使わない（遠すぎる）
-            // 常にクローズアップレンダリングを使う
-            var tex = RenderCloseUpPreview(go);
+            // AssetPreviewを先に試す（Unity標準）
+            var tex = AssetPreview.GetAssetPreview(go);
+            if (tex != null)
+            {
+                _previewTexCache[go] = tex;
+                return tex;
+            }
+
+            // カスタムクローズアップレンダリング
+            tex = RenderCloseUpPreview(go);
             if (tex != null)
             {
                 _previewTexCache[go] = tex;
@@ -238,7 +245,7 @@ namespace Moruton.Gimmicks.Editor
                 return tex;
             }
 
-            // フォールバック
+            // 最終フォールバック
             tex = AssetPreview.GetMiniThumbnail(go);
             if (tex != null)
             {
@@ -257,38 +264,16 @@ namespace Moruton.Gimmicks.Editor
             if (renderers.Length == 0) return null;
 
             var preview = new PreviewRenderUtility();
-            GameObject tempInstance = null;
-
             try
             {
-                // オブジェクトをプレビューシーンにコピー
-                tempInstance = Object.Instantiate(sourceGo, preview.scene.root);
-                tempInstance.name = sourceGo.name;
-                tempInstance.hideFlags = HideFlags.HideAndDontSave;
+                preview.AddSingleGO(sourceGo);
 
-                // レイヤーをプレビュー用レイヤーに設定
-                // PreviewRenderUtilityは内部的にレイヤー30を使う
-                foreach (var t in tempInstance.GetComponentsInChildren<Transform>(true))
-                    t.gameObject.layer = preview.previewLayer;
-
-                // アクティブにする
-                tempInstance.SetActive(true);
-
-                // コピーしたインスタンスのレンダラーでBounds計算
-                var instanceRenderers = tempInstance.GetComponentsInChildren<Renderer>(true);
-                if (instanceRenderers.Length == 0) return null;
-
-                var bounds = instanceRenderers[0].bounds;
-                for (int i = 1; i < instanceRenderers.Length; i++)
-                    bounds.Encapsulate(instanceRenderers[i].bounds);
+                var bounds = renderers[0].bounds;
+                for (int i = 1; i < renderers.Length; i++)
+                    bounds.Encapsulate(renderers[i].bounds);
 
                 float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
                 if (maxDim <= 0f) maxDim = 1f;
-
-                // カメラ設定
-                preview.camera.fieldOfView = 30f;
-                preview.camera.clearFlags = CameraClearFlags.SolidColor;
-                preview.camera.backgroundColor = new Color(0, 0, 0, 0);
 
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
                 float dist = maxDim / (2f * Mathf.Tan(halfFov));
@@ -300,18 +285,14 @@ namespace Moruton.Gimmicks.Editor
                 preview.camera.farClipPlane = dist + maxDim * 2f;
 
                 preview.camera.Render();
-
                 return preview.EndPreview() as Texture2D;
             }
-            catch (System.Exception e)
+            catch
             {
-                Debug.LogError($"[Metamorphose] Preview render failed: {e}");
                 return null;
             }
             finally
             {
-                if (tempInstance != null)
-                    Object.DestroyImmediate(tempInstance);
                 preview.Cleanup();
             }
         }
