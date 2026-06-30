@@ -72,8 +72,8 @@ namespace Moruton.Gimmicks
         [SerializeField] public string[] bannerAdUrls;
 
         [Header("エディターUIテーマ")]
-        [Tooltip("エディターのUIテーマID。\"Auto\"の場合は手動切替の設定に従います。Devページで変更可能。")]
-        [SerializeField] private string editorTheme = "Auto";
+        [Tooltip("エディターのUIテーマID。Devページで変更可能。")]
+        [SerializeField] public string editorTheme = "Moonlight";
 
         /// <summary>現在のエディターテーマ設定（文字列ID）</summary>
         public string ThemeSetting => editorTheme;
@@ -96,9 +96,6 @@ namespace Moruton.Gimmicks
         [Header("UI表示設定")]
         [Tooltip("コラボタブを表示するかどうか")]
         [SerializeField] public bool showColaboTab = true;
-
-        [Tooltip("エディターのUIテーマ")]
-        [SerializeField] public string editorTheme = "Moonlight";
 
         // ドロップダウン用の選択肢
         public static readonly string[] AvailableThemes = { "Moonlight", "Daylight", "Cyber", "Wizard", "Diamond" };
