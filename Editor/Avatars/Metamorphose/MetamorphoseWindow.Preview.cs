@@ -228,16 +228,8 @@ namespace Moruton.Gimmicks.Editor
             if (_previewTexCache.TryGetValue(go, out var cached))
                 return cached;
 
-            // AssetPreviewを先に試す（Unity標準）
-            var tex = AssetPreview.GetAssetPreview(go);
-            if (tex != null)
-            {
-                _previewTexCache[go] = tex;
-                return tex;
-            }
-
-            // カスタムクローズアップレンダリング
-            tex = RenderCloseUpPreview(go);
+            // クローズアップレンダリングを先に試す（ズーム済み）
+            var tex = RenderCloseUpPreview(go);
             if (tex != null)
             {
                 _previewTexCache[go] = tex;
@@ -245,7 +237,14 @@ namespace Moruton.Gimmicks.Editor
                 return tex;
             }
 
-            // 最終フォールバック
+            // フォールバック: AssetPreview
+            tex = AssetPreview.GetAssetPreview(go);
+            if (tex != null)
+            {
+                _previewTexCache[go] = tex;
+                return tex;
+            }
+
             tex = AssetPreview.GetMiniThumbnail(go);
             if (tex != null)
             {
