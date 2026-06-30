@@ -209,27 +209,42 @@ namespace Moruton.Gimmicks.Editor
 
         private void CreatePropertyFields()
         {
-            // ドロップゾーンで管理するプロパティはhidden
-            var hiddenSlots = new HashSet<string>
+            // ドロップゾーンで管理するプロパティ — 非表示コンテナに格納
+            var hiddenProps = new (string path, string slotName)[]
             {
-                "page0-slot-offTargets",
-                "page0-slot-headItems",
-                "page0-slot-bodyItems",
-                "page0-slot-handItems",
-                "page0-slot-legItems",
+                ("offTargets", "page0-slot-offTargets"),
+                ("headItems", "page0-slot-headItems"),
+                ("bodyItems", "page0-slot-bodyItems"),
+                ("handItems", "page0-slot-handItems"),
+                ("legItems", "page0-slot-legItems"),
             };
+
+            foreach (var (path, slotName) in hiddenProps)
+            {
+                var slot = _root.Q<VisualElement>(slotName);
+                if (slot == null) continue;
+                var pf = new PropertyField { bindingPath = path };
+                slot.Add(pf);
+
+                // slot自体をUSSで非表示にする（!importantなし）
+                // PropertyField追加後にdisplayを設定することで
+                // Unity内部の上書きを確実に上回る
+                slot.style.display = DisplayStyle.None;
+            }
+
+            // 通常のプロパティフィールド
+            var hiddenSlotNames = new HashSet<string>(System.Array.ConvertAll(hiddenProps, p => p.slotName));
 
             for (int pageIdx = 0; pageIdx < PageFieldPaths.Length; pageIdx++)
             {
                 foreach (var path in PageFieldPaths[pageIdx])
                 {
                     var slotName = $"page{pageIdx}-slot-{path}";
+                    if (hiddenSlotNames.Contains(slotName)) continue; // 既に処理済み
+
                     var slot = _root.Q<VisualElement>(slotName);
                     if (slot == null) continue;
                     slot.Add(new PropertyField { bindingPath = path });
-
-                    if (hiddenSlots.Contains(slotName))
-                        slot.AddToClassList("hidden");
                 }
             }
 

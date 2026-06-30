@@ -255,10 +255,6 @@
     margin-bottom: 4px;
 }
 
-.field-slot.hidden {
-    display: none !important;
-}
-
 .field-slot > PropertyField > .unity-property-field__label {
     color: var(--text-secondary);
     min-width: 100px;
