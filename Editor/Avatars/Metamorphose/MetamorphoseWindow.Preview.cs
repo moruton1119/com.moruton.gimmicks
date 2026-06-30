@@ -230,7 +230,7 @@ namespace Moruton.Gimmicks.Editor
 
             // AssetPreviewは使わない（遠すぎる）
             // 常にクローズアップレンダリングを使う
-            tex = RenderCloseUpPreview(go);
+            var tex = RenderCloseUpPreview(go);
             if (tex != null)
             {
                 _previewTexCache[go] = tex;
