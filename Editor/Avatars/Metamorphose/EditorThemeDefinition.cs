@@ -164,5 +164,43 @@ namespace Moruton.Gimmicks.Editor
             openingTitleGlow = new Color(0.882f, 0.149f, 0.882f, 0.7f),
             openingSparkleColor = new Color(0.000f, 0.882f, 0.961f, 1f),
         };
+
+        // ═══════════════════════════════════════════
+        //  Wizard（魔法使い）テーマ
+        // ═══════════════════════════════════════════
+        public static EditorThemeDefinition Wizard => new EditorThemeDefinition
+        {
+            id = "Wizard",
+            displayName = "Wizard",
+            ussClassName = "theme-wizard",
+
+            // ── UI色: 水色 × シルバー × アイスブルー ──
+            windowBg = new Color(0.090f, 0.137f, 0.165f, 1f),       // #17231a...いや #17232a 深い青緑
+            windowText = new Color(0.831f, 0.929f, 0.965f, 1f),     // #d4edf6 氷色文字
+            panelBg = new Color(0.110f, 0.157f, 0.188f, 1f),        // #1c2830
+            sidebarBg = new Color(0.063f, 0.102f, 0.129f, 1f),      // #101a21
+            topbarBg = new Color(0.110f, 0.157f, 0.188f, 1f),       // #1c2830
+            elevatedBg = new Color(0.141f, 0.192f, 0.224f, 1f),     // #243139 カード
+            bannerBg = new Color(0.063f, 0.102f, 0.129f, 1f),      // #101a21
+            inputBg = new Color(0.082f, 0.125f, 0.153f, 1f),        // #152027
+            hoverBg = new Color(0.176f, 0.235f, 0.271f, 1f),        // #2d3c45
+            accent = new Color(0.000f, 0.690f, 0.937f, 1f),         // #00b0ef 水色
+            accentHover = new Color(0.000f, 0.580f, 0.831f, 1f),    // #0094d4
+            border = new Color(0.000f, 0.345f, 0.467f, 1f),         // #005877
+            textSecondary = new Color(0.400f, 0.737f, 0.816f, 1f),  // #66bcd0
+            textDim = new Color(0.502f, 0.620f, 0.690f, 1f),        // #809eb0
+            helpBoxBg = new Color(0.078f, 0.118f, 0.145f, 1f),     // #141e25
+
+            // ── オープニング演出色: 氷の魔法 ──
+            openingBgCenter = new Color(0.180f, 0.247f, 0.290f, 1f), // #2e3f4a 中心は明るい青
+            openingBgEdge = new Color(0.031f, 0.059f, 0.078f, 1f),   // #080f14 外縁は暗い
+            openingParticleColor = new Color(0.000f, 0.690f, 0.937f, 1f), // 水色粒子
+            openingGlowColor = new Color(0.400f, 0.737f, 0.816f, 0.5f),    // 氷グロー
+            openingCircleColor = new Color(0.110f, 0.176f, 0.208f, 0.9f),
+            openingCircleBorder = new Color(0.000f, 0.690f, 0.937f, 0.8f),
+            openingTitleColor = new Color(0.831f, 0.929f, 0.965f, 1f),     // 氷色
+            openingTitleGlow = new Color(0.000f, 0.690f, 0.937f, 0.7f),   // 水色グロー
+            openingSparkleColor = new Color(0.749f, 0.882f, 0.957f, 1f),  // #bfe1f4
+        };
     }
 }

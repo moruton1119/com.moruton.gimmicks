@@ -1,0 +1,113 @@
+/* ═══════════════════════════════════════════════
+   Wizard Theme — Water/Ice Mage
+   水色 × シルバー × アイスブルー
+   ═══════════════════════════════════════════════ */
+
+.theme-wizard {
+    --bg-night: #17232a;
+    --bg-deep: #101a21;
+    --bg-elevated: #243139;
+    --bg-hover: #2d3c45;
+    --bg-input: #152027;
+    --topbar-bg: #1c2830;
+    --sidebar-bg: #101a21;
+    --banner-bg: #101a21;
+    --helpbox-bg: #141e25;
+
+    --accent: #00b0ef;
+    --accent-hover: #0094d4;
+    --accent-bg: rgba(0, 176, 239, 0.08);
+    --accent-border: rgba(0, 176, 239, 0.25);
+    --accent-purple: #66bcd0;
+    --accent-green: #4db6ac;
+    --accent-orange: #ffb74d;
+    --accent-red: #ef5350;
+    --accent-cyan: #00e5ff;
+
+    --border: #005877;
+    --border-subtle: #0a3a4a;
+
+    --text: #d4edf6;
+    --text-secondary: #66bcd0;
+    --text-dim: #809eb0;
+
+    --glow-pink: rgba(0, 176, 239, 0.10);
+    --glow-purple: rgba(102, 188, 208, 0.06);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+}
+
+/* Layout */
+.theme-wizard .content-panel { background-color: var(--bg-night); }
+.theme-wizard .pages-container { background-color: var(--bg-night); }
+.theme-wizard .page-desc { color: var(--text-secondary); }
+.theme-wizard .field-group { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-wizard .field-group-title { color: var(--accent-purple); border-bottom-color: var(--accent-border); }
+.theme-wizard .part-section { background-color: var(--glow-purple); border-color: var(--border-subtle); }
+.theme-wizard .part-label { color: var(--accent); }
+.theme-wizard .fade-section { background-color: var(--glow-purple); border-color: var(--border-subtle); }
+.theme-wizard .fade-part-label { color: var(--accent-orange); }
+.theme-wizard .field-slot > PropertyField > .unity-property-field__label { color: var(--text-secondary); }
+.theme-wizard .dev-page .field-slot > PropertyField > .unity-property-field__label { color: var(--text-secondary); }
+
+/* Navigation */
+.theme-wizard .nav-num { background-color: var(--bg-elevated); color: var(--text-dim); border-color: var(--border-subtle); }
+.theme-wizard .nav-num:hover { background-color: var(--bg-hover); color: var(--text); }
+.theme-wizard .nav-num.active { background-color: var(--accent); color: #ffffff; border-color: var(--accent); }
+.theme-wizard .nav-link { background-color: var(--bg-elevated); color: var(--text-secondary); border-color: var(--border-subtle); }
+.theme-wizard .nav-link:hover { background-color: var(--bg-hover); }
+.theme-wizard .dev-btn { color: var(--accent-orange); }
+.theme-wizard .dev-btn:hover { background-color: var(--accent-bg); }
+.theme-wizard .dev-btn.active { background-color: var(--accent-orange); color: #ffffff; }
+.theme-wizard .part-toggle { background-color: var(--accent); }
+.theme-wizard .part-toggle:hover { background-color: var(--accent-hover); }
+.theme-wizard .part-toggle-off { background-color: var(--bg-hover); color: var(--text-dim); }
+
+/* Topbar / Lang */
+.theme-wizard .topbar { background-color: var(--bg-elevated); border-bottom-color: var(--accent); }
+.theme-wizard .topbar-title { color: var(--accent); }
+.theme-wizard .lang-bar { background-color: var(--bg-hover); }
+.theme-wizard .lang-btn { color: var(--text-dim); }
+.theme-wizard .lang-btn:hover { color: var(--text); background-color: var(--border-subtle); }
+.theme-wizard .lang-btn.selected { background-color: var(--accent); color: #ffffff; }
+
+/* Sidebar / Banner */
+.theme-wizard .sidebar { background-color: var(--sidebar-bg); border-right-color: var(--accent); }
+.theme-wizard .sidebar-header { color: var(--accent); }
+.theme-wizard .banner { background-color: var(--banner-bg); border-top-color: var(--accent-border); }
+.theme-wizard .banner-card { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-wizard .banner-card:hover { border-color: var(--accent); background-color: var(--bg-night); }
+.theme-wizard .banner-card-label { color: var(--text); }
+
+/* Buttons */
+.theme-wizard .theme-toggle { color: var(--accent); background-color: var(--accent-bg); border-color: var(--accent-border); }
+.theme-wizard .link-btn { color: var(--accent); background-color: var(--accent-bg); border-color: var(--accent-border); }
+.theme-wizard .preview-thumb { border-color: var(--accent-border); }
+.theme-wizard .colabo-shop-image { border-color: var(--accent-border); }
+.theme-wizard .part-card { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-wizard .part-card:hover { border-color: var(--accent); background-color: var(--bg-hover); }
+.theme-wizard .part-card-label { color: var(--accent); }
+
+/* Unity elements */
+.theme-wizard HelpBox { background-color: var(--helpbox-bg); border-color: var(--accent-border); color: var(--text-secondary); }
+.theme-wizard .unity-base-field__input { background-color: var(--bg-input); border-color: var(--border-subtle); color: var(--text); }
+.theme-wizard .unity-object-field__object { background-color: var(--bg-input); color: var(--text); border-color: var(--border-subtle); }
+.theme-wizard .unity-color-field { background-color: var(--bg-input); border-color: var(--border-subtle); }
+.theme-wizard .unity-integer-field, .theme-wizard .unity-float-field { background-color: var(--bg-input); color: var(--text); }
+.theme-wizard .unity-property-field__label { color: var(--text-secondary) !important; }
+.theme-wizard .unity-foldout__text { color: var(--text); }
+.theme-wizard .unity-foldout__toggle { color: var(--accent); }
+.theme-wizard .unity-toggle__label { color: var(--text); }
+
+/* Arrays */
+.theme-wizard .unity-list-view { background-color: var(--bg-input); border-color: var(--border-subtle); }
+.theme-wizard .unity-list-view__reorderable-item { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-wizard .unity-list-view__reorderable-item:hover { background-color: var(--bg-hover); }
+.theme-wizard .unity-list-view__reorderable-item__drag-handle { background-color: var(--border); }
+.theme-wizard .unity-list-view__reorderable-item__drag-handle:hover { background-color: var(--accent); }
+.theme-wizard .unity-list-view__reorderable-item__remove-button { color: var(--text-dim); background-color: transparent; }
+.theme-wizard .unity-list-view__reorderable-item__remove-button:hover { color: var(--accent-red); background-color: var(--bg-hover); }
+.theme-wizard .unity-array-size-field__input { background-color: var(--bg-input); color: var(--text); }
+.theme-wizard .unity-scroll-view { background-color: transparent; }

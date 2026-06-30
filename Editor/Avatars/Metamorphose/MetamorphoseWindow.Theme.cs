@@ -73,18 +73,20 @@ namespace Moruton.Gimmicks.Editor
                 {
                     "Daylight" => "☀",
                     "Cyber" => "≡",
+                    "Wizard" => "✦",
                     _ => "☾",
                 };
         }
 
         private void ToggleTheme()
         {
-            // 3テーマのローテーション: Moonlight → Daylight → Cyber → Moonlight
+            // 4テーマのローテーション: Moonlight → Daylight → Cyber → Wizard → Moonlight
             _currentThemeId = _currentThemeId switch
             {
                 "Moonlight" => "Daylight",
                 "Daylight" => "Cyber",
-                "Cyber" => "Moonlight",
+                "Cyber" => "Wizard",
+                "Wizard" => "Moonlight",
                 _ => "Moonlight",
             };
             EditorPrefs.SetString("MetamorphoseEditor_ThemeId", _currentThemeId);

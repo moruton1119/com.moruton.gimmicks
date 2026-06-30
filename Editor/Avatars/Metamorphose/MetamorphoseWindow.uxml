@@ -3,6 +3,7 @@
   <Style src="Theme_Moonlight.uss" />
   <Style src="Theme_Daylight.uss" />
   <Style src="Theme_Cyber.uss" />
+  <Style src="Theme_Wizard.uss" />
 
   <ui:VisualElement name="app" class="app-root">
 

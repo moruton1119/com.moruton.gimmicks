@@ -60,6 +60,7 @@ namespace Moruton.Gimmicks.Editor
             Register(EditorThemeDefinition.Moonlight);
             Register(EditorThemeDefinition.Daylight);
             Register(EditorThemeDefinition.Cyber);
+            Register(EditorThemeDefinition.Wizard);
         }
 
         private static void Register(EditorThemeDefinition theme)
