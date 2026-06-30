@@ -12,11 +12,6 @@ namespace Moruton.Gimmicks.Editor
 
         private void SetupButtonCallbacks()
         {
-            // Theme toggle
-            var themeBtn = _root.Q<Button>("theme-toggle");
-            if (themeBtn != null)
-                themeBtn.clicked += ToggleTheme;
-
             for (int i = 0; i < _languageCodes.Length; i++)
             {
                 int index = i;

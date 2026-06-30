@@ -217,7 +217,6 @@
 
               <ui:Label name="fg3-editor-theme" class="field-group-title" text="Editor Theme" />
               <ui:VisualElement name="page3-slot-editorTheme" class="field-slot" />
-              <ui:Button name="theme-toggle" class="link-btn" text="Toggle Theme" tooltip="Toggle Light/Dark Theme" />
 
               <ui:Label name="fg3-ui-settings" class="field-group-title" text="UI Settings" />
               <ui:VisualElement class="dev-toggle-grid">

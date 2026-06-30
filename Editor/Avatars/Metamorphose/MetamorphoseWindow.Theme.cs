@@ -36,16 +36,14 @@ namespace Moruton.Gimmicks.Editor
 
         /// <summary>
         /// テーマを適用する。
-        /// ★ 色の制御は全てUSS（CSS変数）に任せる。
-        ///    C#側は「テーマクラスの付与」だけ行う。
-        ///    インラインスタイルでの色指定は一切しない。
+        /// 色の制御は全てUSS（CSS変数）に任せる。
+        /// C#側は「テーマクラスの付与」だけ行う。
         /// </summary>
         private void ApplyTheme()
         {
             if (_root == null) return;
 
             var theme = GetCurrentTheme();
-            bool isDaylight = theme.id == "Daylight";
 
             var appElement = _root.Q<VisualElement>("app");
 
@@ -61,52 +59,6 @@ namespace Moruton.Gimmicks.Editor
             _root.AddToClassList(theme.ussClassName);
             rootVisualElement.AddToClassList(theme.ussClassName);
             if (appElement != null) appElement.AddToClassList(theme.ussClassName);
-
-            _root.EnableInClassList("light-theme", isDaylight);
-            rootVisualElement.EnableInClassList("light-theme", isDaylight);
-
-            // トグルボタンのアイコン
-            var toggle = _root.Q<Button>("theme-toggle");
-            if (toggle != null)
-            {
-                toggle.text = theme.id switch
-                {
-                    "Daylight" => "☀",
-                    "Cyber" => "≡",
-                    "Wizard" => "✦",
-                    "Diamond" => "◆",
-                    _ => "☾",
-                };
-            }
-        }
-
-        private void ToggleTheme()
-        {
-            // 5テーマのローテーション: Moonlight → Daylight → Cyber → Wizard → Diamond → Moonlight
-            _currentThemeId = _currentThemeId switch
-            {
-                "Moonlight" => "Daylight",
-                "Daylight" => "Cyber",
-                "Cyber" => "Wizard",
-                "Wizard" => "Diamond",
-                "Diamond" => "Moonlight",
-                _ => "Moonlight",
-            };
-            EditorPrefs.SetString("MetamorphoseEditor_ThemeId", _currentThemeId);
-
-            if (_target != null)
-            {
-                Undo.RecordObject(_target, "Change Editor Theme");
-                _so.Update();
-                var prop = _so.FindProperty("editorTheme");
-                if (prop != null)
-                {
-                    prop.stringValue = _currentThemeId;
-                    _so.ApplyModifiedProperties();
-                }
-            }
-
-            ApplyTheme();
         }
 
         #endregion
@@ -115,9 +67,6 @@ namespace Moruton.Gimmicks.Editor
 
         /// <summary>
         /// ウィンドウを開いた時のオープニング演出。
-        /// MagicalOpeningEffect でグラデーション背景 + 粒子 + グローを描画。
-        /// Moonlight: 紫の闇からピンクの光が広がる
-        /// Daylight: 白い光からピンクのキラキラが降る
         /// </summary>
         private void PlayOpeningAnimation()
         {
