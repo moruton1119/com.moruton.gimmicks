@@ -116,6 +116,8 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
+        #region Part Toggles
+
         private void SetupPartToggles()
         {
             SetupPartToggle("toggle-head", "section-head", "Head", () => _target.showHead, "showHead");
