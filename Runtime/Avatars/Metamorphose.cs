@@ -96,6 +96,12 @@ namespace Moruton.Gimmicks
         [Header("UI表示設定")]
         [Tooltip("コラボタブを表示するかどうか")]
         [SerializeField] public bool showColaboTab = true;
+
+        [Tooltip("エディターのUIテーマ")]
+        [SerializeField] public string editorTheme = "Auto";
+
+        // ドロップダウン用の選択肢
+        public static readonly string[] AvailableThemes = { "Auto", "Moonlight", "Daylight", "Cyber", "Wizard", "Diamond" };
         
         public GameObject Avatar => avatar;
         public GameObject Model => model;

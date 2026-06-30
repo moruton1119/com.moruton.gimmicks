@@ -253,7 +253,22 @@ namespace Moruton.Gimmicks.Editor
             {
                 var slot = _root.Q<VisualElement>(slotName);
                 if (slot == null) continue;
-                slot.Add(new PropertyField { bindingPath = path });
+
+                // editorTheme はドロップダウン（Popup）にする
+                if (path == "editorTheme")
+                {
+                    var popup = new PopupField<string>(
+                        new List<string>(Metamorphose.AvailableThemes),
+                        0
+                    );
+                    popup.label = "Editor Theme";
+                    popup.bindingPath = path;
+                    slot.Add(popup);
+                }
+                else
+                {
+                    slot.Add(new PropertyField { bindingPath = path });
+                }
             }
         }
 
