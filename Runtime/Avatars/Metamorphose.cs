@@ -93,6 +93,10 @@ namespace Moruton.Gimmicks
         [SerializeField] public bool showFadeArm = true;
         [SerializeField] public bool showFadeLeg = true;
         
+        [Header("UI表示設定")]
+        [Tooltip("コラボタブを表示するかどうか")]
+        [SerializeField] public bool showColaboTab = true;
+        
         public GameObject Avatar => avatar;
         public GameObject Model => model;
         public Animator Animator => animator;

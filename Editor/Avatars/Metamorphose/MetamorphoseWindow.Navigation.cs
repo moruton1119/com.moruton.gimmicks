@@ -78,10 +78,32 @@ namespace Moruton.Gimmicks.Editor
             if (tabMain != null) tabMain.EnableInClassList("tab-active", mainActive);
             if (tabColabo != null) tabColabo.EnableInClassList("tab-active", !mainActive);
 
-            // タブバーの表示切替（Devページでは隠す）
+            // タブバーの表示切替（Devページまたはコラボタブ無効時は隠す）
             var tabBar = _root.Q<VisualElement>("tab-bar");
             if (tabBar != null)
-                tabBar.style.display = _currentPage == 3 ? DisplayStyle.None : DisplayStyle.Flex;
+                tabBar.style.display = (_currentPage == 3 || !_target.showColaboTab) ? DisplayStyle.None : DisplayStyle.Flex;
+        }
+
+        private void UpdateColaboTabVisibility(bool visible)
+        {
+            var tabBar = _root.Q<VisualElement>("tab-bar");
+            if (tabBar != null)
+            {
+                tabBar.style.display = (_currentPage == 3 || !visible) ? DisplayStyle.None : DisplayStyle.Flex;
+            }
+
+            // コラボタブが非表示の時、メインページに強制切替
+            if (!visible && _currentPage == 1)
+            {
+                SwitchToMain();
+            }
+
+            // タブボタンの表示
+            var tabColabo = _root.Q<Button>("tab-colabo");
+            if (tabColabo != null)
+            {
+                tabColabo.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            }
         }
 
         private void ShowPage(string hidePage, string showPage, bool show)
@@ -94,118 +116,6 @@ namespace Moruton.Gimmicks.Editor
 
         #endregion
 
-        #region Drag & Drop Setup
-
-        /// <summary>
-        /// 全ドラッグ&ドロップエリアにD&Dハンドラを登録する。
-        /// GameObjectがドロップされたら対応する配列プロパティに追加。
-        /// </summary>
-        private void SetupDragAndDrop()
-        {
-            // OffTargets
-            SetupDragDropForSlot("page0-slot-offTargets", "offTargets");
-
-            // 部位ごとのアイテム
-            SetupDragDropForSlot("page0-slot-headItems", "headItems");
-            SetupDragDropForSlot("page0-slot-bodyItems", "bodyItems");
-            SetupDragDropForSlot("page0-slot-handItems", "handItems");
-            SetupDragDropForSlot("page0-slot-legItems", "legItems");
-
-            // フェード演出アイテム
-            SetupDragDropForSlot("page2-slot-fadeHeadItems", "fadeHeadItems");
-            SetupDragDropForSlot("page2-slot-fadeBodyItems", "fadeBodyItems");
-            SetupDragDropForSlot("page2-slot-fadeArmItems", "fadeArmItems");
-            SetupDragDropForSlot("page2-slot-fadeLegItems", "fadeLegItems");
-        }
-
-        private void SetupDragDropForSlot(string slotName, string propertyPath)
-        {
-            var slot = _root.Q<VisualElement>(slotName);
-            if (slot == null) return;
-
-            // ドラッグ中のハイライト
-            slot.RegisterCallback<DragEnterEvent>(e =>
-            {
-                slot.AddToClassList("drag-drop-hover");
-            });
-            slot.RegisterCallback<DragLeaveEvent>(e =>
-            {
-                slot.RemoveFromClassList("drag-drop-hover");
-            });
-
-            // ドロップ処理
-            slot.RegisterCallback<DragPerformEvent>(e =>
-            {
-                slot.RemoveFromClassList("drag-drop-hover");
-
-                if (_target == null || _so == null) return;
-
-                // ドラッグされたオブジェクトを取得
-                var draggedObjects = DragAndDrop.objectReferences;
-                if (draggedObjects == null || draggedObjects.Length == 0) return;
-
-                _so.Update();
-                var prop = _so.FindProperty(propertyPath);
-                if (prop == null || !prop.isArray) return;
-
-                foreach (var obj in draggedObjects)
-                {
-                    GameObject go = null;
-
-                    // GameObject直接
-                    if (obj is GameObject directGo)
-                        go = directGo;
-                    // Prefabやアセットの場合
-                    else if (obj is Component comp)
-                        go = comp.gameObject;
-
-                    if (go == null) continue;
-
-                    // 重複チェック
-                    bool exists = false;
-                    for (int i = 0; i < prop.arraySize; i++)
-                    {
-                        if (prop.GetArrayElementAtIndex(i).objectReferenceValue == go)
-                        {
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    if (!exists)
-                    {
-                        prop.InsertArrayElementAtIndex(prop.arraySize);
-                        prop.GetArrayElementAtIndex(prop.arraySize - 1).objectReferenceValue = go;
-                    }
-                }
-
-                _so.ApplyModifiedProperties();
-
-                // プレビュー更新
-                var previewName = GetPreviewNameForSlot(slotName);
-                if (previewName != null)
-                    UpdatePartPreview(previewName, propertyPath);
-
-                _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
-            });
-        }
-
-        private string GetPreviewNameForSlot(string slotName)
-        {
-            return slotName switch
-            {
-                "page0-slot-headItems" => "head-preview",
-                "page0-slot-bodyItems" => "body-preview",
-                "page0-slot-handItems" => "hand-preview",
-                "page0-slot-legItems" => "leg-preview",
-                _ => null,
-            };
-        }
-
-        #endregion
-
-        #region Part Toggles
-
         private void SetupPartToggles()
         {
             SetupPartToggle("toggle-head", "section-head", "Head", () => _target.showHead, "showHead");
@@ -216,6 +126,31 @@ namespace Moruton.Gimmicks.Editor
             SetupPartToggle("toggle-fadeBody", "section-fadeBody", "F-Body", () => _target.showFadeBody, "showFadeBody");
             SetupPartToggle("toggle-fadeArm", "section-fadeArm", "F-Arm", () => _target.showFadeArm, "showFadeArm");
             SetupPartToggle("toggle-fadeLeg", "section-fadeLeg", "F-Leg", () => _target.showFadeLeg, "showFadeLeg");
+
+            // コラボタブ表示切替
+            var colaboTabBtn = _root.Q<Button>("toggle-colabo-tab");
+            if (colaboTabBtn != null)
+            {
+                bool showColabo = _target.showColaboTab;
+                colaboTabBtn.text = $"Colabo Tab: {(showColabo ? "ON" : "OFF")}";
+                colaboTabBtn.EnableInClassList("part-toggle-off", !showColabo);
+                UpdateColaboTabVisibility(showColabo);
+
+                colaboTabBtn.clicked += () =>
+                {
+                    showColabo = !showColabo;
+                    _so.Update();
+                    var prop = _so.FindProperty("showColaboTab");
+                    if (prop != null)
+                    {
+                        prop.boolValue = showColabo;
+                        _so.ApplyModifiedProperties();
+                    }
+                    colaboTabBtn.text = $"Colabo Tab: {(showColabo ? "ON" : "OFF")}";
+                    colaboTabBtn.EnableInClassList("part-toggle-off", !showColabo);
+                    UpdateColaboTabVisibility(showColabo);
+                };
+            }
         }
 
         private void SetupPartToggle(string toggleName, string sectionName, string displayName, System.Func<bool> getter, string propertyPath)

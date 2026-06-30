@@ -572,7 +572,78 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Drag & Drop Area
+   Mesh Dropzone — メッシュをドロップする枠
+   ═══════════════════════════════════════════════ */
+.mesh-dropzone {
+    border-width: 2px;
+    border-color: var(--border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-input);
+    padding: 16px 8px;
+    margin-bottom: 8px;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.mesh-dropzone:hover {
+    border-color: var(--accent);
+}
+
+.mesh-dropzone-label {
+    color: var(--text-dim);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+}
+
+.mesh-dropzone.drag-hover {
+    border-color: var(--accent);
+    background-color: var(--accent-bg);
+}
+
+/* ═══════════════════════════════════════════════
+   Preview Grid — メッシュプレビューグリッド
+   ═══════════════════════════════════════════════ */
+.preview-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.preview-grid .preview-item {
+    width: 80px;
+    margin: 2px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.preview-grid .preview-thumb-large {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-sm);
+    border-width: 2px;
+    border-color: var(--accent-border);
+    object-fit: scale-down;
+}
+
+.preview-grid .preview-remove-btn {
+    width: 72px;
+    height: 18px;
+    font-size: 10px;
+    color: var(--accent-red);
+    background-color: transparent;
+    border-width: 0;
+    border-radius: 0;
+    -unity-text-align: middle-center;
+    margin-top: 0;
+}
+
+.preview-grid .preview-remove-btn:hover {
+    background-color: var(--accent-bg);
+}
+
+/* ═══════════════════════════════════════════════
+   Drag & Drop Area (legacy — OffTargets still uses this)
    ═══════════════════════════════════════════════ */
 .drag-drop-area {
     border-radius: var(--radius-sm);

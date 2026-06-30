@@ -57,8 +57,11 @@
               <ui:VisualElement name="section-off" class="field-group outfit-section">
                 <ui:Label name="fg-off-title" class="field-group-title" text="Step 1: Before" />
                 <ui:HelpBox name="off-help" message-type="Info" />
-                <ui:VisualElement name="page0-slot-offTargets" class="field-slot drag-drop-area" />
-                <ui:VisualElement name="off-preview" class="preview-row" />
+                <ui:VisualElement name="page0-slot-offTargets" class="field-slot" style="display: none;" />
+                <ui:VisualElement name="off-dropzone" class="mesh-dropzone">
+                  <ui:Label class="mesh-dropzone-label" text="Drop meshes here" />
+                </ui:VisualElement>
+                <ui:VisualElement name="off-preview" class="preview-grid" />
               </ui:VisualElement>
 
               <!-- Step 2: 変身後の衣装 -->
@@ -70,26 +73,38 @@
 
                   <ui:VisualElement name="section-head" class="part-card">
                     <ui:Label name="label-head" class="part-card-label" text="Head" />
-                    <ui:VisualElement name="page0-slot-headItems" class="field-slot drag-drop-area" />
-                    <ui:VisualElement name="head-preview" class="preview-row" />
+                    <ui:VisualElement name="page0-slot-headItems" class="field-slot" style="display: none;" />
+                    <ui:VisualElement name="head-dropzone" class="mesh-dropzone">
+                      <ui:Label class="mesh-dropzone-label" text="Drop meshes here" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="head-preview" class="preview-grid" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-body" class="part-card">
                     <ui:Label name="label-body" class="part-card-label" text="Body" />
-                    <ui:VisualElement name="page0-slot-bodyItems" class="field-slot drag-drop-area" />
-                    <ui:VisualElement name="body-preview" class="preview-row" />
+                    <ui:VisualElement name="page0-slot-bodyItems" class="field-slot" style="display: none;" />
+                    <ui:VisualElement name="body-dropzone" class="mesh-dropzone">
+                      <ui:Label class="mesh-dropzone-label" text="Drop meshes here" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="body-preview" class="preview-grid" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-hand" class="part-card">
                     <ui:Label name="label-hand" class="part-card-label" text="Hand" />
-                    <ui:VisualElement name="page0-slot-handItems" class="field-slot drag-drop-area" />
-                    <ui:VisualElement name="hand-preview" class="preview-row" />
+                    <ui:VisualElement name="page0-slot-handItems" class="field-slot" style="display: none;" />
+                    <ui:VisualElement name="hand-dropzone" class="mesh-dropzone">
+                      <ui:Label class="mesh-dropzone-label" text="Drop meshes here" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="hand-preview" class="preview-grid" />
                   </ui:VisualElement>
 
                   <ui:VisualElement name="section-leg" class="part-card">
                     <ui:Label name="label-leg" class="part-card-label" text="Leg" />
-                    <ui:VisualElement name="page0-slot-legItems" class="field-slot drag-drop-area" />
-                    <ui:VisualElement name="leg-preview" class="preview-row" />
+                    <ui:VisualElement name="page0-slot-legItems" class="field-slot" style="display: none;" />
+                    <ui:VisualElement name="leg-dropzone" class="mesh-dropzone">
+                      <ui:Label class="mesh-dropzone-label" text="Drop meshes here" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="leg-preview" class="preview-grid" />
                   </ui:VisualElement>
 
                 </ui:VisualElement>
@@ -200,6 +215,11 @@
               <ui:Label name="fg3-editor-theme" class="field-group-title" text="Editor Theme" />
               <ui:VisualElement name="page3-slot-editorTheme" class="field-slot" />
               <ui:Button name="theme-toggle" class="link-btn" text="Toggle Theme" tooltip="Toggle Light/Dark Theme" />
+
+              <ui:Label name="fg3-ui-settings" class="field-group-title" text="UI Settings" />
+              <ui:VisualElement class="dev-toggle-grid">
+                <ui:Button name="toggle-colabo-tab" class="part-toggle" text="Colabo Tab: ON" />
+              </ui:VisualElement>
             </ui:VisualElement>
 
           </ui:VisualElement>

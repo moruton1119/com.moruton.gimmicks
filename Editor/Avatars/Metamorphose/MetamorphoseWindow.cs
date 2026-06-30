@@ -198,7 +198,6 @@ namespace Moruton.Gimmicks.Editor
             RegisterPreviewCallbacks();
             SetupNavigation();
             SetupPartToggles();
-            SetupDragAndDrop();
             SetupButtonCallbacks();
             ApplyLocalization(_root);
 
@@ -216,6 +215,9 @@ namespace Moruton.Gimmicks.Editor
             UpdateShopVisibility();
 
             LoadBannerCards();
+
+            // コラボタブの初期表示状態
+            UpdateColaboTabVisibility(_target.showColaboTab);
 
             rootVisualElement.Clear();
             rootVisualElement.style.flexDirection = FlexDirection.Column;
