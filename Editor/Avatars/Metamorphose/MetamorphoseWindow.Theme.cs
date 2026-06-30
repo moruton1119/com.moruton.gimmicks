@@ -68,7 +68,7 @@ namespace Moruton.Gimmicks.Editor
             // トグルボタンのアイコン
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
-                var theme = GetCurrentTheme();
+            {
                 toggle.text = theme.id switch
                 {
                     "Daylight" => "☀",
@@ -76,6 +76,7 @@ namespace Moruton.Gimmicks.Editor
                     "Wizard" => "✦",
                     _ => "☾",
                 };
+            }
         }
 
         private void ToggleTheme()
