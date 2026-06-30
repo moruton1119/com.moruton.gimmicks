@@ -579,7 +579,8 @@
     border-color: var(--border-subtle);
     border-radius: var(--radius-md);
     background-color: var(--bg-input);
-    padding: 16px 8px;
+    padding: 24px 16px;
+    min-height: 60px;
     margin-bottom: 8px;
     align-items: center;
     justify-content: center;
