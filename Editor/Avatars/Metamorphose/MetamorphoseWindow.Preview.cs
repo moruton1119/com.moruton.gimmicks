@@ -117,6 +117,7 @@ namespace Moruton.Gimmicks.Editor
                 if (added)
                 {
                     _so.ApplyModifiedProperties();
+                    Debug.Log($"[Metamorphose] Dropped {draggedObjects.Length} object(s) to {propertyPath}, arraySize now = {prop.arraySize}");
                     UpdatePartPreview(previewName, propertyPath);
                     _previewRefreshTime = Time.realtimeSinceStartup + 0.15f;
                 }
@@ -144,12 +145,12 @@ namespace Moruton.Gimmicks.Editor
         private void UpdatePartPreview(string previewElementName, string propertyPath)
         {
             var container = _root.Q<VisualElement>(previewElementName);
-            if (container == null) return;
+            if (container == null) { Debug.LogWarning($"[Metamorphose] Preview container '{previewElementName}' not found!"); return; }
 
             container.Clear();
 
             var prop = _so.FindProperty(propertyPath);
-            if (prop == null || !prop.isArray) return;
+            if (prop == null || !prop.isArray) { Debug.LogWarning($"[Metamorphose] Property '{propertyPath}' not found or not array!"); return; }
 
             // ドロップゾーンのラベル更新
             var dropzoneName = GetDropzoneNameForPreview(previewElementName);
