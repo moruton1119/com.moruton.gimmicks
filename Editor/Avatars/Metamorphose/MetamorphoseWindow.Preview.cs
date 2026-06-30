@@ -250,21 +250,35 @@ namespace Moruton.Gimmicks.Editor
             return null;
         }
 
-        private static Texture2D RenderCloseUpPreview(GameObject prefabAsset)
+        private static Texture2D RenderCloseUpPreview(GameObject sourceGo)
         {
-            if (prefabAsset == null) return null;
+            if (sourceGo == null) return null;
 
-            var renderers = prefabAsset.GetComponentsInChildren<Renderer>(true);
+            var renderers = sourceGo.GetComponentsInChildren<Renderer>(true);
             if (renderers.Length == 0) return null;
 
             var preview = new PreviewRenderUtility();
+            GameObject tempInstance = null;
             try
             {
-                preview.AddSingleGO(prefabAsset);
+                // シーン内オブジェクトの場合、インスタンスを作ってプレビュー用ステージに配置
+                // （そのまま渡すとシーンと競合して正しくレンダリングされない）
+                tempInstance = preview.InstantiatePrefabInScene(sourceGo);
+                if (tempInstance == null)
+                {
+                    // InstantiatePrefabが失敗したら手動でインスタンス化
+                    tempInstance = Object.Instantiate(sourceGo);
+                    tempInstance.hideFlags = HideFlags.HideAndDontSave;
+                    preview.AddSingleGO(tempInstance);
+                }
 
-                var bounds = renderers[0].bounds;
-                for (int i = 1; i < renderers.Length; i++)
-                    bounds.Encapsulate(renderers[i].bounds);
+                // インスタンスのレンダラーでBoundsを再計算
+                var instanceRenderers = tempInstance.GetComponentsInChildren<Renderer>(true);
+                if (instanceRenderers.Length == 0) return null;
+
+                var bounds = instanceRenderers[0].bounds;
+                for (int i = 1; i < instanceRenderers.Length; i++)
+                    bounds.Encapsulate(instanceRenderers[i].bounds);
 
                 float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
                 if (maxDim <= 0f) maxDim = 1f;
@@ -272,7 +286,6 @@ namespace Moruton.Gimmicks.Editor
                 // 広角レンズで全体を捉える
                 preview.camera.fieldOfView = 30f;
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-                // メッシュが画面全体に映る距離
                 float dist = maxDim / (2f * Mathf.Tan(halfFov));
 
                 Vector3 center = bounds.center;
@@ -290,6 +303,8 @@ namespace Moruton.Gimmicks.Editor
             }
             finally
             {
+                if (tempInstance != null)
+                    Object.DestroyImmediate(tempInstance);
                 preview.Cleanup();
             }
         }
