@@ -224,28 +224,25 @@ namespace Moruton.Gimmicks.Editor
         {
             if (go == null) return null;
 
-            var tex = AssetPreview.GetAssetPreview(go);
-            if (tex != null)
-            {
-                _previewTexCache[go] = tex;
-                return tex;
-            }
-
+            // キャッシュチェック
             if (_previewTexCache.TryGetValue(go, out var cached))
                 return cached;
 
-            tex = AssetPreview.GetMiniThumbnail(go);
-            if (tex != null)
-            {
-                _previewTexCache[go] = tex;
-                return tex;
-            }
-
+            // AssetPreviewは使わない（遠すぎる）
+            // 常にクローズアップレンダリングを使う
             tex = RenderCloseUpPreview(go);
             if (tex != null)
             {
                 _previewTexCache[go] = tex;
                 _ownedPreviewTextures.Add(tex);
+                return tex;
+            }
+
+            // フォールバック
+            tex = AssetPreview.GetMiniThumbnail(go);
+            if (tex != null)
+            {
+                _previewTexCache[go] = tex;
                 return tex;
             }
 
@@ -271,9 +268,11 @@ namespace Moruton.Gimmicks.Editor
                 float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
                 if (maxDim <= 0f) maxDim = 1f;
 
+                // 広角レンズで全体を捉える
+                preview.camera.fieldOfView = 30f;
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-                // かなり近づける（0.30倍）
-                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 0.15f;
+                // メッシュが画面全体に映る距離
+                float dist = maxDim / (2f * Mathf.Tan(halfFov));
 
                 Vector3 center = bounds.center;
                 preview.camera.transform.position = center - Vector3.forward * dist;
@@ -305,7 +304,7 @@ namespace Moruton.Gimmicks.Editor
                 {
                     var go = prop.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
                     if (go == null) continue;
-                    if (AssetPreview.GetAssetPreview(go) == null && !_previewTexCache.ContainsKey(go))
+                    if (!_previewTexCache.ContainsKey(go))
                         return true;
                 }
             }
