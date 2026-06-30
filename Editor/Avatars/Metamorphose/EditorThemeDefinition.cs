@@ -202,5 +202,43 @@ namespace Moruton.Gimmicks.Editor
             openingTitleGlow = new Color(0.000f, 0.690f, 0.937f, 0.7f),   // 水色グロー
             openingSparkleColor = new Color(0.749f, 0.882f, 0.957f, 1f),  // #bfe1f4
         };
+
+        // ═══════════════════════════════════════════
+        //  Diamond（ダイヤモンド）テーマ
+        // ═══════════════════════════════════════════
+        public static EditorThemeDefinition Diamond => new EditorThemeDefinition
+        {
+            id = "Diamond",
+            displayName = "Diamond",
+            ussClassName = "theme-diamond",
+
+            // ── UI色: 白銀 × アイスブルー × ダイヤの輝き ──
+            windowBg = new Color(0.122f, 0.137f, 0.149f, 1f),       // #1f2326 深い石炭色
+            windowText = new Color(0.910f, 0.933f, 0.945f, 1f),     // #e8eef1 白銀
+            panelBg = new Color(0.149f, 0.165f, 0.180f, 1f),        // #262a2e
+            sidebarBg = new Color(0.090f, 0.102f, 0.114f, 1f),      // #171a1d
+            topbarBg = new Color(0.149f, 0.165f, 0.180f, 1f),       // #262a2e
+            elevatedBg = new Color(0.180f, 0.196f, 0.212f, 1f),     // #2e3236 カード
+            bannerBg = new Color(0.090f, 0.102f, 0.114f, 1f),      // #171a1d
+            inputBg = new Color(0.110f, 0.125f, 0.137f, 1f),        // #1c2023
+            hoverBg = new Color(0.212f, 0.227f, 0.243f, 1f),        // #363a3e
+            accent = new Color(0.600f, 0.835f, 0.937f, 1f),         // #99d5ef ダイヤブルー
+            accentHover = new Color(0.467f, 0.737f, 0.867f, 1f),    // #77bcdd
+            border = new Color(0.290f, 0.325f, 0.357f, 1f),         // #4a5359
+            textSecondary = new Color(0.667f, 0.745f, 0.804f, 1f),  // #aabecc
+            textDim = new Color(0.447f, 0.490f, 0.529f, 1f),        // #727d87
+            helpBoxBg = new Color(0.137f, 0.149f, 0.165f, 1f),     // #23262a
+
+            // ── オープニング演出色: ダイヤの輝き ──
+            openingBgCenter = new Color(0.243f, 0.271f, 0.290f, 1f), // #3e454a 中心は銀色に光る
+            openingBgEdge = new Color(0.043f, 0.051f, 0.059f, 1f),   // #0b0d0f 外縁は暗い
+            openingParticleColor = new Color(0.831f, 0.929f, 1f, 1f), // #d4edff ダイヤ粒子
+            openingGlowColor = new Color(0.600f, 0.835f, 0.937f, 0.5f), // ダイヤブルーグロー
+            openingCircleColor = new Color(0.180f, 0.212f, 0.235f, 0.9f),
+            openingCircleBorder = new Color(0.831f, 0.929f, 1f, 0.8f), // 銀枠
+            openingTitleColor = new Color(0.910f, 0.933f, 0.945f, 1f),  // 白銀
+            openingTitleGlow = new Color(0.600f, 0.835f, 0.937f, 0.7f), // ダイヤグロー
+            openingSparkleColor = new Color(0.910f, 0.957f, 1f, 1f),   // #e8f4ff キラキラ
+        };
     }
 }

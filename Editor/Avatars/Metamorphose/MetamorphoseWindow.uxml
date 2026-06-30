@@ -4,6 +4,7 @@
   <Style src="Theme_Daylight.uss" />
   <Style src="Theme_Cyber.uss" />
   <Style src="Theme_Wizard.uss" />
+  <Style src="Theme_Diamond.uss" />
 
   <ui:VisualElement name="app" class="app-root">
 
