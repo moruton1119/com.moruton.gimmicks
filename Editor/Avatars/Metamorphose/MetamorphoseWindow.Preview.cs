@@ -263,9 +263,13 @@ namespace Moruton.Gimmicks.Editor
             if (renderers.Length == 0) return null;
 
             var preview = new PreviewRenderUtility();
+            GameObject tempInstance = null;
             try
             {
-                preview.AddSingleGO(sourceGo);
+                // ★ Instantiateしないと元のオブジェクトがプレビューシーンに移動して消える
+                tempInstance = Object.Instantiate(sourceGo);
+                tempInstance.hideFlags = HideFlags.HideAndDontSave;
+                preview.AddSingleGO(tempInstance);
 
                 var bounds = renderers[0].bounds;
                 for (int i = 1; i < renderers.Length; i++)
@@ -292,6 +296,8 @@ namespace Moruton.Gimmicks.Editor
             }
             finally
             {
+                if (tempInstance != null)
+                    Object.DestroyImmediate(tempInstance);
                 preview.Cleanup();
             }
         }
