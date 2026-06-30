@@ -209,13 +209,27 @@ namespace Moruton.Gimmicks.Editor
 
         private void CreatePropertyFields()
         {
+            // ドロップゾーンで管理するプロパティはhidden
+            var hiddenSlots = new HashSet<string>
+            {
+                "page0-slot-offTargets",
+                "page0-slot-headItems",
+                "page0-slot-bodyItems",
+                "page0-slot-handItems",
+                "page0-slot-legItems",
+            };
+
             for (int pageIdx = 0; pageIdx < PageFieldPaths.Length; pageIdx++)
             {
                 foreach (var path in PageFieldPaths[pageIdx])
                 {
-                    var slot = _root.Q<VisualElement>($"page{pageIdx}-slot-{path}");
+                    var slotName = $"page{pageIdx}-slot-{path}";
+                    var slot = _root.Q<VisualElement>(slotName);
                     if (slot == null) continue;
                     slot.Add(new PropertyField { bindingPath = path });
+
+                    if (hiddenSlots.Contains(slotName))
+                        slot.AddToClassList("hidden");
                 }
             }
 
