@@ -1,16 +1,15 @@
 {
     "name": "com.moruton.gimmicks",
-    "references": [
-        "VRC.SDKBase",
-        "nadena.dev.modular-avatar.core"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "MODULAR_AVATAR"
+    ],
     "versionDefines": [
         {
             "name": "com.vrchat.avatars",

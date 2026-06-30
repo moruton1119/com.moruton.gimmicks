@@ -3,8 +3,6 @@
     "rootNamespace": "Moruton.Gimmicks.Editor",
     "references": [
         "com.moruton.gimmicks",
-        "nadena.dev.ndmf",
-        "nadena.dev.modular-avatar.core",
         "MorutonGimmicks.UpdateChecker.Editor"
     ],
     "includePlatforms": [
@@ -15,7 +13,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "MODULAR_AVATAR"
+    ],
     "versionDefines": [
         {
             "name": "com.vrchat.avatars",

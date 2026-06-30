@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
-using nadena.dev.modular_avatar.core;
 using UnityEngine;
+
+#if MODULAR_AVATAR
+using nadena.dev.modular_avatar.core;
+#endif
 
 namespace Moruton.Gimmicks
 {
+#if MODULAR_AVATAR
     [AddComponentMenu("Morulab/Avatars/Metamorphose")]
     [ExecuteInEditMode]
     public class Metamorphose : AvatarTagComponent
@@ -138,4 +142,5 @@ namespace Moruton.Gimmicks
             }
         }
     }
+#endif
 }
