@@ -253,46 +253,39 @@ namespace Moruton.Gimmicks.Editor
         {
             if (sourceGo == null) return null;
 
-            // Rendererを取得（SkinnedMeshRenderer含む）
             var renderers = sourceGo.GetComponentsInChildren<Renderer>(true);
             if (renderers.Length == 0) return null;
 
-            // メッシュとマテリアルを抽出
-            var meshes = new System.Collections.Generic.List<(Mesh mesh, Material[] materials, Transform transform)>();
-
-            foreach (var renderer in renderers)
-            {
-                if (renderer is SkinnedMeshRenderer smr)
-                {
-                    if (smr.sharedMesh == null) continue;
-                    var bakedMesh = new Mesh();
-                    smr.BakeMesh(bakedMesh, true);
-                    meshes.Add((bakedMesh, smr.sharedMaterials, smr.transform));
-                }
-                else if (renderer is MeshRenderer mr)
-                {
-                    var mf = mr.GetComponent<MeshFilter>();
-                    if (mf == null || mf.sharedMesh == null) continue;
-                    meshes.Add((mf.sharedMesh, mr.sharedMaterials, mr.transform));
-                }
-            }
-
-            if (meshes.Count == 0) return null;
-
-            // バウンズ計算
-            var bounds = meshes[0].mesh.bounds;
-            foreach (var (mesh, _, _) in meshes)
-                bounds.Encapsulate(mesh.bounds);
-
-            float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
-            if (maxDim <= 0f) maxDim = 1f;
-
-            const int texSize = 128;
-            var tex = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
-
             var preview = new PreviewRenderUtility();
+            GameObject tempInstance = null;
+
             try
             {
+                // オブジェクトをプレビューシーンにコピー
+                tempInstance = Object.Instantiate(sourceGo, preview.scene.root);
+                tempInstance.name = sourceGo.name;
+                tempInstance.hideFlags = HideFlags.HideAndDontSave;
+
+                // レイヤーをプレビュー用レイヤーに設定
+                // PreviewRenderUtilityは内部的にレイヤー30を使う
+                foreach (var t in tempInstance.GetComponentsInChildren<Transform>(true))
+                    t.gameObject.layer = preview.previewLayer;
+
+                // アクティブにする
+                tempInstance.SetActive(true);
+
+                // コピーしたインスタンスのレンダラーでBounds計算
+                var instanceRenderers = tempInstance.GetComponentsInChildren<Renderer>(true);
+                if (instanceRenderers.Length == 0) return null;
+
+                var bounds = instanceRenderers[0].bounds;
+                for (int i = 1; i < instanceRenderers.Length; i++)
+                    bounds.Encapsulate(instanceRenderers[i].bounds);
+
+                float maxDim = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+                if (maxDim <= 0f) maxDim = 1f;
+
+                // カメラ設定
                 preview.camera.fieldOfView = 30f;
                 preview.camera.clearFlags = CameraClearFlags.SolidColor;
                 preview.camera.backgroundColor = new Color(0, 0, 0, 0);
@@ -306,47 +299,19 @@ namespace Moruton.Gimmicks.Editor
                 preview.camera.nearClipPlane = 0.001f;
                 preview.camera.farClipPlane = dist + maxDim * 2f;
 
-                // メッシュを描画
-                foreach (var (mesh, materials, transform) in meshes)
-                {
-                    for (int sub = 0; sub < mesh.subMeshCount && sub < materials.Length; sub++)
-                    {
-                        if (materials[sub] == null) continue;
-                        Graphics.DrawMesh(
-                            mesh,
-                            transform.localToWorldMatrix,
-                            materials[sub],
-                            0,
-                            preview.camera,
-                            sub
-                        );
-                    }
-                }
-
                 preview.camera.Render();
 
-                // バックアップしたRenderTextureから読み取り
-                var rt = RenderTexture.active;
-                RenderTexture.active = preview.camera.targetTexture;
-                tex.ReadPixels(new Rect(0, 0, texSize, texSize), 0, 0);
-                tex.Apply();
-                RenderTexture.active = rt;
-
-                // bakedMeshをクリーンアップ
-                foreach (var (mesh, _, _) in meshes)
-                {
-                    if (!mesh.Equals(null) && mesh.vertexCount > 0)
-                        Object.DestroyImmediate(mesh);
-                }
-
-                return tex;
+                return preview.EndPreview() as Texture2D;
             }
-            catch
+            catch (System.Exception e)
             {
+                Debug.LogError($"[Metamorphose] Preview render failed: {e}");
                 return null;
             }
             finally
             {
+                if (tempInstance != null)
+                    Object.DestroyImmediate(tempInstance);
                 preview.Cleanup();
             }
         }
