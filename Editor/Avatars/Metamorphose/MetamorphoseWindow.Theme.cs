@@ -19,7 +19,7 @@ namespace Moruton.Gimmicks.Editor
             if (_target == null) return;
 
             string prefabTheme = _target.ThemeSetting;
-            if (!string.IsNullOrEmpty(prefabTheme) && prefabTheme != "Auto")
+            if (!string.IsNullOrEmpty(prefabTheme))
             {
                 _currentThemeId = prefabTheme;
             }
