@@ -65,6 +65,12 @@ namespace Moruton.Gimmicks.Editor
                 dropzone.RemoveFromClassList("drag-hover");
             });
 
+            // ★ これがないとドラッグを受け付けてくない
+            dropzone.RegisterCallback<DragUpdatedEvent>(e =>
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+            });
+
             // ドロップ処理
             dropzone.RegisterCallback<DragPerformEvent>(e =>
             {
