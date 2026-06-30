@@ -59,11 +59,7 @@ namespace Moruton.Gimmicks.Editor
         {
             Register(EditorThemeDefinition.Moonlight);
             Register(EditorThemeDefinition.Daylight);
-
-            // ── 今後のテーマ追加エリア ──
-            // Register(EditorThemeDefinition.Cyber);    // サイバーパンク
-            // Register(EditorThemeDefinition.Wafu);      // 和風
-            // Register(EditorThemeDefinition.Sakura);    // 桜
+            Register(EditorThemeDefinition.Cyber);
         }
 
         private static void Register(EditorThemeDefinition theme)

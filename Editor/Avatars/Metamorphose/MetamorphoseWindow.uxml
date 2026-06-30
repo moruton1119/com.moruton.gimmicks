@@ -2,6 +2,7 @@
   <Style src="MetamorphoseWindow.uss" />
   <Style src="Theme_Moonlight.uss" />
   <Style src="Theme_Daylight.uss" />
+  <Style src="Theme_Cyber.uss" />
 
   <ui:VisualElement name="app" class="app-root">
 

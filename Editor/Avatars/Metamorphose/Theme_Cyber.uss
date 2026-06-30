@@ -1,0 +1,113 @@
+/* ═══════════════════════════════════════════════
+   Cyber Theme — Cyberpunk
+   シアン × マゼンダ × ダーク
+   ═══════════════════════════════════════════════ */
+
+.theme-cyber {
+    --bg-night: #0a0a0f;
+    --bg-deep: #050509;
+    --bg-elevated: #14141c;
+    --bg-hover: #1c1c26;
+    --bg-input: #0c0c11;
+    --topbar-bg: #0f0f15;
+    --sidebar-bg: #050509;
+    --banner-bg: #050509;
+    --helpbox-bg: #0f0a14;
+
+    --accent: #00e1f5;
+    --accent-hover: #00b8d4;
+    --accent-bg: rgba(0, 225, 245, 0.08);
+    --accent-border: rgba(0, 225, 245, 0.25);
+    --accent-purple: #e026e0;
+    --accent-green: #00ff88;
+    --accent-orange: #ff9100;
+    --accent-red: #ff1744;
+    --accent-cyan: #00e5ff;
+
+    --border: #007180;
+    --border-subtle: #0a3a40;
+
+    --text: #60edef;
+    --text-secondary: #e026e0;
+    --text-dim: #8080a4;
+
+    --glow-pink: rgba(224, 38, 224, 0.10);
+    --glow-purple: rgba(0, 225, 245, 0.06);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+}
+
+/* Layout */
+.theme-cyber .content-panel { background-color: var(--bg-night); }
+.theme-cyber .pages-container { background-color: var(--bg-night); }
+.theme-cyber .page-desc { color: var(--text-secondary); }
+.theme-cyber .field-group { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-cyber .field-group-title { color: var(--accent-purple); border-bottom-color: var(--accent-border); }
+.theme-cyber .part-section { background-color: var(--glow-purple); border-color: var(--border-subtle); }
+.theme-cyber .part-label { color: var(--accent); }
+.theme-cyber .fade-section { background-color: var(--glow-purple); border-color: var(--border-subtle); }
+.theme-cyber .fade-part-label { color: var(--accent-orange); }
+.theme-cyber .field-slot > PropertyField > .unity-property-field__label { color: var(--text-secondary); }
+.theme-cyber .dev-page .field-slot > PropertyField > .unity-property-field__label { color: var(--text-secondary); }
+
+/* Navigation */
+.theme-cyber .nav-num { background-color: var(--bg-elevated); color: var(--text-dim); border-color: var(--border-subtle); }
+.theme-cyber .nav-num:hover { background-color: var(--bg-hover); color: var(--text); }
+.theme-cyber .nav-num.active { background-color: var(--accent); color: #ffffff; border-color: var(--accent); }
+.theme-cyber .nav-link { background-color: var(--bg-elevated); color: var(--text-secondary); border-color: var(--border-subtle); }
+.theme-cyber .nav-link:hover { background-color: var(--bg-hover); }
+.theme-cyber .dev-btn { color: var(--accent-orange); }
+.theme-cyber .dev-btn:hover { background-color: var(--accent-bg); }
+.theme-cyber .dev-btn.active { background-color: var(--accent-orange); color: #ffffff; }
+.theme-cyber .part-toggle { background-color: var(--accent); }
+.theme-cyber .part-toggle:hover { background-color: var(--accent-hover); }
+.theme-cyber .part-toggle-off { background-color: var(--bg-hover); color: var(--text-dim); }
+
+/* Topbar / Lang */
+.theme-cyber .topbar { background-color: var(--bg-elevated); border-bottom-color: var(--accent); }
+.theme-cyber .topbar-title { color: var(--accent); }
+.theme-cyber .lang-bar { background-color: var(--bg-hover); }
+.theme-cyber .lang-btn { color: var(--text-dim); }
+.theme-cyber .lang-btn:hover { color: var(--text); background-color: var(--border-subtle); }
+.theme-cyber .lang-btn.selected { background-color: var(--accent); color: #ffffff; }
+
+/* Sidebar / Banner */
+.theme-cyber .sidebar { background-color: var(--sidebar-bg); border-right-color: var(--accent); }
+.theme-cyber .sidebar-header { color: var(--accent); }
+.theme-cyber .banner { background-color: var(--banner-bg); border-top-color: var(--accent-border); }
+.theme-cyber .banner-card { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-cyber .banner-card:hover { border-color: var(--accent); background-color: var(--bg-night); }
+.theme-cyber .banner-card-label { color: var(--text); }
+
+/* Buttons */
+.theme-cyber .theme-toggle { color: var(--accent); background-color: var(--accent-bg); border-color: var(--accent-border); }
+.theme-cyber .link-btn { color: var(--accent); background-color: var(--accent-bg); border-color: var(--accent-border); }
+.theme-cyber .preview-thumb { border-color: var(--accent-border); }
+.theme-cyber .colabo-shop-image { border-color: var(--accent-border); }
+.theme-cyber .part-card { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-cyber .part-card:hover { border-color: var(--accent); background-color: var(--bg-hover); }
+.theme-cyber .part-card-label { color: var(--accent); }
+
+/* Unity elements */
+.theme-cyber HelpBox { background-color: var(--helpbox-bg); border-color: var(--accent-border); color: var(--text-secondary); }
+.theme-cyber .unity-base-field__input { background-color: var(--bg-input); border-color: var(--border-subtle); color: var(--text); }
+.theme-cyber .unity-object-field__object { background-color: var(--bg-input); color: var(--text); border-color: var(--border-subtle); }
+.theme-cyber .unity-color-field { background-color: var(--bg-input); border-color: var(--border-subtle); }
+.theme-cyber .unity-integer-field, .theme-cyber .unity-float-field { background-color: var(--bg-input); color: var(--text); }
+.theme-cyber .unity-property-field__label { color: var(--text-secondary) !important; }
+.theme-cyber .unity-foldout__text { color: var(--text); }
+.theme-cyber .unity-foldout__toggle { color: var(--accent); }
+.theme-cyber .unity-toggle__label { color: var(--text); }
+
+/* Arrays */
+.theme-cyber .unity-list-view { background-color: var(--bg-input); border-color: var(--border-subtle); }
+.theme-cyber .unity-list-view__reorderable-item { background-color: var(--bg-elevated); border-color: var(--border-subtle); }
+.theme-cyber .unity-list-view__reorderable-item:hover { background-color: var(--bg-hover); }
+.theme-cyber .unity-list-view__reorderable-item__drag-handle { background-color: var(--border); }
+.theme-cyber .unity-list-view__reorderable-item__drag-handle:hover { background-color: var(--accent); }
+.theme-cyber .unity-list-view__reorderable-item__remove-button { color: var(--text-dim); background-color: transparent; }
+.theme-cyber .unity-list-view__reorderable-item__remove-button:hover { color: var(--accent-red); background-color: var(--bg-hover); }
+.theme-cyber .unity-array-size-field__input { background-color: var(--bg-input); color: var(--text); }
+.theme-cyber .unity-scroll-view { background-color: transparent; }

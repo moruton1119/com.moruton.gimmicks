@@ -68,12 +68,25 @@ namespace Moruton.Gimmicks.Editor
             // トグルボタンのアイコン
             var toggle = _root.Q<Button>("theme-toggle");
             if (toggle != null)
-                toggle.text = isDaylight ? "☀️" : "🌙";
+                var theme = GetCurrentTheme();
+                toggle.text = theme.id switch
+                {
+                    "Daylight" => "☀",
+                    "Cyber" => "≡",
+                    _ => "☾",
+                };
         }
 
         private void ToggleTheme()
         {
-            _currentThemeId = _currentThemeId == "Daylight" ? "Moonlight" : "Daylight";
+            // 3テーマのローテーション: Moonlight → Daylight → Cyber → Moonlight
+            _currentThemeId = _currentThemeId switch
+            {
+                "Moonlight" => "Daylight",
+                "Daylight" => "Cyber",
+                "Cyber" => "Moonlight",
+                _ => "Moonlight",
+            };
             EditorPrefs.SetString("MetamorphoseEditor_ThemeId", _currentThemeId);
 
             if (_target != null)

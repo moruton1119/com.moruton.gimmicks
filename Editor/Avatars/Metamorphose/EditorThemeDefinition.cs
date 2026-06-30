@@ -128,19 +128,41 @@ namespace Moruton.Gimmicks.Editor
         };
 
         // ═══════════════════════════════════════════
-        //  今後追加するテーマのテンプレート：
-        //
-        //  public static EditorThemeDefinition Cyber => new EditorThemeDefinition
-        //  {
-        //      id = "Cyber",
-        //      displayName = "🌃 Cyber",
-        //      ussClassName = "theme-cyber",
-        //      windowBg = ...,
-        //      openingBgCenter = ...,
-        //      ...（全色フィールドを埋める）
-        //  };
-        //
-        //  → EditorThemeRegistry.RegisterAll() に1行追加するだけ
+        //  Cyber（サイバーパンク）テーマ
         // ═══════════════════════════════════════════
+        public static EditorThemeDefinition Cyber => new EditorThemeDefinition
+        {
+            id = "Cyber",
+            displayName = "Cyber",
+            ussClassName = "theme-cyber",
+
+            // ── UI色: シアン × マゼンダ × ダーク ──
+            windowBg = new Color(0.039f, 0.039f, 0.059f, 1f),       // #0a0a0f
+            windowText = new Color(0.376f, 0.929f, 0.937f, 1f),     // #60edef シアン
+            panelBg = new Color(0.059f, 0.059f, 0.082f, 1f),        // #0f0f15
+            sidebarBg = new Color(0.020f, 0.020f, 0.035f, 1f),      // #050509
+            topbarBg = new Color(0.059f, 0.059f, 0.082f, 1f),       // #0f0f15
+            elevatedBg = new Color(0.078f, 0.078f, 0.110f, 1f),     // #14141c
+            bannerBg = new Color(0.020f, 0.020f, 0.035f, 1f),      // #050509
+            inputBg = new Color(0.047f, 0.047f, 0.067f, 1f),        // #0c0c11
+            hoverBg = new Color(0.110f, 0.110f, 0.149f, 1f),        // #1c1c26
+            accent = new Color(0.000f, 0.882f, 0.961f, 1f),         // #00e1f5 ネオンシアン
+            accentHover = new Color(0.000f, 0.741f, 0.831f, 1f),    // #00b8d4
+            border = new Color(0.000f, 0.443f, 0.502f, 1f),         // #007180
+            textSecondary = new Color(0.882f, 0.149f, 0.882f, 1f),  // #e026e0 ネオンマゼンダ
+            textDim = new Color(0.502f, 0.502f, 0.643f, 1f),        // #8080a4
+            helpBoxBg = new Color(0.059f, 0.039f, 0.078f, 1f),     // #0f0a14
+
+            // ── オープニング演出色 ──
+            openingBgCenter = new Color(0.110f, 0.110f, 0.180f, 1f), // #1c1c2e
+            openingBgEdge = new Color(0.012f, 0.012f, 0.024f, 1f),   // #030309
+            openingParticleColor = new Color(0.000f, 0.882f, 0.961f, 1f),
+            openingGlowColor = new Color(0.882f, 0.149f, 0.882f, 0.5f),
+            openingCircleColor = new Color(0.039f, 0.078f, 0.110f, 0.9f),
+            openingCircleBorder = new Color(0.000f, 0.882f, 0.961f, 0.8f),
+            openingTitleColor = new Color(0.000f, 0.882f, 0.961f, 1f),
+            openingTitleGlow = new Color(0.882f, 0.149f, 0.882f, 0.7f),
+            openingSparkleColor = new Color(0.000f, 0.882f, 0.961f, 1f),
+        };
     }
 }
