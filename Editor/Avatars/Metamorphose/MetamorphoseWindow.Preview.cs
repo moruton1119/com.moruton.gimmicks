@@ -184,6 +184,11 @@ namespace Moruton.Gimmicks.Editor
                 img.AddToClassList("preview-thumb-large");
                 item.Add(img);
 
+                // メッシュ名
+                var nameLabel = new Label(go.name);
+                nameLabel.AddToClassList("preview-name");
+                item.Add(nameLabel);
+
                 // 削除ボタン
                 var capturedPath = propertyPath;
                 var capturedIndex = i;
@@ -279,7 +284,7 @@ namespace Moruton.Gimmicks.Editor
                 if (maxDim <= 0f) maxDim = 1f;
 
                 float halfFov = preview.camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-                float dist = maxDim / (2f * Mathf.Tan(halfFov));
+                float dist = maxDim / (2f * Mathf.Tan(halfFov)) * 0.75f;
 
                 Vector3 center = bounds.center;
                 preview.camera.transform.position = center - Vector3.forward * dist;

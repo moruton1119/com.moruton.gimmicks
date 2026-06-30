@@ -612,23 +612,33 @@
 }
 
 .preview-grid .preview-item {
-    width: 52px;
-    margin: 2px;
+    width: 80px;
+    margin: 3px;
     flex-direction: column;
     align-items: center;
 }
 
 .preview-grid .preview-thumb-large {
-    width: 48px;
-    height: 48px;
+    width: 72px;
+    height: 72px;
     border-radius: var(--radius-sm);
     border-width: 1px;
     border-color: var(--accent-border);
     object-fit: scale-down;
 }
 
+.preview-grid .preview-name {
+    font-size: 10px;
+    color: var(--text-secondary);
+    -unity-text-align: middle-center;
+    margin-top: 2px;
+    max-width: 76px;
+    white-space: normal;
+    overflow: hidden;
+}
+
 .preview-grid .preview-remove-btn {
-    width: 48px;
+    width: 72px;
     height: 16px;
     font-size: 10px;
     color: var(--accent-red);
