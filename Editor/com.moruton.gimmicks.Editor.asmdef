@@ -13,9 +13,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "MODULAR_AVATAR"
-    ],
+    "defineConstraints": [],
     "versionDefines": [
         {
             "name": "com.vrchat.avatars",

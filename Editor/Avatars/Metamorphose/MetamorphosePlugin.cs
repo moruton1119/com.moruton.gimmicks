@@ -1,3 +1,4 @@
+#if MODULAR_AVATAR
 using nadena.dev.ndmf;
 using UnityEngine;
 
@@ -24,3 +25,4 @@ namespace Moruton.Gimmicks.Editor
         }
     }
 }
+#endif

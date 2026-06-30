@@ -9,9 +9,14 @@ using nadena.dev.modular_avatar.core;
 namespace Moruton.Gimmicks
 {
 #if MODULAR_AVATAR
+    using AvatarTagBase = nadena.dev.modular_avatar.core.AvatarTagComponent;
+#else
+    using AvatarTagBase = UnityEngine.MonoBehaviour;
+#endif
+
     [AddComponentMenu("Morulab/Avatars/Metamorphose")]
     [ExecuteInEditMode]
-    public class Metamorphose : AvatarTagComponent
+    public class Metamorphose : AvatarTagBase
     {
         [Header("基本設定")]
         [SerializeField] private Texture2D dummyImage;
@@ -142,5 +147,4 @@ namespace Moruton.Gimmicks
             }
         }
     }
-#endif
 }

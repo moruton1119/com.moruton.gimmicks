@@ -1,3 +1,4 @@
+#if MODULAR_AVATAR
 using System.Collections.Generic;
 using System.Linq;
 using nadena.dev.ndmf;
@@ -180,3 +181,4 @@ namespace Moruton.Gimmicks.Editor
         }
     }
 }
+#endif
