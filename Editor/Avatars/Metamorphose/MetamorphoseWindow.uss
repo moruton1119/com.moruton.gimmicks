@@ -612,15 +612,15 @@
 }
 
 .preview-grid .preview-item {
-    width: 80px;
-    margin: 2px;
+    width: 136px;
+    margin: 4px;
     flex-direction: column;
     align-items: center;
 }
 
 .preview-grid .preview-thumb-large {
-    width: 72px;
-    height: 72px;
+    width: 128px;
+    height: 128px;
     border-radius: var(--radius-sm);
     border-width: 2px;
     border-color: var(--accent-border);
@@ -628,15 +628,15 @@
 }
 
 .preview-grid .preview-remove-btn {
-    width: 72px;
-    height: 18px;
-    font-size: 10px;
+    width: 128px;
+    height: 20px;
+    font-size: 11px;
     color: var(--accent-red);
     background-color: transparent;
     border-width: 0;
     border-radius: 0;
     -unity-text-align: middle-center;
-    margin-top: 0;
+    margin-top: 2px;
 }
 
 .preview-grid .preview-remove-btn:hover {
