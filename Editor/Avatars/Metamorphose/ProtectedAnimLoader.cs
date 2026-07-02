@@ -124,7 +124,7 @@ namespace Moruton.Gimmicks.Editor
         /// <summary>
         /// DefaultAsset（DLL）からファイルパスを取得。
         /// </summary>
-        public static string GetDllPath(Object dllAsset)
+        public static string GetDllPath(UnityEngine.Object dllAsset)
         {
             if (dllAsset == null) return null;
             return AssetDatabase.GetAssetPath(dllAsset);
