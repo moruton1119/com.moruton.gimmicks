@@ -108,6 +108,23 @@ namespace Moruton.Gimmicks
 
         // ドロップダウン用の選択肢
         public static readonly string[] AvailableThemes = { "Moonlight", "Daylight", "Cyber", "Wizard", "Diamond" };
+
+        [Header("Protected Animation")]
+        [Tooltip("暗号化アニメーションDLL（EncryptedAnimData.dll）")]
+        [SerializeField] private DefaultAsset protectedAnimDll;
+        [Tooltip("注入先AnimatorController")]
+        [SerializeField] private RuntimeAnimatorController protectedAnimTargetController;
+        [Tooltip("注入先Layer名")]
+        [SerializeField] private string protectedAnimLayerName = "Metamorphose";
+        [Tooltip("DLL内のアニメーションキー（カンマ区切り）")]
+        [SerializeField] private string protectedAnimKeys = "anim_enable,anim_disable";
+
+        public DefaultAsset ProtectedAnimDll => protectedAnimDll;
+        public RuntimeAnimatorController ProtectedAnimTargetController => protectedAnimTargetController;
+        public string ProtectedAnimLayerName => protectedAnimLayerName;
+        public string[] ProtectedAnimKeyList =>
+            string.IsNullOrEmpty(protectedAnimKeys) ? new string[0] :
+            protectedAnimKeys.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
         
         public GameObject Avatar => avatar;
         public GameObject Model => model;

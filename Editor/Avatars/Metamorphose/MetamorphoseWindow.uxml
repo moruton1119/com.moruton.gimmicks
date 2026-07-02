@@ -222,6 +222,12 @@
               <ui:VisualElement class="dev-toggle-grid">
                 <ui:Button name="toggle-colabo-tab" class="part-toggle" text="Colabo Tab: ON" />
               </ui:VisualElement>
+
+              <ui:Label name="fg3-protected-anim" class="field-group-title" text="Protected Animation" />
+              <ui:VisualElement name="page3-slot-protectedAnimDll" class="field-slot" />
+              <ui:VisualElement name="page3-slot-protectedAnimTargetController" class="field-slot" />
+              <ui:VisualElement name="page3-slot-protectedAnimLayerName" class="field-slot" />
+              <ui:VisualElement name="page3-slot-protectedAnimKeys" class="field-slot" />
             </ui:VisualElement>
 
           </ui:VisualElement>

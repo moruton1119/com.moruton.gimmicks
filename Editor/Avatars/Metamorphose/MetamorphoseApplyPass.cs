@@ -38,6 +38,9 @@ namespace Moruton.Gimmicks.Editor
 
             GenerateAnimations(ctx, mirror);
 
+            // ─── Protected Animation注入 ───
+            InjectProtectedAnimations(ctx, mirror);
+
             // ─── Step 2: 変身後の衣装配置 ───
             ItemPlacer.PlaceItems(mirror.headTarget, mirror.headItems);
             ItemPlacer.PlaceItems(mirror.bodyTarget, mirror.bodyItems);
@@ -61,6 +64,104 @@ namespace Moruton.Gimmicks.Editor
             {
                 ItemPlacer.PlaceItems(mirror.OnePiece.transform, new[] { mirror.ColaboFBX });
             }
+        }
+
+        private static void InjectProtectedAnimations(BuildContext ctx, Metamorphose mirror)
+        {
+            // ProtectedAnimDllが設定されていなければスキップ
+            if (mirror.ProtectedAnimDll == null)
+                return;
+
+            Debug.Log("[MetamorphoseApplyPass] Protected Animation: processing...");
+
+            // DLL読み込み
+            string dllPath = ProtectedAnimLoader.GetDllPath(mirror.ProtectedAnimDll);
+            if (!ProtectedAnimLoader.LoadDll(dllPath))
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Protected Animation: DLL load failed.");
+                return;
+            }
+
+            // 注入先Controllerの確認
+            if (mirror.ProtectedAnimTargetController == null)
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Protected Animation: Target controller not set.");
+                return;
+            }
+
+            // Controllerをクローン
+            var originalController = mirror.ProtectedAnimTargetController as AnimatorController;
+            if (originalController == null)
+            {
+                Debug.LogWarning("[MetamorphoseApplyPass] Protected Animation: Controller is not AnimatorController.");
+                return;
+            }
+
+            var clonedController = Object.Instantiate(originalController);
+            clonedController.name = originalController.name + "_Protected";
+
+            // NDMF AssetContainerに登録
+            if (ctx.AssetContainer != null)
+            {
+                AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
+            }
+
+            // 各キーを復号→クリップ生成→注入
+            var keys = mirror.ProtectedAnimKeyList;
+            foreach (string key in keys)
+            {
+                string trimmedKey = key.Trim();
+                if (string.IsNullOrEmpty(trimmedKey)) continue;
+
+                byte[] data = ProtectedAnimLoader.LoadDecrypted(trimmedKey);
+                if (data == null)
+                {
+                    Debug.LogWarning($"[MetamorphoseApplyPass] Protected Animation: Failed to decrypt '{trimmedKey}'.");
+                    continue;
+                }
+
+                string clipName = trimmedKey.Replace("anim_", "");
+                var clip = ProtectedAnimClipBuilder.Build(data, clipName);
+                if (clip == null) continue;
+
+                // NDMFに登録
+                if (ctx.AssetContainer != null)
+                {
+                    AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
+                }
+
+                // State名 = clip名として対応するStateに割り当て
+                string stateName = clipName;
+                AnimationBuilder.ApplyClipToState(clonedController, stateName, clip);
+
+                Debug.Log($"[MetamorphoseApplyPass] Protected Animation: Injected '{clipName}' into state '{stateName}'.");
+            }
+
+            // MA MergeAnimatorがあれば更新
+            var components = ctx.AvatarRootObject.GetComponentsInChildren<Component>(true);
+            foreach (var comp in components)
+            {
+                if (comp == null) continue;
+                if (comp.GetType().FullName == "nadena.dev.modular_avatar.core.ModularAvatarMergeAnimator")
+                {
+                    var type = comp.GetType();
+                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    foreach (var f in fields)
+                    {
+                        if (f.FieldType == typeof(RuntimeAnimatorController))
+                        {
+                            var val = f.GetValue(comp) as RuntimeAnimatorController;
+                            if (val == originalController)
+                            {
+                                f.SetValue(comp, clonedController);
+                                Debug.Log($"[MetamorphoseApplyPass] Updated MergeAnimator '{comp.gameObject.name}'.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            Debug.Log("[MetamorphoseApplyPass] Protected Animation: complete.");
         }
 
         private static void GenerateAnimations(BuildContext ctx, Metamorphose mirror)

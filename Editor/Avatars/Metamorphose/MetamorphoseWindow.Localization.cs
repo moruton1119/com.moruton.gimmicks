@@ -63,6 +63,7 @@ namespace Moruton.Gimmicks.Editor
             root.Q<Label>("fg3-materials").text = LC("dev_material_label");
             root.Q<Label>("fg3-gimmick-color").text = LC("dev_gimmick_color_targets");
             root.Q<Label>("fg3-banner").text = "Banner Ad URLs";
+            root.Q<Label>("fg3-protected-anim").text = "Protected Animation";
         }
 
         private void SetPropLabel(VisualElement root, string slotName, string label)

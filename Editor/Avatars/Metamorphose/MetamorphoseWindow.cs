@@ -93,6 +93,10 @@ namespace Moruton.Gimmicks.Editor
             ("gimmickCollar", "page3-slot-gimmickCollar"),
             ("bannerAdUrls", "page3-slot-bannerAdUrls"),
             ("editorTheme", "page3-slot-editorTheme"),
+            ("protectedAnimDll", "page3-slot-protectedAnimDll"),
+            ("protectedAnimTargetController", "page3-slot-protectedAnimTargetController"),
+            ("protectedAnimLayerName", "page3-slot-protectedAnimLayerName"),
+            ("protectedAnimKeys", "page3-slot-protectedAnimKeys"),
         };
 
         private string L(string key) => LocalizationManager.Get("Metamorphose", key);
