@@ -111,7 +111,7 @@ namespace Moruton.Gimmicks
 
         [Header("Protected Animation")]
         [Tooltip("暗号化アニメーションDLL（EncryptedAnimData.dll）")]
-        [SerializeField] private DefaultAsset protectedAnimDll;
+        [SerializeField] private Object protectedAnimDll;
         [Tooltip("注入先AnimatorController")]
         [SerializeField] private RuntimeAnimatorController protectedAnimTargetController;
         [Tooltip("注入先Layer名")]
@@ -129,7 +129,7 @@ namespace Moruton.Gimmicks
         [Tooltip("DLLキーと注入先Stateのマッピング")]
         [SerializeField] private ProtectedAnimMapping[] protectedAnimMappings = new ProtectedAnimMapping[0];
 
-        public DefaultAsset ProtectedAnimDll => protectedAnimDll;
+        public Object ProtectedAnimDll => protectedAnimDll;
         public RuntimeAnimatorController ProtectedAnimTargetController => protectedAnimTargetController;
         public string ProtectedAnimLayerName => protectedAnimLayerName;
         public ProtectedAnimMapping[] ProtectedAnimMappings => protectedAnimMappings;
