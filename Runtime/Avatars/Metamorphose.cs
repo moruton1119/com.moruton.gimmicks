@@ -116,15 +116,23 @@ namespace Moruton.Gimmicks
         [SerializeField] private RuntimeAnimatorController protectedAnimTargetController;
         [Tooltip("注入先Layer名")]
         [SerializeField] private string protectedAnimLayerName = "Metamorphose";
-        [Tooltip("DLL内のアニメーションキー（カンマ区切り）")]
-        [SerializeField] private string protectedAnimKeys = "anim_enable,anim_disable";
+
+        [System.Serializable]
+        public struct ProtectedAnimMapping
+        {
+            [Tooltip("DLL内のアニメーションキー")]
+            public string dllKey;
+            [Tooltip("注入先State名")]
+            public string stateName;
+        }
+
+        [Tooltip("DLLキーと注入先Stateのマッピング")]
+        [SerializeField] private ProtectedAnimMapping[] protectedAnimMappings = new ProtectedAnimMapping[0];
 
         public DefaultAsset ProtectedAnimDll => protectedAnimDll;
         public RuntimeAnimatorController ProtectedAnimTargetController => protectedAnimTargetController;
         public string ProtectedAnimLayerName => protectedAnimLayerName;
-        public string[] ProtectedAnimKeyList =>
-            string.IsNullOrEmpty(protectedAnimKeys) ? new string[0] :
-            protectedAnimKeys.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
+        public ProtectedAnimMapping[] ProtectedAnimMappings => protectedAnimMappings;
         
         public GameObject Avatar => avatar;
         public GameObject Model => model;

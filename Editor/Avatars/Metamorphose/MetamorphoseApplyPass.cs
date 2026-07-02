@@ -106,22 +106,28 @@ namespace Moruton.Gimmicks.Editor
                 AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
             }
 
-            // 各キーを復号→クリップ生成→注入
-            var keys = mirror.ProtectedAnimKeyList;
-            foreach (string key in keys)
+            // 各マッピングを復号→クリップ生成→注入
+            var mappings = mirror.ProtectedAnimMappings;
+            if (mappings == null || mappings.Length == 0)
             {
-                string trimmedKey = key.Trim();
-                if (string.IsNullOrEmpty(trimmedKey)) continue;
+                Debug.LogWarning("[MetamorphoseApplyPass] Protected Animation: No mappings set.");
+                return;
+            }
 
-                byte[] data = ProtectedAnimLoader.LoadDecrypted(trimmedKey);
+            foreach (var mapping in mappings)
+            {
+                string dllKey = mapping.dllKey?.Trim();
+                string stateName = mapping.stateName?.Trim();
+                if (string.IsNullOrEmpty(dllKey) || string.IsNullOrEmpty(stateName)) continue;
+
+                byte[] data = ProtectedAnimLoader.LoadDecrypted(dllKey);
                 if (data == null)
                 {
-                    Debug.LogWarning($"[MetamorphoseApplyPass] Protected Animation: Failed to decrypt '{trimmedKey}'.");
+                    Debug.LogWarning($"[MetamorphoseApplyPass] Protected Animation: Failed to decrypt '{dllKey}'.");
                     continue;
                 }
 
-                string clipName = trimmedKey.Replace("anim_", "");
-                var clip = ProtectedAnimClipBuilder.Build(data, clipName);
+                var clip = ProtectedAnimClipBuilder.Build(data, stateName);
                 if (clip == null) continue;
 
                 // NDMFに登録
@@ -130,11 +136,9 @@ namespace Moruton.Gimmicks.Editor
                     AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
                 }
 
-                // State名 = clip名として対応するStateに割り当て
-                string stateName = clipName;
                 AnimationBuilder.ApplyClipToState(clonedController, stateName, clip);
 
-                Debug.Log($"[MetamorphoseApplyPass] Protected Animation: Injected '{clipName}' into state '{stateName}'.");
+                Debug.Log($"[MetamorphoseApplyPass] Protected Animation: Injected '{dllKey}' → state '{stateName}'.");
             }
 
             // MA MergeAnimatorがあれば更新
