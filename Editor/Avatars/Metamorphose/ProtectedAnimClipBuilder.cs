@@ -80,7 +80,9 @@ namespace Moruton.Gimmicks.Editor
                     clip.AddEvent(evt);
                 }
 
-                clip.SetLoop(loopTime);
+                var settings = AnimationUtility.GetAnimationClipSettings(clip);
+                settings.loopTime = loopTime;
+                AnimationUtility.SetAnimationClipSettings(clip, settings);
 
                 // ★ アクセスブロック
                 clip.hideFlags = HideFlags.HideAndDontSave;
