@@ -84,8 +84,8 @@ namespace Moruton.Gimmicks.Editor
                 settings.loopTime = loopTime;
                 AnimationUtility.SetAnimationClipSettings(clip, settings);
 
-                // ★ アクセスブロック
-                clip.hideFlags = HideFlags.HideAndDontSave;
+                // アクセスブロックは AddObjectToAsset 側で行う
+                // (HideAndDontSave をつけると AssetDatabase.AddObjectToAsset が失敗する)
 
                 Debug.Log($"[ProtectedAnimClipBuilder] Built clip '{clip.name}' ({curveCount} curves, {eventCount} events)");
                 return clip;
