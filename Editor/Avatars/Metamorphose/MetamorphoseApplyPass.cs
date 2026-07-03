@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Moruton.Gimmicks.Editor
 {
     /// <summary>
-    /// NDMF Build Pass: ビルド時にアイテム配置＋アニメーション生成を行う。
+    /// NDMF Build Pass: ビルド時にアニメーション生成とProtectedAnim注入を行う。
     /// </summary>
     public sealed class MetamorphoseApplyPass : Pass<MetamorphoseApplyPass>
     {
@@ -66,45 +66,13 @@ namespace Moruton.Gimmicks.Editor
             }
         }
 
-        private static void RegisterAllMotions(UnityEditor.Animations.AnimatorStateMachine stateMachine, UnityEngine.Object container)
-        {
-            foreach (var childState in stateMachine.states)
-            {
-                var motion = childState.state.motion;
-                if (motion is AnimationClip clip && clip != null)
-                {
-                    AssetDatabase.AddObjectToAsset(clip, container);
-                }
-                else if (motion is BlendTree blendTree && blendTree != null)
-                {
-                    AssetDatabase.AddObjectToAsset(blendTree, container);
-                    RegisterBlendTreeMotions(blendTree, container);
-                }
-            }
-
-            foreach (var childStateMachine in stateMachine.stateMachines)
-            {
-                RegisterAllMotions(childStateMachine.stateMachine, container);
-            }
-        }
-
-        private static void RegisterBlendTreeMotions(BlendTree blendTree, UnityEngine.Object container)
-        {
-            foreach (var child in blendTree.children)
-            {
-                if (child.motion is AnimationClip clip && clip != null)
-                    AssetDatabase.AddObjectToAsset(clip, container);
-                else if (child.motion is BlendTree subTree && subTree != null)
-                {
-                    AssetDatabase.AddObjectToAsset(subTree, container);
-                    RegisterBlendTreeMotions(subTree, container);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Protected Animation注入。
+        /// 元のControllerをCloneせず、直接ClipをStateに置く。
+        /// ControllerのCloneも結合もMAに任せる。
+        /// </summary>
         private static void InjectProtectedAnimations(BuildContext ctx, Metamorphose mirror)
         {
-            // ProtectedAnimDllが設定されていなければスキップ
             if (mirror.ProtectedAnimDll == null)
                 return;
 
@@ -125,31 +93,14 @@ namespace Moruton.Gimmicks.Editor
                 return;
             }
 
-            // Controllerをクローン
-            var originalController = mirror.ProtectedAnimTargetController as AnimatorController;
-            if (originalController == null)
+            var targetController = mirror.ProtectedAnimTargetController as AnimatorController;
+            if (targetController == null)
             {
                 Debug.LogWarning("[MetamorphoseApplyPass] Protected Animation: Controller is not AnimatorController.");
                 return;
             }
 
-            var clonedController = Object.Instantiate(originalController);
-            clonedController.name = originalController.name + "_Protected";
-
-            // NDMF AssetContainerに登録
-            if (ctx.AssetContainer != null)
-            {
-                AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
-
-                // CloneしたController内の全Motion（既存のAnimationClip）もAssetContainerに登録
-                // しないとPPtrが壊れる
-                foreach (var layer in clonedController.layers)
-                {
-                    RegisterAllMotions(layer.stateMachine, ctx.AssetContainer);
-                }
-            }
-
-            // 各マッピングを復号→クリップ生成→注入
+            // 各マッピングを復号→クリップ生成→Stateに設定
             var mappings = mirror.ProtectedAnimMappings;
             if (mappings == null || mappings.Length == 0)
             {
@@ -173,43 +124,15 @@ namespace Moruton.Gimmicks.Editor
                 var clip = ProtectedAnimClipBuilder.Build(data, stateName);
                 if (clip == null)
                 {
-                    Debug.LogError($"[MetamorphoseApplyPass] Protected Animation: ClipBuilder returned null for '{dllKey}' → '{stateName}'. Animation NOT injected.");
+                    Debug.LogError($"[MetamorphoseApplyPass] Protected Animation: ClipBuilder returned null for '{dllKey}' → '{stateName}'.");
                     continue;
                 }
 
-                // ctx.AssetContainerに追加（GenerateAnimationsと同じ方法）
-                if (ctx.AssetContainer != null)
-                {
-                    AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
-                }
-
-                AnimationBuilder.ApplyClipToState(clonedController, stateName, clip);
+                // 元のControllerのStateに直接Clipを設定
+                // CloneもAssetContainerもMAに任せる
+                AnimationBuilder.ApplyClipToState(targetController, stateName, clip);
 
                 Debug.Log($"[MetamorphoseApplyPass] Protected Animation: Injected '{dllKey}' → state '{stateName}'.");
-            }
-
-            // MA MergeAnimatorがあれば更新
-            var components = ctx.AvatarRootObject.GetComponentsInChildren<Component>(true);
-            foreach (var comp in components)
-            {
-                if (comp == null) continue;
-                if (comp.GetType().FullName == "nadena.dev.modular_avatar.core.ModularAvatarMergeAnimator")
-                {
-                    var type = comp.GetType();
-                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    foreach (var f in fields)
-                    {
-                        if (f.FieldType == typeof(RuntimeAnimatorController))
-                        {
-                            var val = f.GetValue(comp) as RuntimeAnimatorController;
-                            if (val == originalController)
-                            {
-                                f.SetValue(comp, clonedController);
-                                Debug.Log($"[MetamorphoseApplyPass] Updated MergeAnimator '{comp.gameObject.name}'.");
-                            }
-                        }
-                    }
-                }
             }
 
             Debug.Log("[MetamorphoseApplyPass] Protected Animation: complete.");
@@ -308,7 +231,6 @@ namespace Moruton.Gimmicks.Editor
 
         /// <summary>
         /// クローン内の全Prefabインスタンスを完全にアンパックする。
-        /// Prefab接続が残っていると子オブジェクトの移動・変更が反映されない場合がある。
         /// </summary>
         private static void UnpackAllPrefabs(GameObject root)
         {
