@@ -145,21 +145,11 @@ namespace Moruton.Gimmicks.Editor
 
         private static void GenerateAnimations(BuildContext ctx, Metamorphose mirror)
         {
-            var originalController = mirror.Animator.runtimeAnimatorController as AnimatorController;
-            if (originalController == null)
+            var targetController = mirror.Animator.runtimeAnimatorController as AnimatorController;
+            if (targetController == null)
             {
                 Debug.LogWarning("[MetamorphoseApplyPass] Animator has no AnimatorController assigned.");
                 return;
-            }
-
-            // Clone the AnimatorController to prevent modifying the original asset
-            var clonedController = Object.Instantiate(originalController);
-            clonedController.name = originalController.name + "_Cloned";
-
-            // Register the cloned controller to NDMF's AssetContainer
-            if (ctx.AssetContainer != null)
-            {
-                AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
             }
 
             var offTargets = mirror.OffTargets.Where(t => t != null).ToArray();
@@ -172,49 +162,20 @@ namespace Moruton.Gimmicks.Editor
             {
                 enableClip.name = "Metamorphose_Enable";
                 if (ctx.AssetContainer != null)
-                {
                     AssetDatabase.AddObjectToAsset(enableClip, ctx.AssetContainer);
-                }
-                AnimationBuilder.ApplyClipToState(clonedController, "Enable", enableClip);
+                AnimationBuilder.ApplyClipToState(targetController, "Enable", enableClip);
             }
 
             if (disableClip != null)
             {
                 disableClip.name = "Metamorphose_Disable";
                 if (ctx.AssetContainer != null)
-                {
                     AssetDatabase.AddObjectToAsset(disableClip, ctx.AssetContainer);
-                }
-                AnimationBuilder.ApplyClipToState(clonedController, "Disable", disableClip);
+                AnimationBuilder.ApplyClipToState(targetController, "Disable", disableClip);
             }
 
-            // Assign the cloned controller back to the Animator
-            mirror.Animator.runtimeAnimatorController = clonedController;
-
-            // Find and update any ModularAvatarMergeAnimator components on the avatar to point to the cloned controller
-            var components = ctx.AvatarRootObject.GetComponentsInChildren<Component>(true);
-            foreach (var comp in components)
-            {
-                if (comp != null && comp.GetType().FullName == "nadena.dev.modular_avatar.core.ModularAvatarMergeAnimator")
-                {
-                    var type = comp.GetType();
-                    var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    foreach (var f in fields)
-                    {
-                        if (f.FieldType == typeof(RuntimeAnimatorController))
-                        {
-                            var val = f.GetValue(comp) as RuntimeAnimatorController;
-                            if (val == originalController)
-                            {
-                                f.SetValue(comp, clonedController);
-                                Debug.Log($"[MetamorphoseApplyPass] Updated ModularAvatarMergeAnimator '{comp.gameObject.name}' field '{f.Name}' from original controller to cloned controller.");
-                            }
-                        }
-                    }
-                }
-            }
-
-            Debug.Log("[MetamorphoseApplyPass] Animation generation and controller cloning complete.");
+            // CloneもMergeAnimator書き換えもしない — MAが全部やる
+            Debug.Log("[MetamorphoseApplyPass] Animation clips generated and applied to Controller.");
         }
 
         private static bool Validate(Metamorphose mirror)
