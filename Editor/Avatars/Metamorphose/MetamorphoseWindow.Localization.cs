@@ -33,7 +33,6 @@ namespace Moruton.Gimmicks.Editor
 
             // Step 3: ギミック色
             root.Q<Label>("fg-color-title").text = L("step3_color_label");
-            if (genBtn != null) genBtn.text = L("step4_generate_button");
 
             // タブ
             var tabMain = root.Q<Button>("tab-main");
