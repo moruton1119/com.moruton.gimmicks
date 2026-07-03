@@ -134,8 +134,11 @@ namespace Moruton.Gimmicks.Editor
                     continue;
                 }
 
-                // Controllerに直接追加（AssetContainerじゃなくてControllerの子にする）
-                AssetDatabase.AddObjectToAsset(clip, clonedController);
+                // ctx.AssetContainerに追加（GenerateAnimationsと同じ方法）
+                if (ctx.AssetContainer != null)
+                {
+                    AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
+                }
 
                 AnimationBuilder.ApplyClipToState(clonedController, stateName, clip);
 
