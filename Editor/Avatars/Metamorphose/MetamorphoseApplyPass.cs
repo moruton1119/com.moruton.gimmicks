@@ -134,11 +134,8 @@ namespace Moruton.Gimmicks.Editor
                     continue;
                 }
 
-                // NDMFに登録
-                if (ctx.AssetContainer != null)
-                {
-                    AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
-                }
+                // Controllerに直接追加（AssetContainerじゃなくてControllerの子にする）
+                AssetDatabase.AddObjectToAsset(clip, clonedController);
 
                 AnimationBuilder.ApplyClipToState(clonedController, stateName, clip);
 
