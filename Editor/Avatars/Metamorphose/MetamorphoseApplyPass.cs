@@ -66,6 +66,42 @@ namespace Moruton.Gimmicks.Editor
             }
         }
 
+        private static void RegisterAllMotions(UnityEditor.Animations.AnimatorStateMachine stateMachine, UnityEngine.Object container)
+        {
+            foreach (var childState in stateMachine.states)
+            {
+                var motion = childState.state.motion;
+                if (motion is AnimationClip clip && clip != null)
+                {
+                    AssetDatabase.AddObjectToAsset(clip, container);
+                }
+                else if (motion is BlendTree blendTree && blendTree != null)
+                {
+                    AssetDatabase.AddObjectToAsset(blendTree, container);
+                    RegisterBlendTreeMotions(blendTree, container);
+                }
+            }
+
+            foreach (var childStateMachine in stateMachine.stateMachines)
+            {
+                RegisterAllMotions(childStateMachine.stateMachine, container);
+            }
+        }
+
+        private static void RegisterBlendTreeMotions(BlendTree blendTree, UnityEngine.Object container)
+        {
+            foreach (var child in blendTree.children)
+            {
+                if (child.motion is AnimationClip clip && clip != null)
+                    AssetDatabase.AddObjectToAsset(clip, container);
+                else if (child.motion is BlendTree subTree && subTree != null)
+                {
+                    AssetDatabase.AddObjectToAsset(subTree, container);
+                    RegisterBlendTreeMotions(subTree, container);
+                }
+            }
+        }
+
         private static void InjectProtectedAnimations(BuildContext ctx, Metamorphose mirror)
         {
             // ProtectedAnimDllが設定されていなければスキップ
@@ -104,6 +140,13 @@ namespace Moruton.Gimmicks.Editor
             if (ctx.AssetContainer != null)
             {
                 AssetDatabase.AddObjectToAsset(clonedController, ctx.AssetContainer);
+
+                // CloneしたController内の全Motion（既存のAnimationClip）もAssetContainerに登録
+                // しないとPPtrが壊れる
+                foreach (var layer in clonedController.layers)
+                {
+                    RegisterAllMotions(layer.stateMachine, ctx.AssetContainer);
+                }
             }
 
             // 各マッピングを復号→クリップ生成→注入
