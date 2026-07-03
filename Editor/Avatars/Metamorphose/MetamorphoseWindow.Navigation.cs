@@ -273,7 +273,7 @@ namespace Moruton.Gimmicks.Editor
                     // DLLが変更されたら自動でキー一覧を取得してMappingsに反映
                     if (path == "protectedAnimDll")
                     {
-                        pf.RegisterValueChangedCallback(evt =>
+                        pf.RegisterValueChangeCallback(evt =>
                         {
                             AutoFillDllKeys();
                         });
