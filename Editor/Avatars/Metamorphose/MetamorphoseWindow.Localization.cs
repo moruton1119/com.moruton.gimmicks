@@ -33,13 +33,6 @@ namespace Moruton.Gimmicks.Editor
 
             // Step 3: ギミック色
             root.Q<Label>("fg-color-title").text = L("step3_color_label");
-
-            // Step 4: アニメーション生成
-            root.Q<Label>("fg-avatar-title").text = L("step4_finish_label");
-            var animHelp = root.Q<HelpBox>("anim-help");
-            if (animHelp != null) animHelp.text = L("step4_anim_help");
-            SetPropLabel(root, "page0-slot-avatar", L("step1_avatar"));
-            var genBtn = root.Q<Button>("btn-generate-anim");
             if (genBtn != null) genBtn.text = L("step4_generate_button");
 
             // タブ

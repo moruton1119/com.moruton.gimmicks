@@ -119,12 +119,6 @@
                 <ui:VisualElement name="page0-slot-gimmickColor" class="field-slot" />
               </ui:VisualElement>
 
-              <!-- Step 4: Avatar & Animation -->
-              <ui:VisualElement name="section-avatar" class="field-group">
-                <ui:Label name="fg-avatar-title" class="field-group-title" text="Step 4: Finish" />
-                <ui:HelpBox name="anim-help" message-type="Info" />
-                <ui:VisualElement name="page0-slot-avatar" class="field-slot" />
-              </ui:VisualElement>
 
             </ui:VisualElement>
 
