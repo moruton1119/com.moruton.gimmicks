@@ -267,9 +267,85 @@ namespace Moruton.Gimmicks.Editor
                 }
                 else
                 {
-                    slot.Add(new PropertyField { bindingPath = path });
+                    var pf = new PropertyField { bindingPath = path };
+                    slot.Add(pf);
+
+                    // DLLが変更されたら自動でキー一覧を取得してMappingsに反映
+                    if (path == "protectedAnimDll")
+                    {
+                        pf.RegisterValueChangedCallback(evt =>
+                        {
+                            AutoFillDllKeys();
+                        });
+                    }
                 }
             }
+
+            // 初回表示時にもDLLが既に設定されていれば自動取得
+            AutoFillDllKeys();
+        }
+
+        /// <summary>
+        /// DLLからキー一覧を取得して、ProtectedAnimMappingsのdllKeyを自動入力する。
+        /// stateNameはユーザーが手動で設定する。
+        /// </summary>
+        private void AutoFillDllKeys()
+        {
+            if (_target == null || _so == null) return;
+
+            var dllAsset = _target.ProtectedAnimDll;
+            if (dllAsset == null) return;
+
+            string dllPath = ProtectedAnimLoader.GetDllPath(dllAsset);
+            if (string.IsNullOrEmpty(dllPath) || !ProtectedAnimLoader.LoadDll(dllPath))
+            {
+                return; // DLL読み込み失敗は静かにスキップ
+            }
+
+            var keys = ProtectedAnimLoader.GetAvailableKeys();
+            if (keys == null || keys.Length == 0) return;
+
+            // 既存のマッピングを取得
+            var mappingsProp = _so.FindProperty("protectedAnimMappings");
+            if (mappingsProp == null) return;
+
+            // 既存のstateNameを保持（空でないものは残す）
+            var existingStateNames = new Dictionary<string, string>();
+            for (int i = 0; i < mappingsProp.arraySize; i++)
+            {
+                var elem = mappingsProp.GetArrayElementAtIndex(i);
+                var oldKey = elem.FindPropertyRelative("dllKey")?.stringValue ?? "";
+                var stateName = elem.FindPropertyRelative("stateName")?.stringValue ?? "";
+                if (!string.IsNullOrEmpty(oldKey) && !string.IsNullOrEmpty(stateName))
+                {
+                    existingStateNames[oldKey] = stateName;
+                }
+            }
+
+            // マッピング配列をキー数に合わせてリサイズ
+            mappingsProp.arraySize = keys.Length;
+
+            // 各キーをセット
+            for (int i = 0; i < keys.Length; i++)
+            {
+                var elem = mappingsProp.GetArrayElementAtIndex(i);
+                elem.FindPropertyRelative("dllKey").stringValue = keys[i];
+
+                // 既存のstateNameがあれば保持、なければ空
+                if (existingStateNames.TryGetValue(keys[i], out var stateName))
+                {
+                    elem.FindPropertyRelative("stateName").stringValue = stateName;
+                }
+                else if (string.IsNullOrEmpty(elem.FindPropertyRelative("stateName").stringValue))
+                {
+                    elem.FindPropertyRelative("stateName").stringValue = "";
+                }
+            }
+
+            _so.ApplyModifiedProperties();
+            _so.Update();
+
+            Debug.Log($"[MetamorphoseWindow] Auto-filled {keys.Length} DLL key(s): {string.Join(", ", keys)}");
         }
 
         #endregion
