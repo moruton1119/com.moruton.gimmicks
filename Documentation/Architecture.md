@@ -1,313 +1,126 @@
 # com.moruton.gimmicks アーキテクチャ
 
+> 最終更新: beta.160
+
 ## 全体構成
-
-```mermaid
-graph TB
-    subgraph "com.moruton.gimmicks"
-        subgraph Runtime["Runtime Layer"]
-            subgraph BaseClasses["Base Classes"]
-                MorutonGimmickPackage["MorutonGimmickPackage<br/>ギミック基底クラス"]
-                MorutonAvatarPackage["MorutonAvatarPackage<br/>アバター専用基底クラス"]
-            end
-            
-            subgraph AvatarComponents["Avatar Components"]
-                GimmickSetupHelper["GimmickSetupHelper<br/>セットアップ補助"]
-                Metamorphose["Metamorphose<br/>変身ギミック"]
-                Item_Randomiser["Item_Randomiser<br/>アイテムランダマイザー"]
-                ItemSetupScript["ItemSetupScript<br/>アイテムセットアップ"]
-            end
-        end
-        
-        subgraph Editor["Editor Layer"]
-            LocalizationManager["LocalizationManager<br/>多言語管理"]
-            MorutonAvatarPackageEditorHelper["MorutonAvatarPackageEditorHelper<br/>共通UI・更新管理"]
-            GimmickSetupHelperEditor["GimmickSetupHelperEditor"]
-            MetamorphoseEditor["MetamorphoseEditor"]
-            Item_RandomiserEditor["Item_RandomiserEditor"]
-            ItemSetupScriptEditor["ItemSetupScriptEditor"]
-        end
-    end
-    
-    MorutonAvatarPackage -->|継承| GimmickSetupHelper
-    MorutonAvatarPackage -->|継承| Item_Randomiser
-    MorutonGimmickPackage -.->|現状未使用| MorutonAvatarPackage
-    
-    MorutonAvatarPackageEditorHelper -->|使用| LocalizationManager
-    GimmickSetupHelperEditor -->|使用| MorutonAvatarPackageEditorHelper
-    MetamorphoseEditor -->|使用| MorutonAvatarPackageEditorHelper
-    MetamorphoseEditor -->|使用| LocalizationManager
-    Item_RandomiserEditor -->|使用| MorutonAvatarPackageEditorHelper
-    ItemSetupScriptEditor -->|使用| MorutonAvatarPackageEditorHelper
-```
-
-## Runtime Layer
-
-### Base Classes
-
-```mermaid
-classDiagram
-    class MonoBehaviour {
-        +gameObject
-        +transform
-    }
-    
-    class AvatarTagComponent {
-        <<Modular Avatar>>
-    }
-    
-    class MorutonGimmickPackage {
-        <<abstract>>
-        条件付き継承: MA有効時はAvatarTagComponent
-    }
-    
-    class MorutonAvatarPackage {
-        <<abstract>>
-        条件付き継承: MA有効時はAvatarTagComponent
-    }
-    
-    class GimmickSetupHelper {
-        +Sprite dummyImage
-        +List~SetupTarget~ targets
-    }
-    
-    class Metamorphose {
-        +GameObject avatar
-        +GameObject model
-        +GameObject[] offTargets
-        +Animator animator
-        +Transform headTarget
-        +GameObject[] headItems
-        ...多数の設定項目
-    }
-    
-    class Item_Randomiser {
-        +List~SetupTarget~ targets
-        +List~ItemData~ items
-        +CopyAllToTarget()
-    }
-    
-    class ItemSetupScript {
-        +List~ItemData~ items
-        +CopyAllToTarget()
-    }
-    
-    MonoBehaviour <.. MorutonGimmickPackage : MA無効時
-    AvatarTagComponent <.. MorutonGimmickPackage : MA有効時
-    MonoBehaviour <.. MorutonAvatarPackage : MA無効時
-    AvatarTagComponent <.. MorutonAvatarPackage : MA有効時
-    
-    MorutonAvatarPackage <|-- GimmickSetupHelper
-    AvatarTagComponent <|-- Metamorphose : 直接継承
-    MorutonAvatarPackage <|-- Item_Randomiser
-    MonoBehaviour <|-- ItemSetupScript : 直接継承
-```
-
-### GimmickSetupHelper データ構造
-
-```mermaid
-classDiagram
-    class GimmickSetupHelper {
-        +Sprite dummyImage
-        +List~SetupTarget~ targets
-    }
-    
-    class SetupTarget {
-        +string description
-        +Transform targetObject
-    }
-    
-    GimmickSetupHelper *-- SetupTarget : contains
-```
-
-### Item_Randomiser / ItemSetupScript データ構造
-
-```mermaid
-classDiagram
-    class Item_Randomiser {
-        +List~SetupTarget~ targets
-        +List~ItemData~ items
-        +CopyAllToTarget()
-    }
-    
-    class ItemSetupScript {
-        +List~ItemData~ items
-        +CopyAllToTarget()
-    }
-    
-    class SetupTarget {
-        +string description
-        +Transform targetObject
-    }
-    
-    class ItemData {
-        +GameObject sourceObject
-        +Transform targetParent
-    }
-    
-    Item_Randomiser *-- SetupTarget
-    Item_Randomiser *-- ItemData
-    ItemSetupScript *-- ItemData
-```
-
-## Editor Layer
-
-### LocalizationManager
-
-```mermaid
-classDiagram
-    class LocalizationManager {
-        <<static>>
-        -Dictionary~string,Dictionary~ commonTexts
-        -Dictionary~string,Dictionary~ scriptTexts
-        -string[] supportedLanguageCodes
-        -string[] supportedLanguageNames
-        -string currentLanguage
-        +SupportedLanguageNames$
-        +SupportedLanguageCodes$
-        +CurrentLanguage$
-        +SetLanguage(languageCode)
-        +Load(scriptName, languageCode)
-        +Get(scriptName, key)$
-        +GetCommon(key)$
-        -LoadJson(path)
-    }
-```
-
-対応言語: 日本語 (ja), English (en), 한국어 (ko), Italiano (it), Español (es)
-
-### MorutonAvatarPackageEditorHelper
-
-```mermaid
-classDiagram
-    class MorutonAvatarPackageEditorHelper {
-        <<static>>
-        -string latestVersion
-        -bool isChecking
-        -bool isUpdating
-        -string updateStatus
-        +DrawHeader()$
-        -CheckVersion()$
-        -IsNewerVersion(latest, current)$
-        -GetCurrentVersion()$
-        -FetchRemoteVersion()$
-        -StartAutoUpdate()$
-        -PerformUpdate()$
-        -UpdateVpmManifest(newVersion)$
-    }
-```
-
-機能:
-- ヘッダー描画 (ロゴ、Booth/Discordリンク)
-- バージョンチェック (GitHubリリース確認)
-- 自動更新 (ZIP ダウンロード → 展開 → 適用)
-
-### Editor Classes 構成
-
-```mermaid
-flowchart TD
-    subgraph Editors["CustomEditor Classes"]
-        GimmickSetupHelperEditor
-        MetamorphoseEditor
-        Item_RandomiserEditor
-        ItemSetupScriptEditor
-    end
-    
-    subgraph Shared["Shared Components"]
-        MorutonAvatarPackageEditorHelper
-        LocalizationManager
-        GimmickSetupHelperEditor.DrawDeveloperMode
-        GimmickSetupHelperEditor.DrawTargetsList
-        ItemSetupScriptEditor.DrawItemsList
-    end
-    
-    GimmickSetupHelperEditor --> MorutonAvatarPackageEditorHelper
-    MetamorphoseEditor --> MorutonAvatarPackageEditorHelper
-    MetamorphoseEditor --> LocalizationManager
-    Item_RandomiserEditor --> MorutonAvatarPackageEditorHelper
-    Item_RandomiserEditor --> GimmickSetupHelperEditor.DrawDeveloperMode
-    Item_RandomiserEditor --> ItemSetupScriptEditor.DrawItemsList
-    ItemSetupScriptEditor --> MorutonAvatarPackageEditorHelper
-```
-
-## ファイル構成
 
 ```
 com.moruton.gimmicks/
 ├── Runtime/
-│   ├── MorutonGimmickPackage.cs
-│   └── Avatars/
-│       ├── MorutonAvatarPackage.cs
-│       ├── GimmickSetupHelper.cs
-│       ├── Metamorphose.cs
-│       ├── Item_Randomiser.cs
-│       └── ItemSetupScript.cs
+│   ├── com.moruton.gimmicks.asmdef     # MA参照（#if MODULAR_AVATARでガード）
+│   ├── MorutonGimmickPackage.cs        # 基底クラス
+│   ├── Avatars/
+│   │   ├── MorutonAvatarPackage.cs     # アバター専用基底
+│   │   ├── Metamorphose.cs             # 変身ギミック本体（データ保持）
+│   │   ├── GimmickSetupHelper.cs       # セットアップ補助
+│   │   ├── Item_Randomiser.cs          # アイテムランダマイザー
+│   │   └── ItemSetupScript.cs          # アイテムセットアップ
+│   └── Common/
+│       ├── SetupTarget.cs              # 汎用データ構造
+│       └── ItemCopyUtility.cs          # コピー処理
+│
 ├── Editor/
-│   └── Avatars/
-│       ├── LocalizationManager.cs
-│       ├── MorutonAvatarPackageEditorHelper.cs
-│       ├── GimmickSetupHelperEditor.cs
-│       ├── MetamorphoseEditor.cs
-│       ├── Item_RandomiserEditor.cs
-│       ├── ItemSetupScriptEditor.cs
-│       └── Localization/
-│           ├── Common/
-│           │   ├── ja.json
-│           │   ├── en.json
-│           │   ├── ko.json
-│           │   ├── it.json
-│           │   └── es.json
-│           └── Metamorphose/
-│               ├── ja.json
-│               ├── en.json
-│               ├── ko.json
-│               ├── it.json
-│               └── es.json
+│   ├── com.moruton.gimmicks.Editor.asmdef
+│   ├── Avatars/
+│   │   ├── LocalizationManager.cs      # 多言語管理
+│   │   ├── MorutonAvatarPackageEditorHelper.cs  # 共通ヘッダー・更新通知
+│   │   ├── Metamorphose/               # 変身ギミックUI・ビルド
+│   │   │   ├── MetamorphoseEditor.cs              # Inspector
+│   │   │   ├── MetamorphosePlugin.cs               # NDMF Plugin登録
+│   │   │   ├── MetamorphoseApplyPass.cs            # NDMF Build Pass
+│   │   │   ├── MetamorphoseSetupService.cs         # エディタユーティリティ
+│   │   │   ├── ProtectedAnimLoader.cs              # 暗号化DLL読み込み
+│   │   │   ├── ProtectedAnimClipBuilder.cs         # バイナリ→AnimationClip復元
+│   │   │   ├── EditorThemeDefinition.cs            # テーマ色定義
+│   │   │   ├── EditorThemeRegistry.cs              # テーマ登録管理
+│   │   │   ├── MagicalOpeningEffect.cs             # OP演出
+│   │   │   ├── MetamorphoseWindow.cs               # セットアップウィンドウ
+│   │   │   ├── MetamorphoseWindow.Theme.cs         # テーマ制御
+│   │   │   ├── MetamorphoseWindow.Preview.cs       # プレビュー描画
+│   │   │   ├── MetamorphoseWindow.Navigation.cs    # ページ遷移・D&D
+│   │   │   ├── MetamorphoseWindow.Localization.cs  # 多言語適用
+│   │   │   ├── MetamorphoseWindow.Banner.cs        # バナー広告
+│   │   │   ├── MetamorphoseWindow.Buttons.cs       # ボタンコールバック
+│   │   │   ├── MetamorphoseWindow.uxml             # UI定義
+│   │   │   ├── MetamorphoseWindow.uss              # 共通スタイル
+│   │   │   ├── Theme_Moonlight.uss                 # テーマ: 月光（ダーク）
+│   │   │   ├── Theme_Daylight.uss                  # テーマ: 昼光（ライト）
+│   │   │   ├── Theme_Cyber.uss                     # テーマ: サイバー
+│   │   │   ├── Theme_Wizard.uss                    # テーマ: 魔法使い
+│   │   │   └── Theme_Diamond.uss                   # テーマ: ダイヤモンド
+│   │   ├── GimmickSetupHelperEditor.cs
+│   │   ├── Item_RandomiserEditor.cs
+│   │   └── ItemSetupScriptEditor.cs
+│   ├── Common/
+│   │   ├── AnimationBuilder.cs         # AnimationClip生成
+│   │   ├── GimmickPrefabUtility.cs     # Prefab操作
+│   │   ├── ItemPlacer.cs               # アイテム配置
+│   │   └── EditorStyleFactory.cs       # GUIStyle（※現在未使用）
+│   └── Core/UpdateChecker/             # 自動アップデート（独立asmdef）
+│       ├── SemVer.cs                   # SemVer 2.0 パーサー
+│       └── GimmicksUpdateChecker.cs    # バージョンチェック・自動更新
+│
 └── Documentation/
-    └── Architecture.md
 ```
 
-## 役割まとめ
+## 変身ギミック（Metamorphose）のビルドフロー
 
-| コンポーネント | 役割 |
-|--------------|------|
-| **MorutonGimmickPackage** | ギミックの基底クラス（Modular Avatar自動切替）※現状未使用 |
-| **MorutonAvatarPackage** | アバター専用ギミックの基底クラス（Modular Avatar自動切替） |
-| **GimmickSetupHelper** | アバターセットアップ補助コンポーネント（説明文・対象管理） |
-| **Metamorphose** | 変身ギミック（衣装切替・アニメーション生成） |
-| **Item_Randomiser** | アイテムランダマイザー（ターゲット調整・アイテム入れ替え） |
-| **ItemSetupScript** | アイテムセットアップ（ソース→ターゲットコピー） |
-| **LocalizationManager** | JSON多言語対応管理（5言語対応） |
-| **MorutonAvatarPackageEditorHelper** | 共通ヘッダーUI・バージョンチェック・自動更新 |
-| **GimmickSetupHelperEditor** | GimmickSetupHelper用Inspector UI |
-| **MetamorphoseEditor** | Metamorphose用Inspector UI（多言語対応） |
-| **Item_RandomiserEditor** | Item_Randomiser用Inspector UI（タブ切替） |
-| **ItemSetupScriptEditor** | ItemSetupScript用Inspector UI |
+### NDMFビルドパイプライン
 
-## Shader 命名・格納ガイドライン
+```
+Resolving Phase
+  ├─ MetamorphoseApplyPass（BeforePlugin: MA）
+  │   ├─ GenerateAnimations
+  │   │   └─ Enable/Disable AnimationClipをControllerのStateに設定
+  │   ├─ InjectProtectedAnimations
+  │   │   ├─ ProtectedAnimLoader.LoadDll() — DLL読み込み
+  │   │   ├─ ProtectedAnimLoader.LoadDecrypted() — 復号
+  │   │   ├─ ProtectedAnimClipBuilder.Build() — バイナリ→AnimationClip
+  │   │   └─ AnimationBuilder.ApplyClipToState() — Stateに設定
+  │   ├─ ItemPlacer.PlaceItems() — 衣装をアバターに配置
+  │   └─ UnpackAllPrefabs() — Prefabを完全展開
+  │
+  ├─ Modular Avatar
+  │   ├─ Clone animators — ControllerをClone（上記Clip含む）
+  │   └─ MergeAnimator — 統合
+  │
+Transforming Phase
+  └─ Modular Avatar
+      ├─ MergeArmature
+      ├─ MenuInstall
+      └─ その他統合処理
+```
 
-`Runtime/Shaders/` フォルダは、パッケージに含まれるカスタムシェーダーの格納場所です。
-パッケージの整理と命名規則を綺麗に維持するため、以下のルールに従ってシェーダーを格納・定義します。
+### 条件付きコンパイル
 
-### 1. Shaderの定義名（Shader Path）の規則
-シェーダーファイル内で宣言する `Shader "Moruton/Package/～～～"` のパス名は、以下のカテゴリ分類に従って記述します。
-※頭文字は大文字の `Moruton/Package/...` に統一し、複数形を使用します。
-
-| カテゴリ | パス名規則 | 用途・説明 |
+| シンボル | 定義条件 | 影響 |
 |---|---|---|
-| **パーティクル・演出系** | `Shader "Moruton/Package/Particles/[ShaderName]"` | パーティクルシステムやギミックの発光・変身演出用 |
-| **アバター用** | `Shader "Moruton/Package/Avatars/[ShaderName]"` | フェード用マテリアルやアバターに直接適用する質感用 |
-| **ワールド用** | `Shader "Moruton/Package/Worlds/[ShaderName]"` | ワールドギミックや背景・環境演出用のシェーダー |
-| **共通・ユーティリティ** | `Shader "Moruton/Package/Common/[ShaderName]"` | デバッグ表示や、複数のギミックで広く共用する基本処理 |
+| `MODULAR_AVATAR` | `nadena.dev.modular-avatar`インストール時 | MA連携機能が有効化 |
+| `VRC_SDK_AVATARS` | `com.vrchat.avatars`インストール時 | VRC SDK機能が有効化 |
 
-### 2. 現行シェーダー（ComonParticleShader）の書き換え提案
-現在格納されている `ComonParticleShader.shader` をこの規則に則って綺麗に整理するための推奨される書き換え手順は以下の通りです。
+MAがない環境では：
+- `Metamorphose` は `MonoBehaviour` として動作（`AvatarTagComponent`の代わり）
+- NDMF Plugin / ApplyPass はコンパイルされない
+- エラーなしで読み込まれる
 
-#### 2-1. スペルミスと冗長な名称の修正（ファイル名）
-- **現状のファイル名**: `Runtime/Shaders/ComonParticleShader.shader` ('m'が1つでスペルミス、末尾の `Shader` が冗長)
-- **変更後のファイル名**: `Runtime/Shaders/CommonParticle.shader` (Commonのスペルを修正し、拡張子と重複する `Shader` を除去)
+## テーマシステム
 
-#### 2-2. Shader定義名の書き換え (Shader Path)
-- **現状の定義名**: `Shader "moruton/Package/Particle/ComonParticleShader"`
-- **決定した対応**: **定義名は変更せず維持** (既存のマテリアルの参照破損を防ぐため、シェーダーファイル内部の定義名は変更せず、ファイル名のみのリネームとします)
+色は全て `EditorThemeDefinition` 構造体 + USS（CSS変数）で管理。
+**C#でのインライン色指定は禁止**（詳細: [AntiHardcodeRules.md](AntiHardcodeRules.md)）。
 
+5テーマ: Moonlight / Daylight / Cyber / Wizard / Diamond
+
+## ProtectedAnimationSystem
+
+暗号化されたアニメーションDLLから、ビルド時に復元して注入するシステム。
+
+```
+EncryptedAnimData.dll
+  ├─ AES-256で暗号化されたアニメーションバイナリ
+  ├─ AES鍵（DLL内に埋め込み）
+  └─ GetDecryptedData(key) メソッド
+```
+
+ビルド時に `ProtectedAnimLoader` がDLLを読み込み、`ProtectedAnimClipBuilder` がバイナリからAnimationClipを復元する。
+
+詳細: [ProtectedAnimationSystem_Design.md](ProtectedAnimationSystem.md)

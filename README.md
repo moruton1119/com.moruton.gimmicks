@@ -1,27 +1,52 @@
 # Moruton Gimmicks Package
 
-**[➡️ 公式配布ページ (Add to VCC)](https://moruton1119.github.io/com.moruton.gimmicks/)**
+**[➡️ VCCに追加](https://moruton1119.github.io/com.moruton.gimmicks/)**
 
-Moruton Laboratory のギミック共通パッケージです。ワールド・アバター両対応。
+Moruton Laboratory のアバター用ギミックパッケージです。変身ギミック（Metamorphose）を中心に、Modular Avatarと連携した各種ギミックを提供します。
 
----
+## インストール
 
-[Direct VCC Link](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json)
+VCCに以下のURLを追加してください：
 
-vcc://vpm/addRepo?url=<https://moruton1119.github.io/com.moruton.gimmicks/index.json>
+```
+https://moruton1119.github.io/com.moruton.gimmicks/index.json
+```
 
-# Moruton Gimmicks Package
+または [VCCリンク](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json) をクリック。
 
-This is a VRChat world creation package containing base scripts for Moruton Laboratory gimmicks.
+## 必須パッケージ
 
-## Installation / インストール
+- VRChat Avatars SDK
+- Modular Avatar
+- NDMF (Modular Avatarが自動で入れます)
 
-Click the button below to add this repository to your VCC.  
-以下のボタンをクリックしてVCCに追加してください。
+## 主な機能
 
-[![Add to VCC](https://img.shields.io/badge/VCC-Add%20to%20VCC-green)](vcc://vpm/addRepo?url=https://moruton1119.github.io/com.moruton.gimmicks/index.json)
+### 変身ギミック（Metamorphose）
 
-OR use this URL manually:  
-手動で追加する場合は以下のURLを使用してください:
+- 衣装の切り替えアニメーションを自動生成
+- パーツごとのドラッグ&ドロップ設定
+- ProtectedAnimationSystem：暗号化DLLからアニメーションを復元・注入
+- 5つのUIテーマ（Moonlight / Daylight / Cyber / Wizard / Diamond）
+- 5言語対応（日本語 / English / 韓国語 / イタリア語 / スペイン語）
+- 魔法少女風オープニング演出
 
-`https://moruton1119.github.io/com.moruton.gimmicks/index.json`
+### その他のギミック
+
+- **Item Randomiser** — アイテムのランダム切り替え
+- **Item Setup Script** — アイテムの一括セットアップ
+- **Gimmick Setup Helper** — セットアップ対象の管理
+
+## ドキュメント
+
+- [アーキテクチャ](Documentation/Architecture.md)
+- [リリースワークフロー](Documentation/ReleaseWorkflow.md)
+- [ProtectedAnimationSystem設計書](Documentation/ProtectedAnimationSystem.md)
+- [色のハードコード禁止ルール](Documentation/AntiHardcodeRules.md)
+
+## リンク
+
+- [BOOTH](https://moruton.booth.pm/)
+- [X (Twitter)](https://x.com/MoruLabo)
+- [Note](https://note.com/mortonlaboratory)
+- [Discord](https://discord.gg/GHJwmyTcfX)

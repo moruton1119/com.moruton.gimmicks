@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -13,71 +12,9 @@ namespace Moruton.Gimmicks.Editor
     public static class AnimationBuilder
     {
         /// <summary>
-        /// 指定したオブジェクトの有効/無効を切り替える Enable/Disable アニメーションを生成する。
-        /// </summary>
-        /// <param name="root">パス計算のルートオブジェクト</param>
-        /// <param name="offTargets">Enable時にOFFにするオブジェクト群</param>
-        /// <param name="toggleTarget">Enable時にON、Disable時にOFFにするオブジェクト</param>
-        /// <param name="outputFolder">出力フォルダパス</param>
-        /// <param name="enableClipName">Enableクリップ名 (default: "Enable")</param>
-        /// <param name="disableClipName">Disableクリップ名 (default: "Disable")</param>
-        /// <returns>成功時は (enableClip, disableClip)、失敗時は null</returns>
-        public static (AnimationClip enableClip, AnimationClip disableClip) CreateToggleAnimations(
-            GameObject root,
-            GameObject[] offTargets,
-            GameObject toggleTarget,
-            string outputFolder,
-            string enableClipName = "Enable",
-            string disableClipName = "Disable")
-        {
-            if (root == null || toggleTarget == null) return (null, null);
-
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            string enablePath = Path.Combine(outputFolder, $"{enableClipName}.anim");
-            string disablePath = Path.Combine(outputFolder, $"{disableClipName}.anim");
-
-            // Enable Animation: offTargetsをOFF、toggleTargetをON
-            AnimationClip enableClip = new AnimationClip();
-            foreach (var obj in offTargets)
-            {
-                if (obj == null) continue;
-                string path = GetRelativePath(root, obj);
-                if (!string.IsNullOrEmpty(path))
-                    enableClip.SetCurve(path, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 0));
-            }
-            string togglePath = GetRelativePath(root, toggleTarget);
-            if (!string.IsNullOrEmpty(togglePath))
-                enableClip.SetCurve(togglePath, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 1));
-            AssetDatabase.CreateAsset(enableClip, enablePath);
-
-            // Disable Animation: offTargetsをON、toggleTargetをOFF
-            AnimationClip disableClip = new AnimationClip();
-            foreach (var obj in offTargets)
-            {
-                if (obj == null) continue;
-                string path = GetRelativePath(root, obj);
-                if (!string.IsNullOrEmpty(path))
-                    disableClip.SetCurve(path, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 1));
-            }
-            if (!string.IsNullOrEmpty(togglePath))
-                disableClip.SetCurve(togglePath, typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0, 0, 0));
-            AssetDatabase.CreateAsset(disableClip, disablePath);
-
-            AssetDatabase.SaveAssets();
-
-            return (enableClip, disableClip);
-        }
-
-        /// <summary>
         /// 指定したオブジェクトの有効/無効を切り替える Enable/Disable アニメーションを生成する（メモリ上のみ）。
         /// NDMF Pass 等でアセット保存不要な場合に使用。
         /// </summary>
-        /// <param name="root">パス計算のルートオブジェクト</param>
-        /// <param name="offTargets">Enable時にOFFにするオブジェクト群</param>
-        /// <param name="toggleTarget">Enable時にON、Disable時にOFFにするオブジェクト</param>
-        /// <returns>成功時は (enableClip, disableClip)、失敗時は null</returns>
         public static (AnimationClip enableClip, AnimationClip disableClip) CreateToggleClipsInMemory(
             GameObject root,
             GameObject[] offTargets,
