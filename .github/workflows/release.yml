@@ -13,6 +13,10 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,11 +51,9 @@ jobs:
           
           print(f'Updating {idx_path} with version {tag_version}...')
           
-          # Load package.json
           with open(pkg_path, 'r') as f: pkg = json.load(f)
           pkg['version'] = tag_version
           
-          # Try to load existing index.json from gh-pages (via raw URL)
           idx = {}
           try:
               with urllib.request.urlopen(repo_url) as response:
@@ -62,7 +64,6 @@ jobs:
               if os.path.exists(idx_path):
                   with open(idx_path, 'r') as f: idx = json.load(f)
 
-          # Ensure base metadata
           idx.setdefault('name', 'Moruton Laboratory')
           idx.setdefault('author', 'moruton1119')
           idx['id'] = repo_url
@@ -71,11 +72,9 @@ jobs:
           
           name = pkg['name']
           
-          # Ensure package structure exists
           if name not in idx['packages']:
               idx['packages'][name] = {'versions': {}}
           
-          # Add/Update version
           pkg['url'] = zip_url
           if '-' in tag_version:
               pkg['prerelease'] = True
@@ -83,7 +82,6 @@ jobs:
           
           print(f'Adding package {name} version {tag_version}')
           
-          # Save updated index.json
           os.makedirs(os.path.dirname(idx_path), exist_ok=True)
           with open(idx_path, 'w') as f:
               json.dump(idx, f, indent=4)
@@ -91,10 +89,45 @@ jobs:
           print('Successfully updated docs/index.json')
           "
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        id: upload
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: gh-pages
-          keep_files: true
+          path: ./docs
+
+  deploy:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy to GitHub Pages (attempt 1)
+        id: deploy1
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Deploy to GitHub Pages (retry 1)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deploy3
+        if: steps.deploy2.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+
+      - name: Check result
+        if: always()
+        run: |
+          echo "Deploy1: ${{ steps.deploy1.outcome }}"
+          echo "Deploy2: ${{ steps.deploy2.outcome }}"
+          echo "Deploy3: ${{ steps.deploy3.outcome }}"
+          if [ "${{ steps.deploy1.outcome }}" != "success" ] && [ "${{ steps.deploy2.outcome }}" != "success" ] && [ "${{ steps.deploy3.outcome }}" != "success" ]; then
+            echo "::error::All 3 deploy attempts failed"
+            exit 1
+          fi
+          echo "Deploy succeeded!"
