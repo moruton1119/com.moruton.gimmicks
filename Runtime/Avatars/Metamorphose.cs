@@ -106,6 +106,9 @@ namespace Moruton.Gimmicks
         [Tooltip("コラボタブを表示するかどうか")]
         [SerializeField] public bool showColaboTab = true;
 
+        [Tooltip("ギミックカラーを表示するかどうか")]
+        [SerializeField] public bool showGimmickColor = true;
+
         // ドロップダウン用の選択肢
         public static readonly string[] AvailableThemes = { "Moonlight", "Daylight", "Cyber", "Wizard", "Diamond" };
 

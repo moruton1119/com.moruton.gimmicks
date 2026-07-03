@@ -107,6 +107,13 @@ namespace Moruton.Gimmicks.Editor
             }
         }
 
+        private void UpdateGimmickColorVisibility(bool visible)
+        {
+            var colorSection = _root.Q<VisualElement>("section-color");
+            if (colorSection != null)
+                colorSection.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
         private void ShowPage(string hidePage, string showPage, bool show)
         {
             var hide = _root.Q<VisualElement>(hidePage);
@@ -152,6 +159,31 @@ namespace Moruton.Gimmicks.Editor
                     colaboTabBtn.text = $"Colabo Tab: {(showColabo ? "ON" : "OFF")}";
                     colaboTabBtn.EnableInClassList("part-toggle-off", !showColabo);
                     UpdateColaboTabVisibility(showColabo);
+                };
+            }
+
+            // ギミックカラー表示切替
+            var colorTabBtn = _root.Q<Button>("toggle-gimmick-color");
+            if (colorTabBtn != null)
+            {
+                bool showColor = _target.showGimmickColor;
+                colorTabBtn.text = $"Gimmick Color: {(showColor ? "ON" : "OFF")}";
+                colorTabBtn.EnableInClassList("part-toggle-off", !showColor);
+                UpdateGimmickColorVisibility(showColor);
+
+                colorTabBtn.clicked += () =>
+                {
+                    showColor = !showColor;
+                    _so.Update();
+                    var prop = _so.FindProperty("showGimmickColor");
+                    if (prop != null)
+                    {
+                        prop.boolValue = showColor;
+                        _so.ApplyModifiedProperties();
+                    }
+                    colorTabBtn.text = $"Gimmick Color: {(showColor ? "ON" : "OFF")}";
+                    colorTabBtn.EnableInClassList("part-toggle-off", !showColor);
+                    UpdateGimmickColorVisibility(showColor);
                 };
             }
         }

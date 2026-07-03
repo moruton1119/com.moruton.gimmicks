@@ -214,6 +214,7 @@
               <ui:Label name="fg3-ui-settings" class="field-group-title" text="UI Settings" />
               <ui:VisualElement class="dev-toggle-grid">
                 <ui:Button name="toggle-colabo-tab" class="part-toggle" text="Colabo Tab: ON" />
+                <ui:Button name="toggle-gimmick-color" class="part-toggle" text="Gimmick Color: ON" />
               </ui:VisualElement>
 
               <ui:Label name="fg3-protected-anim" class="field-group-title" text="Protected Animation" />

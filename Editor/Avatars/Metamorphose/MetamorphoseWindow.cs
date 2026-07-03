@@ -237,6 +237,13 @@ namespace Moruton.Gimmicks.Editor
                 bool hasShop = _target.colaboShopTex != null || !string.IsNullOrEmpty(_target.colaboShopInfo);
                 shopSection.style.display = hasShop ? DisplayStyle.Flex : DisplayStyle.None;
             }
+
+            // ギミックカラーの表示/非表示
+            var colorSection = _root.Q<VisualElement>("section-color");
+            if (colorSection != null)
+            {
+                colorSection.style.display = _target.showGimmickColor ? DisplayStyle.Flex : DisplayStyle.None;
+            }
         }
 
         #endregion
