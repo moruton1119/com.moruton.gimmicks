@@ -20,7 +20,10 @@ namespace Moruton.Gimmicks.Editor
         {
             Debug.Log("[MetamorphosePlugin] Configure() - registering pass");
 
-            InPhase(BuildPhase.Generating)
+            // MAの処理前に実行して、アニメーションをControllerに紐づける
+            // その後MAが普通にMergeAnimatorで統合する
+            InPhase(BuildPhase.Transforming)
+                .BeforePlugin("nadena.dev.modular-avatar")
                 .Run(new MetamorphoseApplyPass());
         }
     }
