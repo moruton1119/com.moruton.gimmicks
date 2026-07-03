@@ -1825,14 +1825,14 @@
                     "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.147/com.moruton.gimmicks-0.3.0-beta.147.zip",
                     "prerelease": true
                 },
-                "0.3.0-beta.148": {
+                "0.3.0-beta.149": {
                     "name": "com.moruton.gimmicks",
-                    "version": "0.3.0-beta.148",
+                    "version": "0.3.0-beta.149",
                     "displayName": "Moruton Gimmicks Package",
                     "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
                     "unity": "2022.3",
                     "vpmDependencies": {},
-                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.148/com.moruton.gimmicks-0.3.0-beta.148.zip",
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.149/com.moruton.gimmicks-0.3.0-beta.149.zip",
                     "prerelease": true
                 }
             }
