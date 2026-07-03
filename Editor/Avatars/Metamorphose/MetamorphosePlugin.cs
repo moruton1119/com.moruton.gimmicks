@@ -18,11 +18,10 @@ namespace Moruton.Gimmicks.Editor
 
         protected override void Configure()
         {
-            Debug.Log("[MetamorphosePlugin] Configure() - registering pass");
-
-            // Generating PhaseでMAの前に実行
-            // 公式ドキュメント推奨: https://modular-avatar.nena.dev/ja/docs/extending
-            InPhase(BuildPhase.Generating)
+            // Resolving PhaseでMAの前に実行
+            // MAの「Clone animators」より前にClipをControllerに置く必要がある
+            // そうすればMAがClone時にClipも一緒にコピーして統合してくれる
+            InPhase(BuildPhase.Resolving)
                 .BeforePlugin("nadena.dev.modular-avatar")
                 .Run(new MetamorphoseApplyPass());
         }
