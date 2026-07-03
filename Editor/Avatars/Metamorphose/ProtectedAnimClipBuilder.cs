@@ -22,6 +22,8 @@ namespace Moruton.Gimmicks.Editor
                 return null;
             }
 
+            Debug.Log($"[ProtectedAnimClipBuilder] Building '{clipName}' from {data.Length} bytes");
+
             try
             {
                 using var ms = new MemoryStream(data);
@@ -33,6 +35,8 @@ namespace Moruton.Gimmicks.Editor
                 float length = reader.ReadSingle();
                 bool loopTime = reader.ReadBoolean();
                 bool loopBlend = reader.ReadBoolean();
+
+                Debug.Log($"[ProtectedAnimClipBuilder] Header: v{formatVersion}, name='{name}', length={length}, loop={loopTime}, pos={ms.Position}/{data.Length}");
 
                 var clip = new AnimationClip { name = string.IsNullOrEmpty(clipName) ? name : clipName };
 

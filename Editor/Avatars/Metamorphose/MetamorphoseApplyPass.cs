@@ -128,7 +128,11 @@ namespace Moruton.Gimmicks.Editor
                 }
 
                 var clip = ProtectedAnimClipBuilder.Build(data, stateName);
-                if (clip == null) continue;
+                if (clip == null)
+                {
+                    Debug.LogError($"[MetamorphoseApplyPass] Protected Animation: ClipBuilder returned null for '{dllKey}' → '{stateName}'. Animation NOT injected.");
+                    continue;
+                }
 
                 // NDMFに登録
                 if (ctx.AssetContainer != null)

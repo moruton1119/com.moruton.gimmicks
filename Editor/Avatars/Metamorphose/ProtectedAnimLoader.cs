@@ -88,7 +88,9 @@ namespace Moruton.Gimmicks.Editor
             try
             {
                 var result = _getDataMethod.Invoke(null, new object[] { animKey });
-                return result as byte[];
+                var bytes = result as byte[];
+                Debug.Log($"[ProtectedAnimLoader] LoadDecrypted('{animKey}'): {bytes?.Length ?? 0} bytes");
+                return bytes;
             }
             catch (Exception e)
             {
