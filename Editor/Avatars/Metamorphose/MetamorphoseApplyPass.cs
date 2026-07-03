@@ -128,8 +128,13 @@ namespace Moruton.Gimmicks.Editor
                     continue;
                 }
 
-                // 元のControllerのStateに直接Clipを設定
-                // CloneもAssetContainerもMAに任せる
+                // ClipをNDMF AssetContainerに保存（これがないとPPtrが壊れる）
+                if (ctx.AssetContainer != null)
+                {
+                    AssetDatabase.AddObjectToAsset(clip, ctx.AssetContainer);
+                }
+
+                // 元のControllerのStateに直接Clipを設定（CloneはMAがやる）
                 AnimationBuilder.ApplyClipToState(targetController, stateName, clip);
 
                 Debug.Log($"[MetamorphoseApplyPass] Protected Animation: Injected '{dllKey}' → state '{stateName}'.");
