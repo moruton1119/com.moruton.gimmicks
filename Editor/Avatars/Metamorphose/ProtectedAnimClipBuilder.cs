@@ -115,7 +115,10 @@ namespace Moruton.Gimmicks.Editor
                     settings.cycleOffset = cycleOffset;
                     settings.level = level;
                     settings.hasAdditiveReferencePose = hasAdditiveReferencePose;
-                    settings.additiveReferenceFrameTime = additiveReferenceFrameTime;
+                    // additiveReferenceFrameTime is removed in newer Unity versions — use reflection
+                    var field = typeof(AnimationClipSettings).GetField("additiveReferenceFrameTime");
+                    if (field != null)
+                        field.SetValueDirect(__makeref(settings), additiveReferenceFrameTime);
                 }
                 AnimationUtility.SetAnimationClipSettings(clip, settings);
 
