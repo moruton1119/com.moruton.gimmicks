@@ -33,8 +33,23 @@ namespace Moruton.Gimmicks.Editor
                 int formatVersion = reader.ReadInt32();
                 string name = reader.ReadString();
                 float length = reader.ReadSingle();
+
+                // === AnimationClipSettings の読み込み ===
                 bool loopTime = reader.ReadBoolean();
                 bool loopBlend = reader.ReadBoolean();
+
+                // v2で追加されたフィールド（後方互換: v1の場合はデフォルト値を使用）
+                bool loopBlendOrientation = formatVersion >= 2 && reader.ReadBoolean();
+                bool loopBlendPositionY = formatVersion >= 2 && reader.ReadBoolean();
+                bool loopBlendPositionXZ = formatVersion >= 2 && reader.ReadBoolean();
+                bool keepOriginalOrientation = formatVersion >= 2 && reader.ReadBoolean();
+                bool keepOriginalPositionY = formatVersion >= 2 && reader.ReadBoolean();
+                bool keepOriginalPositionXZ = formatVersion >= 2 && reader.ReadBoolean();
+                bool heightFromFeet = formatVersion >= 2 && reader.ReadBoolean();
+                float cycleOffset = formatVersion >= 2 ? reader.ReadSingle() : 0f;
+                int level = formatVersion >= 2 ? reader.ReadInt32() : 0;
+                bool hasAdditiveReferencePose = formatVersion >= 2 && reader.ReadBoolean();
+                float additiveReferenceFrameTime = formatVersion >= 2 ? reader.ReadSingle() : 0f;
 
                 Debug.Log($"[ProtectedAnimClipBuilder] Header: v{formatVersion}, name='{name}', length={length}, loop={loopTime}, pos={ms.Position}/{data.Length}");
 
@@ -84,8 +99,24 @@ namespace Moruton.Gimmicks.Editor
                     clip.AddEvent(evt);
                 }
 
+                // === AnimationClipSettings の復元 ===
                 var settings = AnimationUtility.GetAnimationClipSettings(clip);
                 settings.loopTime = loopTime;
+                settings.loopBlend = loopBlend;
+                if (formatVersion >= 2)
+                {
+                    settings.loopBlendOrientation = loopBlendOrientation;
+                    settings.loopBlendPositionY = loopBlendPositionY;
+                    settings.loopBlendPositionXZ = loopBlendPositionXZ;
+                    settings.keepOriginalOrientation = keepOriginalOrientation;
+                    settings.keepOriginalPositionY = keepOriginalPositionY;
+                    settings.keepOriginalPositionXZ = keepOriginalPositionXZ;
+                    settings.heightFromFeet = heightFromFeet;
+                    settings.cycleOffset = cycleOffset;
+                    settings.level = level;
+                    settings.hasAdditiveReferencePose = hasAdditiveReferencePose;
+                    settings.additiveReferenceFrameTime = additiveReferenceFrameTime;
+                }
                 AnimationUtility.SetAnimationClipSettings(clip, settings);
 
                 // アクセスブロックは AddObjectToAsset 側で行う
