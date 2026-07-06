@@ -49,7 +49,7 @@ namespace Moruton.Gimmicks.Editor
                 float cycleOffset = formatVersion >= 2 ? reader.ReadSingle() : 0f;
                 int level = formatVersion >= 2 ? reader.ReadInt32() : 0;
                 bool hasAdditiveReferencePose = formatVersion >= 2 && reader.ReadBoolean();
-                float additiveReferenceFrameTime = formatVersion >= 2 ? reader.ReadSingle() : 0f;
+                // note: additiveReferenceFrameTime はUnityバージョンによって存在しないため除外
 
                 Debug.Log($"[ProtectedAnimClipBuilder] Header: v{formatVersion}, name='{name}', length={length}, loop={loopTime}, pos={ms.Position}/{data.Length}");
 
@@ -115,10 +115,6 @@ namespace Moruton.Gimmicks.Editor
                     settings.cycleOffset = cycleOffset;
                     settings.level = level;
                     settings.hasAdditiveReferencePose = hasAdditiveReferencePose;
-                    // additiveReferenceFrameTime is removed in newer Unity versions — use reflection
-                    var field = typeof(AnimationClipSettings).GetField("additiveReferenceFrameTime");
-                    if (field != null)
-                        field.SetValueDirect(__makeref(settings), additiveReferenceFrameTime);
                 }
                 AnimationUtility.SetAnimationClipSettings(clip, settings);
 
