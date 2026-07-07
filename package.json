@@ -4,5 +4,8 @@
     "displayName": "Moruton Gimmicks Package",
     "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
     "unity": "2022.3",
-    "vpmDependencies": {}
+    "vpmDependencies": {
+        "com.vrchat.avatars": ">=3.7.0",
+        "nadena.dev.modular-avatar": ">=1.10.0"
+    }
 }
