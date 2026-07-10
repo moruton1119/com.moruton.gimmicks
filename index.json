@@ -499,14 +499,17 @@
                     },
                     "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0/com.moruton.gimmicks-0.3.0.zip"
                 },
-                "0.3.0-beta.143": {
+                "0.4.0-beta.1": {
                     "name": "com.moruton.gimmicks",
-                    "version": "0.3.0-beta.143",
+                    "version": "0.4.0-beta.1",
                     "displayName": "Moruton Gimmicks Package",
                     "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
                     "unity": "2022.3",
-                    "vpmDependencies": {},
-                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.143/com.moruton.gimmicks-0.3.0-beta.143.zip",
+                    "vpmDependencies": {
+                        "com.vrchat.avatars": ">=3.7.0",
+                        "nadena.dev.modular-avatar": ">=1.10.0"
+                    },
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.4.0-beta.1/com.moruton.gimmicks-0.4.0-beta.1.zip",
                     "prerelease": true
                 }
             }
