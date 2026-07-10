@@ -498,6 +498,16 @@
                         "nadena.dev.modular-avatar": ">=1.10.0"
                     },
                     "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0/com.moruton.gimmicks-0.3.0.zip"
+                },
+                "0.3.0-beta.143": {
+                    "name": "com.moruton.gimmicks",
+                    "version": "0.3.0-beta.143",
+                    "displayName": "Moruton Gimmicks Package",
+                    "description": "Base class and utilities for Moruton Laboratory gimmicks (Avatar Only).",
+                    "unity": "2022.3",
+                    "vpmDependencies": {},
+                    "url": "https://github.com/moruton1119/com.moruton.gimmicks/releases/download/v0.3.0-beta.143/com.moruton.gimmicks-0.3.0-beta.143.zip",
+                    "prerelease": true
                 }
             }
         }
