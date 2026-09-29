@@ -15,6 +15,9 @@ namespace Morution.DevTools
         public DevPosePlacement Owner { get; private set; }
         readonly Animator animator;
         readonly Avatar avatar;
+        readonly Transform hips;
+        readonly RootPose rootPose;
+        readonly Vector3 hipsWorldPosition;
         readonly Dictionary<Transform, LocalPose> original = new Dictionary<Transform, LocalPose>();
         readonly Dictionary<Transform, LocalPose> posed = new Dictionary<Transform, LocalPose>();
         readonly Dictionary<int, AnimationCurve> curves = new Dictionary<int, AnimationCurve>();
@@ -31,6 +34,20 @@ namespace Morution.DevTools
             readonly Quaternion rotation;
             public LocalPose(Transform t) { position = t.localPosition; rotation = t.localRotation; scale = t.localScale; }
             public void Restore(Transform t) { t.localPosition = position; t.localRotation = rotation; t.localScale = scale; }
+        }
+
+        // HumanPoseHandler may apply root translation while evaluating a pose. Keep the
+        // avatar root at the world pose where the session started, including parented roots.
+        struct RootPose
+        {
+            readonly Vector3 position, localScale;
+            readonly Quaternion rotation;
+            public RootPose(Transform t) { position = t.position; rotation = t.rotation; localScale = t.localScale; }
+            public void Restore(Transform t)
+            {
+                t.localScale = localScale;
+                t.SetPositionAndRotation(position, rotation);
+            }
         }
 
         public static Animator FindAnimator(DevPosePlacement settings)
@@ -72,6 +89,7 @@ namespace Morution.DevTools
             if (PrefabStageUtility.GetCurrentPrefabStage() != null) return "Use a scene instance, not Prefab Stage.";
             var a = FindAnimator(settings);
             if (!a || !a.avatar || !a.avatar.isValid || !a.avatar.isHuman) return "Parent VRCAvatarDescriptor needs a valid root Humanoid Animator.";
+            if (!a.GetBoneTransform(HumanBodyBones.Hips)) return "Humanoid Animator needs a valid Hips bone.";
             if (!settings.clip || settings.clip.legacy) return "Assign a non-Legacy Humanoid pose Clip.";
             try { ReadCurves(settings.clip); }
             catch (Exception ex) { return ex.Message; }
@@ -85,6 +103,9 @@ namespace Morution.DevTools
             Owner = settings;
             animator = FindAnimator(settings);
             avatar = animator.avatar;
+            hips = animator.GetBoneTransform(HumanBodyBones.Hips);
+            rootPose = new RootPose(animator.transform);
+            hipsWorldPosition = hips.position;
             Duration = settings.clip.length;
             curves = ReadCurves(settings.clip);
             try
@@ -118,6 +139,11 @@ namespace Morution.DevTools
                     bodyRotation = initial.bodyRotation, muscles = (float[])initial.muscles.Clone() };
                 foreach (var pair in curves) pose.muscles[pair.Key] = pair.Value.Evaluate(Time);
                 handler.SetHumanPose(ref pose);
+                // Root motion/translation is not part of this muscle-only preview. Restore the
+                // captured root first, then remove only Hips world translation. Hips rotation
+                // remains the evaluated pose, so muscle-driven limb/body rotation is preserved.
+                rootPose.Restore(animator.transform);
+                hips.position = hipsWorldPosition;
                 posed.Clear();
                 foreach (var pair in original) if (pair.Key) posed.Add(pair.Key, new LocalPose(pair.Key));
                 SceneView.RepaintAll();
@@ -129,7 +155,9 @@ namespace Morution.DevTools
         {
             if (!IsAlive || EditorApplication.isPlayingOrWillChangePlaymode || AnimationMode.InAnimationMode())
             { Dispose(); return; }
-            // Hold only the skeleton. Local prop edits remain normal Unity edits.
+            // Hold only the skeleton at the session-start world placement. Local prop edits
+            // remain normal Unity edits because props are absent from posed.
+            rootPose.Restore(animator.transform);
             foreach (var pair in posed)
             {
                 if (!pair.Key) { Dispose(); return; }
@@ -144,6 +172,7 @@ namespace Morution.DevTools
         }
         void RestoreOriginal()
         {
+            if (animator) rootPose.Restore(animator.transform);
             foreach (var pair in original) if (pair.Key) pair.Value.Restore(pair.Key);
         }
         public void Dispose()

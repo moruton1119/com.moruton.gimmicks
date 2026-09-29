@@ -36,7 +36,8 @@ https://moruton1119.github.io/com.moruton.gimmicks/index.json
 > beta機能です。分離コンパイルと静的検査は実施済みですが、実Unity Editorでの動作は未検証です。
 
 - Scene上のアバターの子へ `Morulab/Avatars/Dev Pose Placement (Editor Only)` を追加し、Humanoid muscle-onlyのAnimationClipを指定します。
-- Inspectorの「Dev開始」で親アバターへポーズを固定し、Unity標準の移動・回転ツールで小物を配置します。時間指定もInspectorで行います。「Dev停止」で人体骨だけを元へ戻し、小物のローカル配置は保持します。
+- Inspectorの「Dev開始」で親アバターを開始時のworld位置・回転・スケールとHips位置のままポーズ固定し、Unity標準の移動・回転ツールで対象オブジェクトを配置します。Humanoid筋肉の姿勢は適用されますが、クリップ由来の全体位置ずれは抑制されます。時間指定もInspectorで行います。「Dev停止」で人体骨だけを元へ戻し、オブジェクトのローカル配置は保持します。
+- 「近接フォーカス対象」へScene内のTransformをドラッグ&ドロップし、表示距離（初期値0.3m）を指定して「対象へ近接フォーカス」を押すと、視線方向とPerspective/Orthographicモードを保ったままSceneビューだけを対象のworld位置へ寄せます。対象オブジェクト、アバター、Gameカメラは移動しません。
 - Editモード専用です。Play移行、domain reload、Editor終了、Scene保存前には自動停止します。他のAnimationModeを開始・停止しません。
 - 旧Assets版から移行する場合、このパッケージ導入後に同じGUID/型が重複しないよう、Scene参照を確認してから旧 `DevPosePlacement` フォルダをプロジェクト外へ退避または削除してください。パッケージ内の3スクリプトは旧版のmeta GUIDを維持しています。
 
