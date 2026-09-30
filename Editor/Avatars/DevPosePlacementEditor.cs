@@ -12,6 +12,7 @@ namespace Morution.DevTools
         const float MaxSceneViewDistance = 3.2e34f;
         const float MaxSceneViewSize = 3.2e34f;
         string error;
+        bool showDev;
 
         internal static bool IsPositiveFinite(float value)
         {
@@ -74,59 +75,75 @@ namespace Morution.DevTools
 
             var settings = (DevPosePlacement)target;
             var session = DevPoseSession.Active;
-            using (new EditorGUI.DisabledScope(session != null || EditorApplication.isPlayingOrWillChangePlaymode))
+            showDev = EditorGUILayout.Foldout(showDev, "Dev", true);
+            if (showDev)
             {
-                serializedObject.Update();
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("clip"));
-                serializedObject.ApplyModifiedProperties();
-            }
-            using (new EditorGUI.DisabledScope(true))
-                EditorGUILayout.ObjectField("親の Animator", DevPoseSession.FindAnimator(settings), typeof(Animator), true);
-            EditorGUILayout.HelpBox("実アバターを現在のworld位置・回転・スケールとHips位置のままポーズ固定します。対象オブジェクトを選択し、通常のUnityツールで配置を編集できます。停止するには開始したコンポーネントを再選択してください。停止してもオブジェクトの編集は残ります。", MessageType.Info);
-
-            serializedObject.Update();
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("focusTarget"), new GUIContent("近接フォーカス対象"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("focusDistance"), new GUIContent("表示距離 (m)"));
-            serializedObject.ApplyModifiedProperties();
-            var sceneView = SceneView.lastActiveSceneView;
-            string focusInvalid = FocusValidationError(settings, sceneView);
-            if (focusInvalid != null) EditorGUILayout.HelpBox(focusInvalid, MessageType.Warning);
-            using (new EditorGUI.DisabledScope(focusInvalid != null))
-                if (GUILayout.Button("対象へ近接フォーカス"))
+                using (new EditorGUI.DisabledScope(session != null || EditorApplication.isPlayingOrWillChangePlaymode))
                 {
-                    try { Focus(sceneView, settings.focusTarget, settings.focusDistance); error = null; }
-                    catch (Exception ex) { error = ex.Message; }
+                    serializedObject.Update();
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("clip"));
+                    serializedObject.ApplyModifiedProperties();
                 }
+                using (new EditorGUI.DisabledScope(true))
+                    EditorGUILayout.ObjectField("親の Animator", DevPoseSession.FindAnimator(settings), typeof(Animator), true);
+                EditorGUILayout.HelpBox("実アバターを現在のworld位置・回転・スケールとHips位置のままポーズ固定します。対象オブジェクトを選択し、通常のUnityツールで配置を編集できます。停止するには開始したコンポーネントを再選択してください。停止してもオブジェクトの編集は残ります。", MessageType.Info);
 
-            if (session != null)
-            {
-                if (session.Owner == settings)
-                {
-                    EditorGUILayout.LabelField("ポーズ固定中");
-                    EditorGUI.BeginChangeCheck();
-                    float time = EditorGUILayout.Slider("Time (秒)", session.Time, 0, session.Duration);
-                    if (EditorGUI.EndChangeCheck())
+                serializedObject.Update();
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("focusTarget"), new GUIContent("近接フォーカス対象"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("focusDistance"), new GUIContent("表示距離 (m)"));
+                serializedObject.ApplyModifiedProperties();
+                var sceneView = SceneView.lastActiveSceneView;
+                string focusInvalid = FocusValidationError(settings, sceneView);
+                if (focusInvalid != null) EditorGUILayout.HelpBox(focusInvalid, MessageType.Warning);
+                using (new EditorGUI.DisabledScope(focusInvalid != null))
+                    if (GUILayout.Button("対象へ近接フォーカス"))
                     {
-                        try { session.Sample(time); error = null; }
+                        try
+                        {
+                            Focus(sceneView, settings.focusTarget, settings.focusDistance);
+                            Selection.activeGameObject = settings.focusTarget.gameObject;
+                            EditorGUIUtility.PingObject(settings.focusTarget.gameObject);
+                            Tools.current = Tool.Move;
+                            error = null;
+                        }
                         catch (Exception ex) { error = ex.Message; }
                     }
-                    if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
+
+                if (session != null)
+                {
+                    if (session.Owner == settings)
+                    {
+                        EditorGUILayout.LabelField("ポーズ固定中");
+                        EditorGUI.BeginChangeCheck();
+                        float time = EditorGUILayout.Slider("Time (秒)", session.Time, 0, session.Duration);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            try { session.Sample(time); error = null; }
+                            catch (Exception ex) { error = ex.Message; }
+                        }
+                        if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
+                    }
+                    else
+                        EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
                 }
                 else
-                    EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
+                {
+                    string invalid = DevPoseSession.Validate(settings);
+                    if (invalid != null) EditorGUILayout.HelpBox(invalid, MessageType.Warning);
+                    using (new EditorGUI.DisabledScope(invalid != null))
+                        if (GUILayout.Button("Dev開始 — ポーズ固定"))
+                        {
+                            try { new DevPoseSession(settings); error = null; }
+                            catch (Exception ex) { error = ex.Message; }
+                        }
+                }
+                if (!string.IsNullOrEmpty(error)) EditorGUILayout.HelpBox(error, MessageType.Error);
             }
-            else
+            else if (session != null && session.Owner == settings)
             {
-                string invalid = DevPoseSession.Validate(settings);
-                if (invalid != null) EditorGUILayout.HelpBox(invalid, MessageType.Warning);
-                using (new EditorGUI.DisabledScope(invalid != null))
-                    if (GUILayout.Button("Dev開始 — ポーズ固定"))
-                    {
-                        try { new DevPoseSession(settings); error = null; }
-                        catch (Exception ex) { error = ex.Message; }
-                    }
+                EditorGUILayout.LabelField("Devポーズ固定中");
+                if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
             }
-            if (!string.IsNullOrEmpty(error)) EditorGUILayout.HelpBox(error, MessageType.Error);
         }
     }
 }
