@@ -31,6 +31,7 @@ jobs:
           files: "com.moruton.gimmicks-${{ steps.version.outputs.VERSION }}.zip"
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
+          body_path: .github/release-notes.md
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
 
