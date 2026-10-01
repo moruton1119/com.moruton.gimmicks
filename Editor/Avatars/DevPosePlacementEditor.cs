@@ -94,7 +94,7 @@ namespace Morution.DevTools
                 string invalid = DevPoseSession.Validate(settings);
                 if (invalid != null) EditorGUILayout.HelpBox(invalid, MessageType.Warning);
                 using (new EditorGUI.DisabledScope(invalid != null))
-                    if (GUILayout.Button("Dev開始 — ポーズ固定"))
+                    if (GUILayout.Button("アニメーション再生"))
                     {
                         try { new DevPoseSession(settings); error = null; }
                         catch (Exception ex) { error = ex.Message; }
