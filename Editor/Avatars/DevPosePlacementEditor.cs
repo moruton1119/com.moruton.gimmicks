@@ -101,6 +101,24 @@ namespace Morution.DevTools
                     }
             }
 
+            // 対象へ近接フォーカスは常に表示（Dev折りたたみの外）
+            var sceneView = SceneView.lastActiveSceneView;
+            string focusInvalid = FocusValidationError(settings, sceneView);
+            using (new EditorGUI.DisabledScope(focusInvalid != null))
+                if (GUILayout.Button("対象へ近接フォーカス"))
+                {
+                    try
+                    {
+                        Focus(sceneView, settings.focusTarget, settings.focusDistance);
+                        Selection.activeGameObject = settings.focusTarget.gameObject;
+                        EditorGUIUtility.PingObject(settings.focusTarget.gameObject);
+                        Tools.current = Tool.Move;
+                        error = null;
+                    }
+                    catch (Exception ex) { error = ex.Message; }
+                }
+            if (focusInvalid != null) EditorGUILayout.HelpBox(focusInvalid, MessageType.Warning);
+
             showDev = EditorGUILayout.Foldout(showDev, "Dev", true);
             if (showDev)
             {
@@ -118,22 +136,6 @@ namespace Morution.DevTools
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("focusTarget"), new GUIContent("近接フォーカス対象"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("focusDistance"), new GUIContent("表示距離 (m)"));
                 serializedObject.ApplyModifiedProperties();
-                var sceneView = SceneView.lastActiveSceneView;
-                string focusInvalid = FocusValidationError(settings, sceneView);
-                if (focusInvalid != null) EditorGUILayout.HelpBox(focusInvalid, MessageType.Warning);
-                using (new EditorGUI.DisabledScope(focusInvalid != null))
-                    if (GUILayout.Button("対象へ近接フォーカス"))
-                    {
-                        try
-                        {
-                            Focus(sceneView, settings.focusTarget, settings.focusDistance);
-                            Selection.activeGameObject = settings.focusTarget.gameObject;
-                            EditorGUIUtility.PingObject(settings.focusTarget.gameObject);
-                            Tools.current = Tool.Move;
-                            error = null;
-                        }
-                        catch (Exception ex) { error = ex.Message; }
-                    }
 
                 if (session != null && session.Owner != settings)
                     EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
