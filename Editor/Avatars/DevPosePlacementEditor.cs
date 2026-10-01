@@ -118,6 +118,7 @@ namespace Morution.DevTools
                     catch (Exception ex) { error = ex.Message; }
                 }
             if (focusInvalid != null) EditorGUILayout.HelpBox(focusInvalid, MessageType.Warning);
+            if (!string.IsNullOrEmpty(error)) EditorGUILayout.HelpBox(error, MessageType.Error);
 
             showDev = EditorGUILayout.Foldout(showDev, "Dev", true);
             if (showDev)
@@ -139,7 +140,6 @@ namespace Morution.DevTools
 
                 if (session != null && session.Owner != settings)
                     EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
-                if (!string.IsNullOrEmpty(error)) EditorGUILayout.HelpBox(error, MessageType.Error);
             }
         }
     }
