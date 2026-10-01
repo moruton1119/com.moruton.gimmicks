@@ -75,6 +75,32 @@ namespace Morution.DevTools
 
             var settings = (DevPosePlacement)target;
             var session = DevPoseSession.Active;
+
+            // Dev開始/停止は常に表示（Dev折りたたみの外）
+            if (session != null && session.Owner == settings)
+            {
+                EditorGUILayout.LabelField("ポーズ固定中");
+                EditorGUI.BeginChangeCheck();
+                float time = EditorGUILayout.Slider("Time (秒)", session.Time, 0, session.Duration);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    try { session.Sample(time); error = null; }
+                    catch (Exception ex) { error = ex.Message; }
+                }
+                if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
+            }
+            else
+            {
+                string invalid = DevPoseSession.Validate(settings);
+                if (invalid != null) EditorGUILayout.HelpBox(invalid, MessageType.Warning);
+                using (new EditorGUI.DisabledScope(invalid != null))
+                    if (GUILayout.Button("Dev開始 — ポーズ固定"))
+                    {
+                        try { new DevPoseSession(settings); error = null; }
+                        catch (Exception ex) { error = ex.Message; }
+                    }
+            }
+
             showDev = EditorGUILayout.Foldout(showDev, "Dev", true);
             if (showDev)
             {
@@ -109,40 +135,9 @@ namespace Morution.DevTools
                         catch (Exception ex) { error = ex.Message; }
                     }
 
-                if (session != null)
-                {
-                    if (session.Owner == settings)
-                    {
-                        EditorGUILayout.LabelField("ポーズ固定中");
-                        EditorGUI.BeginChangeCheck();
-                        float time = EditorGUILayout.Slider("Time (秒)", session.Time, 0, session.Duration);
-                        if (EditorGUI.EndChangeCheck())
-                        {
-                            try { session.Sample(time); error = null; }
-                            catch (Exception ex) { error = ex.Message; }
-                        }
-                        if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
-                    }
-                    else
-                        EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
-                }
-                else
-                {
-                    string invalid = DevPoseSession.Validate(settings);
-                    if (invalid != null) EditorGUILayout.HelpBox(invalid, MessageType.Warning);
-                    using (new EditorGUI.DisabledScope(invalid != null))
-                        if (GUILayout.Button("Dev開始 — ポーズ固定"))
-                        {
-                            try { new DevPoseSession(settings); error = null; }
-                            catch (Exception ex) { error = ex.Message; }
-                        }
-                }
+                if (session != null && session.Owner != settings)
+                    EditorGUILayout.HelpBox("別のコンポーネントでポーズ固定中です。時間変更・停止は開始したコンポーネントを再選択してください。", MessageType.Info);
                 if (!string.IsNullOrEmpty(error)) EditorGUILayout.HelpBox(error, MessageType.Error);
-            }
-            else if (session != null && session.Owner == settings)
-            {
-                EditorGUILayout.LabelField("Devポーズ固定中");
-                if (GUILayout.Button("Dev停止 — 人体の元ポーズに戻す")) session.Dispose();
             }
         }
     }
